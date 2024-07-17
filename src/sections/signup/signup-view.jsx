@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -19,65 +18,44 @@ import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 
-
 // ----------------------------------------------------------------------
 
-  export default function LoginView() {
+  export default function SignUpView() {
     const theme = useTheme();
 
     const router = useRouter();
 
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
-    const handleClick = async () => {
-      setLoading(true);
-      try {
-        const {data} = await axios.post('https://mor-marketplace.onrender.com/api/auth/login', {
-          email,
-          password,
-        });
-        setLoading(false);
-  
-        if (data.success) {
-          
-          const { user } = data; 
-          if (user.role === 'Admin') {
-            router.push('/');
-          } else {
-            setError('Bạn không có quyền truy cập trang này.');
-          }
-        } else {
-          setError('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.');
-        }
-      } catch (err) {
-        setLoading(false);
-        setError('Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.');
-      }
-    };
+   const clickLogin = () => {
+    router.push('/login');
+   }
 
-    const clickSignUp = () => {
-      router.push('/signup');
-    }
     const renderForm = (
       <>
         <Stack spacing={3}>
-           <TextField
-          name="email"
-          label="Nhập email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+          <TextField name="email" label="Nhập email" />
 
           <TextField
             name="password"
             label="Nhập mật khẩu"
             type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          
+<TextField
+            name="checkPassword"
+            label="Xác nhận mật khẩu"
+            type={showPassword ? 'text' : 'checkPassword'}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -90,28 +68,17 @@ import Iconify from 'src/components/iconify';
           />
         </Stack>
 
-        <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-          <Link variant="subtitle2" underline="hover" sx={{  cursor: 'pointer' }}>
-            Quên mật khẩu
-          </Link>
-        </Stack>
-
         <LoadingButton
           fullWidth
           size="large"
           type="submit"
           variant="contained"
           color="inherit"
-          onClick={handleClick}
-          loading={loading}
+          onClick={clickLogin}
+          sx={{ mt : 3}}
         >
-          Đăng nhập
+          Đăng Ký
         </LoadingButton>
-        {error && (
-        <Typography variant="body2" sx={{ color: 'error.main', mt: 2 }}>
-          {error}
-        </Typography>
-          )}
       </>
     );
 
@@ -161,9 +128,9 @@ import Iconify from 'src/components/iconify';
           </Divider>
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5, textAlign:'center' }}>
-              Bạn không có tài khoản?
-              <Link onClick={clickSignUp} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
-                Đăng kí ngay
+              Bạn đã có tài khoản?
+              <Link onClick={clickLogin} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
+                Đăng nhập
               </Link>
             </Typography>
 
