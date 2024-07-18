@@ -33,6 +33,7 @@ const navConfig = [
     path: '/signup',
     icon: icon('ic_signup'),
   },
+
   {
     title: 'Not found',
     path: '/404',

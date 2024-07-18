@@ -1,7 +1,11 @@
 // ----------------------------------------------------------------------
+import Cookies from 'js-cookie';
+
+
+
 
 export const account = {
-  displayName: 'Jaydon Frankie',
-  email: 'demo@minimals.cc',
+  displayName: Cookies.get('username'),
+  email:  Cookies.get('email'),
   photoURL: '/assets/images/avatars/avatar_25.jpg',
 };

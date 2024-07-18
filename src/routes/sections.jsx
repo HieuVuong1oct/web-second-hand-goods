@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
@@ -10,36 +11,44 @@ export const LoginPage = lazy(() => import('src/pages/login'));
 export const SignUpPage = lazy(() => import('src/pages/signup'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const HomeMainPage = lazy(() => import('src/pages/homemain'));
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const isAuthenticated = Cookies.get('accessToken'); // Kiểm tra token trong cookie
+  console.log(isAuthenticated);
   const routes = useRoutes([
     {
-      element: (
+      element: isAuthenticated ? (
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
-        
       ],
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element: isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />,
     },
     {
       path: 'signup',
-      element: <SignUpPage />,
+      element: isAuthenticated ? <Navigate to="/" replace /> : <SignUpPage />,
     },
     {
-      path: '404',  
+      path: 'homemain',
+      element: !isAuthenticated ? <Navigate to="/homemain" replace /> : <HomeMainPage />,
+    },
+    {
+      path: '404',
       element: <Page404 />,
     },
     {

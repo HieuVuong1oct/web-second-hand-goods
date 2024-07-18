@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -16,20 +17,7 @@ import { account } from 'src/_mock/account';
 
 // ----------------------------------------------------------------------
 
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
-];
+
 
 // ----------------------------------------------------------------------
 
@@ -43,10 +31,19 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
     
+    
   };
 
+  const handleHome = () => {
+    setOpen(null);
+    router.push('/homemain')
+    
+  };
   const logOut = () => {
-    router.push('/signup');
+    
+    Cookies.remove('accessToken');
+    Cookies.remove('refreshToken');
+    router.push('/login');
   }
   return (
     <>
@@ -101,11 +98,14 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        {MENU_OPTIONS.map((option) => (
-          <MenuItem key={option.label} onClick={handleClose}>
-            {option.label}
-          </MenuItem>
-        ))}
+        <MenuItem
+          disableRipple
+          disableTouchRipple
+          onClick={handleHome}
+          sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+        >
+          Tới trang chủ
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
@@ -115,7 +115,7 @@ export default function AccountPopover() {
           onClick={logOut}
           sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
         >
-          Logout
+          Đăng xuất
         </MenuItem>
       </Popover>
     </>
