@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import Box from '@mui/material/Box';
-import Popover from '@mui/material/Popover';
-import MenuItem from '@mui/material/MenuItem';
-import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box'
+import Popover from '@mui/material/Popover'
+import MenuItem from '@mui/material/MenuItem'
+import IconButton from '@mui/material/IconButton'
 
 // ----------------------------------------------------------------------
 
@@ -23,20 +23,20 @@ const LANGS = [
     label: 'French',
     icon: '/assets/icons/ic_flag_fr.svg',
   },
-];
+]
 
 // ----------------------------------------------------------------------
 
 export default function LanguagePopover() {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(null)
 
   const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
+    setOpen(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setOpen(null);
-  };
+    setOpen(null)
+  }
 
   return (
     <>
@@ -82,5 +82,5 @@ export default function LanguagePopover() {
         ))}
       </Popover>
     </>
-  );
+  )
 }

@@ -1,7 +1,8 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+// import axios from 'axios';
+import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -17,39 +18,51 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { login } from 'src/api/account';
 import { bgGradient } from 'src/theme/css';
+import { setCookies } from 'src/cookie/setCookies';
 
 import Iconify from 'src/components/iconify';
-
-// ----------------------------------------------------------------------
 
 export default function LoginView() {
   const theme = useTheme();
   const router = useRouter();
-  const { handleSubmit, control, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    password: Yup.string()
+      .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+      .required('Vui lòng nhập mật khẩu'),
+  });
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post('https://mor-marketplace.onrender.com/api/auth/login', data);
+      const response = await login(data);
+
+      // const response = await axios.post('https://help-uu0q.onrender.com/api/auth/login', data);
       setLoading(false);
-      const userData = response.data;
+      console.log('Login response:', response);
+
+      const userData = response;
 
       if (userData[0].userId) {
-        Cookies.set('accessToken', userData[1].accessToken, { expires: 7 });
-        Cookies.set('refreshToken', userData[2].refreshToken, { expires: 7 });
-        Cookies.set('userId', userData[0].userId, { expires: 7 });
-        Cookies.set('username', userData[0].username, { expires: 7 });
-        Cookies.set('avatar', userData[0].avatar, { expires: 7 });
-        Cookies.set('email', userData[0].email, { expires: 7 });
-        Cookies.set('role', userData[0].role, { expires: 7 });
+        setCookies(userData);
 
-        if (userData[0].role === 'Admin') {
+        if (userData[0].role === 'ADMIN') {
           router.push('/');
-        } else if (userData[0].role === 'User') {
+        } else if (userData[0].role === 'USER') {
           router.push('/homemain');
         } else {
           setError('Bạn không có quyền truy cập trang này.');
@@ -59,7 +72,11 @@ export default function LoginView() {
       }
     } catch (err) {
       setLoading(false);
-      setError('Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.');
+      console.error('Error details:', err);
+      const errorMsg =
+        err.response.data.message ||
+        'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.';
+      setError(errorMsg);
     }
   };
 
@@ -74,7 +91,7 @@ export default function LoginView() {
           name="email"
           control={control}
           defaultValue=""
-          rules={{ required: 'Vui lòng nhập email' }}
+          // rules={{ required: 'Vui lòng nhập email' }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -89,7 +106,6 @@ export default function LoginView() {
           name="password"
           control={control}
           defaultValue=""
-          rules={{ required: 'Vui lòng nhập mật khẩu' }}
           render={({ field }) => (
             <TextField
               {...field}
@@ -167,9 +183,7 @@ export default function LoginView() {
             </Box>
           </Stack>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {renderForm}
-          </form>
+          <form onSubmit={handleSubmit(onSubmit)}>{renderForm}</form>
           <Divider sx={{ my: 3 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
               Hoặc

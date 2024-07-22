@@ -1,6 +1,8 @@
-import axios from 'axios';
+
+import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -17,6 +19,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useRouter } from 'src/routes/hooks';
 
+import { signup } from 'src/api/account';
 import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
@@ -31,7 +34,27 @@ export default function SignUpView() {
   const [error, setError] = useState('');
   const [signupSuccess, setSignupSuccess] = useState(false);
 
-  const { handleSubmit, control, formState: { errors } } = useForm();
+  const validationSchema = Yup.object({
+    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    password: Yup.string()
+      .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
+      .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
+      .required('Vui lòng nhập mật khẩu'),
+    checkPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
+      .required('Vui lòng xác nhận mật khẩu'),
+    username: Yup.string().required('Vui lòng nhập tên tài khoản'),
+    name: Yup.string().required('Vui lòng nhập tên người dùng'),
+    avatar: Yup.string().required('Vui lòng tải lên avatar'),
+  });
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
 
   const onSubmit = async (formData) => {
     setLoading(true);
@@ -43,16 +66,16 @@ export default function SignUpView() {
     }
 
     try {
-      const { data } = await axios.post('https://mor-marketplace.onrender.com/api/auth/signup', {
+      const response = await signup({
         email: formData.email,
         password: formData.password,
         username: formData.username,
         name: formData.name,
         avatar: formData.avatar,
       });
-
+      console.log(response)
       setLoading(false);
-      console.log(data);
+      const { data } = response;
       if (data) {
         setSignupSuccess(true);
         router.push('/login');
@@ -60,8 +83,10 @@ export default function SignUpView() {
         setError('Đăng ký không thành công. Vui lòng thử lại.');
       }
     } catch (err) {
-      setLoading(false);
-      setError('Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.');
+      console.error('Error details:', err);
+      const errorMsg =
+        err.response.data.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
+      setError(errorMsg);
     }
   };
 
@@ -113,7 +138,7 @@ export default function SignUpView() {
                   name="email"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng nhập email' }}
+                  // rules={{ required: 'Vui lòng nhập email' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -129,7 +154,6 @@ export default function SignUpView() {
                   name="password"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng nhập mật khẩu' }}
                   render={({ field }) => (
                     <TextField
                       sx={{ mt: 2 }}
@@ -156,7 +180,6 @@ export default function SignUpView() {
                   name="checkPassword"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng xác nhận mật khẩu' }}
                   render={({ field }) => (
                     <TextField
                       sx={{ mt: 2 }}
@@ -184,7 +207,6 @@ export default function SignUpView() {
                   name="username"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng nhập tên tài khoản' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
@@ -199,7 +221,6 @@ export default function SignUpView() {
                   name="name"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng nhập tên người dùng' }}
                   render={({ field }) => (
                     <TextField
                       sx={{ mt: 2 }}
@@ -215,7 +236,6 @@ export default function SignUpView() {
                   name="avatar"
                   control={control}
                   defaultValue=""
-                  rules={{ required: 'Vui lòng nhập avatar' }}
                   render={({ field }) => (
                     <TextField
                       sx={{ mt: 2 }}
@@ -224,7 +244,7 @@ export default function SignUpView() {
                       error={!!errors.avatar}
                       helperText={errors.avatar ? errors.avatar.message : ''}
                       fullWidth
-                      />
+                    />
                   )}
                 />
               </Grid>
@@ -237,7 +257,10 @@ export default function SignUpView() {
             )}
 
             {signupSuccess && (
-              <Typography variant="body2" sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}
+              >
                 Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...
               </Typography>
             )}

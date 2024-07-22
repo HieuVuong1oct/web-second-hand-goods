@@ -1,15 +1,15 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import { alpha } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
 export default function ColorPreview({ colors, limit = 3, sx }) {
-  const renderColors = colors.slice(0, limit);
+  const renderColors = colors.slice(0, limit)
 
-  const remainingColor = colors.length - limit;
+  const remainingColor = colors.length - limit
 
   return (
     <Stack component="span" direction="row" alignItems="center" justifyContent="flex-end" sx={sx}>
@@ -32,11 +32,11 @@ export default function ColorPreview({ colors, limit = 3, sx }) {
         <Box component="span" sx={{ typography: 'subtitle2' }}>{`+${remainingColor}`}</Box>
       )}
     </Stack>
-  );
+  )
 }
 
 ColorPreview.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),
   limit: PropTypes.number,
   sx: PropTypes.object,
-};
+}

@@ -1,11 +1,11 @@
-import { alpha } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles'
 
-import { grey, info, error, common, primary, success, warning, secondary } from './palette';
+import { grey, info, error, common, primary, success, warning, secondary } from './palette'
 
 // ----------------------------------------------------------------------
 
 export function customShadows() {
-  const transparent = alpha(grey[500], 0.16);
+  const transparent = alpha(grey[500], 0.16)
 
   return {
     z1: `0 1px 2px 0 ${transparent}`,
@@ -26,5 +26,5 @@ export function customShadows() {
     success: `0 8px 16px 0 ${alpha(success.main, 0.24)}`,
     warning: `0 8px 16px 0 ${alpha(warning.main, 0.24)}`,
     error: `0 8px 16px 0 ${alpha(error.main, 0.24)}`,
-  };
+  }
 }

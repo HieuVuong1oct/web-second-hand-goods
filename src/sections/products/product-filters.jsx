@@ -1,19 +1,18 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Radio from '@mui/material/Radio';
-import Button from '@mui/material/Button';
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
-import RadioGroup from '@mui/material/RadioGroup';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Radio from '@mui/material/Radio'
+import Button from '@mui/material/Button'
+import Drawer from '@mui/material/Drawer'
+import Divider from '@mui/material/Divider'
+import RadioGroup from '@mui/material/RadioGroup'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
+import FormControlLabel from '@mui/material/FormControlLabel'
 
-import Iconify from 'src/components/iconify';
-import Scrollbar from 'src/components/scrollbar';
-
+import Iconify from 'src/components/iconify'
+import Scrollbar from 'src/components/scrollbar'
 
 // ----------------------------------------------------------------------
 
@@ -22,22 +21,19 @@ export const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest' },
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
-];
+]
 
-export const CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories'];
+export const CATEGORY_OPTIONS = ['All', 'Shose', 'Apparel', 'Accessories']
 
 export const PRICE_OPTIONS = [
   { value: 'below', label: 'Below $25' },
   { value: 'between', label: 'Between $25 - $75' },
   { value: 'above', label: 'Above $75' },
-];
-
+]
 
 // ----------------------------------------------------------------------
 
 export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter }) {
-
-
   const renderCategory = (
     <Stack spacing={1}>
       <Typography variant="subtitle2">Category</Typography>
@@ -47,7 +43,7 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
         ))}
       </RadioGroup>
     </Stack>
-  );
+  )
 
   const renderPrice = (
     <Stack spacing={1}>
@@ -63,7 +59,7 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
         ))}
       </RadioGroup>
     </Stack>
-  );
+  )
 
   return (
     <>
@@ -102,11 +98,9 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
 
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
-
             {renderCategory}
 
             {renderPrice}
-
           </Stack>
         </Scrollbar>
 
@@ -124,11 +118,11 @@ export default function ProductFilters({ openFilter, onOpenFilter, onCloseFilter
         </Box>
       </Drawer>
     </>
-  );
+  )
 }
 
 ProductFilters.propTypes = {
   openFilter: PropTypes.bool,
   onOpenFilter: PropTypes.func,
   onCloseFilter: PropTypes.func,
-};
+}

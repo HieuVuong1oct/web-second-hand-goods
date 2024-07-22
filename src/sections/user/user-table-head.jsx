@@ -1,13 +1,13 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
-import Box from '@mui/material/Box';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import TableHead from '@mui/material/TableHead';
-import TableCell from '@mui/material/TableCell';
-import TableSortLabel from '@mui/material/TableSortLabel';
+import Box from '@mui/material/Box'
+import TableRow from '@mui/material/TableRow'
+import Checkbox from '@mui/material/Checkbox'
+import TableHead from '@mui/material/TableHead'
+import TableCell from '@mui/material/TableCell'
+import TableSortLabel from '@mui/material/TableSortLabel'
 
-import { visuallyHidden } from './utils';
+import { visuallyHidden } from './utils'
 
 // ----------------------------------------------------------------------
 
@@ -21,8 +21,8 @@ export default function UserTableHead({
   onSelectAllClick,
 }) {
   const onSort = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+    onRequestSort(event, property)
+  }
 
   return (
     <TableHead>
@@ -59,7 +59,7 @@ export default function UserTableHead({
         ))}
       </TableRow>
     </TableHead>
-  );
+  )
 }
 
 UserTableHead.propTypes = {
@@ -70,4 +70,4 @@ UserTableHead.propTypes = {
   numSelected: PropTypes.number,
   onRequestSort: PropTypes.func,
   onSelectAllClick: PropTypes.func,
-};
+}

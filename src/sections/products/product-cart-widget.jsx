@@ -1,7 +1,7 @@
-import Badge from '@mui/material/Badge';
-import { styled } from '@mui/material/styles';
+import Badge from '@mui/material/Badge'
+import { styled } from '@mui/material/styles'
 
-import Iconify from 'src/components/iconify';
+import Iconify from 'src/components/iconify'
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
   borderBottomLeftRadius: Number(theme.shape.borderRadius) * 2,
   transition: theme.transitions.create('opacity'),
   '&:hover': { opacity: 0.72 },
-}));
+}))
 
 // ----------------------------------------------------------------------
 
@@ -35,5 +35,5 @@ export default function CartWidget() {
         <Iconify icon="eva:shopping-cart-fill" width={24} height={24} />
       </Badge>
     </StyledRoot>
-  );
+  )
 }

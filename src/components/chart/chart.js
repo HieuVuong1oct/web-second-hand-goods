@@ -1,9 +1,9 @@
-import { memo } from 'react';
-import ApexChart from 'react-apexcharts';
+import { memo } from 'react'
+import ApexChart from 'react-apexcharts'
 
-import { alpha, styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles'
 
-import { bgBlur } from 'src/theme/css';
+import { bgBlur } from 'src/theme/css'
 
 // ----------------------------------------------------------------------
 
@@ -62,6 +62,6 @@ const Chart = styled(ApexChart)(({ theme }) => ({
       textTransform: 'capitalize',
     },
   },
-}));
+}))
 
-export default memo(Chart);
+export default memo(Chart)
