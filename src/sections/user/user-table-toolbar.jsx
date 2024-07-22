@@ -9,8 +9,6 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 import Iconify from 'src/components/iconify'
 
-// ----------------------------------------------------------------------
-
 export default function UserTableToolbar({ numSelected, filterName, onFilterName }) {
   return (
     <Toolbar

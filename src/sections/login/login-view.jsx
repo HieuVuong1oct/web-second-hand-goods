@@ -50,8 +50,6 @@ export default function LoginView() {
     setLoading(true);
     try {
       const response = await login(data);
-
-      // const response = await axios.post('https://help-uu0q.onrender.com/api/auth/login', data);
       setLoading(false);
       console.log('Login response:', response);
 
@@ -91,7 +89,6 @@ export default function LoginView() {
           name="email"
           control={control}
           defaultValue=""
-          // rules={{ required: 'Vui lòng nhập email' }}
           render={({ field }) => (
             <TextField
               {...field}

@@ -33,6 +33,7 @@ export default function AccountPopover() {
   }
   const logOut = () => {
     clearCookies();
+    router.push('/login');
   }
   return (
     <>

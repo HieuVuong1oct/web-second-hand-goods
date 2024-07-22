@@ -21,9 +21,6 @@ import { NAV } from './config-layout'
 import Account from '../../_mock/account'
 import navConfig from './config-navigation'
 
-
-// ----------------------------------------------------------------------
-
 export default function Nav({ openNav, onCloseNav }) {
   const account = Account()
   const pathname = usePathname()
@@ -130,8 +127,6 @@ Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
 }
-
-// ----------------------------------------------------------------------
 
 function NavItem({ item }) {
   const pathname = usePathname()

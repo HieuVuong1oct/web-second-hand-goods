@@ -32,7 +32,7 @@ export default function SignUpView() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
 
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
@@ -56,28 +56,30 @@ export default function SignUpView() {
     resolver: yupResolver(validationSchema),
   });
 
-  const onSubmit = async (formData) => {
+  const onSubmit = async (data) => {
+    const { email, password, checkPassword, username, name, avatar } = data;
+  
     setLoading(true);
-
-    if (formData.password !== formData.checkPassword) {
+  
+    if (password !== checkPassword) {
       setError('Mật khẩu và xác nhận mật khẩu không khớp.');
       setLoading(false);
       return;
     }
-
+  
     try {
       const response = await signup({
-        email: formData.email,
-        password: formData.password,
-        username: formData.username,
-        name: formData.name,
-        avatar: formData.avatar,
+        email,
+        password,
+        username,
+        name,
+        avatar,
       });
-      console.log(response)
+      console.log(response);
       setLoading(false);
-      const { data } = response;
-      if (data) {
-        setSignupSuccess(true);
+      const { data: responseData } = response;
+      if (responseData) {
+        setSignUpSuccess(true);
         router.push('/login');
       } else {
         setError('Đăng ký không thành công. Vui lòng thử lại.');
@@ -85,8 +87,9 @@ export default function SignUpView() {
     } catch (err) {
       console.error('Error details:', err);
       const errorMsg =
-        err.response.data.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
+        err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
       setError(errorMsg);
+      setLoading(false);
     }
   };
 
@@ -256,7 +259,7 @@ export default function SignUpView() {
               </Typography>
             )}
 
-            {signupSuccess && (
+            {signUpSuccess && (
               <Typography
                 variant="body2"
                 sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}

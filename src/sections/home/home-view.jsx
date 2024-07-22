@@ -8,7 +8,7 @@ export default function HomeView() {
     <div>
       <Header />
       <Content />
-      {}
+      
     </div>
   );
 }
