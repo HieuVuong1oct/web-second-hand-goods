@@ -24,6 +24,6 @@ const clearCookies = () => {
   Cookies.remove('avatar');
   Cookies.remove('email');
   Cookies.remove('role');
-  console.log('Đã xóa cookie')
+
 };
 export { setCookies,clearCookies };

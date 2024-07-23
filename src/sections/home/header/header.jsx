@@ -1,12 +1,11 @@
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { alpha } from '@mui/material/styles';
 import { ShoppingCart, Search as SearchIcon } from '@mui/icons-material';
 import {Box,Avatar, AppBar, Button,Divider, Popover, MenuItem, InputBase, IconButton, Typography,InputAdornment,  } from '@mui/material';
 
-import { useRouter } from 'src/routes/hooks'
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import Account from 'src/_mock/account';
 import { clearCookies } from 'src/cookie/setCookies';
@@ -15,10 +14,9 @@ import useStyles from './HeaderStyles';
 
 
 const Header = () => {
-  const router = useRouter();
+
   const account = Account();
   const classes = useStyles();
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -29,12 +27,14 @@ const Header = () => {
     }
   }, []);
 
+  const { navigateToLogin , navigateToSignUp } = useNavigationHelpers();
+
   const handleLoginClick = () => {
-    navigate('/login');
+    navigateToLogin();
   };
 
   const handleRegisterClick = () => {
-    navigate('/signup');
+    navigateToSignUp();
   };
 
   const handleOpen = (event) => {
@@ -43,7 +43,7 @@ const Header = () => {
 
   const logOut = () => {
     clearCookies();
-    router.push('/login');
+    navigateToLogin();
   };
 
   const handleClose = () => {

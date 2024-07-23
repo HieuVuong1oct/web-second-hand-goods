@@ -1,4 +1,4 @@
-// import axios from 'axios';
+
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { login } from 'src/api/account';
 import { bgGradient } from 'src/theme/css';
@@ -26,11 +26,10 @@ import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
   const theme = useTheme();
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
+  const {navigateToHome,navigateToAdmin, navigateToSignUp } = useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
     password: Yup.string()
@@ -51,7 +50,7 @@ export default function LoginView() {
     try {
       const response = await login(data);
       setLoading(false);
-      console.log('Login response:', response);
+
 
       const userData = response;
 
@@ -59,9 +58,9 @@ export default function LoginView() {
         setCookies(userData);
 
         if (userData[0].role === 'ADMIN') {
-          router.push('/');
+          navigateToAdmin()
         } else if (userData[0].role === 'USER') {
-          router.push('/homemain');
+          navigateToHome()
         } else {
           setError('Bạn không có quyền truy cập trang này.');
         }
@@ -79,7 +78,7 @@ export default function LoginView() {
   };
 
   const clickSignUp = () => {
-    router.push('/signup');
+    navigateToSignUp()
   };
 
   const renderForm = (
