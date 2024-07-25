@@ -16,6 +16,7 @@ export const ProductDetailPage = lazy(() => import('src/pages/ProductDetail'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const HomeMainPage = lazy(() => import('src/pages/homemain'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'));
+export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
@@ -62,6 +63,7 @@ export default function Router() {
         { path: 'login', element: <LoginPage /> },
         { path: 'signup', element: <SignUpPage /> },
         { path: 'forgotPassword', element: <ForgotPasswordPage /> },
+        { path: 'resetPassword', element: <ResetPasswordPage /> },
       ],
     },
     {

@@ -14,11 +14,16 @@ export const login = (data) => {
   };
 
   export const sendResetPasswordEmail = (data) => {
-    const url = '/account/forgot-password';
+    const url = '/auth/forgot-password';
     return axiosClient.post(url, data);
   };
 
   export const verifyEmail = (email) => {
     const url = `/auth/verify/${email}`;
     return axiosClient.get(url);
+  };
+
+  export const resetPassword = (data) => {
+    const url = '/auth/refresh-token';
+    return axiosClient.post(url, data);
   };

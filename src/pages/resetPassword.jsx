@@ -1,15 +1,15 @@
 import { Helmet } from 'react-helmet-async'
 
-import { ForgotPasswordView } from 'src/sections/forgotPassword'
+import { ResetPasswordView } from 'src/sections/resetPassword'
 
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
   return (
     <>
       <Helmet>
         <title> ForgotPassword | Minimal UI </title>
       </Helmet>
 
-      <ForgotPasswordView />
+      <ResetPasswordView />
     </>
   )
 }
