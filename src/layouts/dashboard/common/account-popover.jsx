@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 
-import { useRouter } from 'src/routes/hooks'
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import Account from 'src/_mock/account'
 import { clearCookies } from 'src/cookie/setCookies';
@@ -18,7 +18,7 @@ import { clearCookies } from 'src/cookie/setCookies';
 export default function AccountPopover() {
   const account = Account()
   const [open, setOpen] = useState(null)
-  const router = useRouter()
+  const {navigateToHome,navigateToLogin } = useNavigationHelpers();
   const handleOpen = (event) => {
     setOpen(event.currentTarget)
   }
@@ -29,11 +29,11 @@ export default function AccountPopover() {
 
   const handleHome = () => {
     setOpen(null)
-    router.push('/homemain')
+    navigateToHome()
   }
   const logOut = () => {
-    clearCookies();
-    router.push('/login');
+    clearCookies()
+    navigateToLogin()
   }
   return (
     <>

@@ -17,23 +17,20 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { useRouter } from 'src/routes/hooks';
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { signup } from 'src/api/account';
 import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 
-// ----------------------------------------------------------------------
-
 export default function SignUpView() {
   const theme = useTheme();
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-
+  const {navigateToLogin } = useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
     password: Yup.string()
@@ -75,17 +72,16 @@ export default function SignUpView() {
         name,
         avatar,
       });
-      console.log(response);
-      setLoading(false);
-      const { data: responseData } = response;
-      if (responseData) {
+    
+      setLoading(false);     
+      if (response) {
         setSignUpSuccess(true);
-        router.push('/login');
+        navigateToLogin()
       } else {
         setError('Đăng ký không thành công. Vui lòng thử lại.');
       }
     } catch (err) {
-      console.error('Error details:', err);
+    
       const errorMsg =
         err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
       setError(errorMsg);
@@ -98,7 +94,7 @@ export default function SignUpView() {
   };
 
   const handleClickLogin = () => {
-    router.push('/login');
+    navigateToLogin()
   };
 
   return (
@@ -141,7 +137,6 @@ export default function SignUpView() {
                   name="email"
                   control={control}
                   defaultValue=""
-                  // rules={{ required: 'Vui lòng nhập email' }}
                   render={({ field }) => (
                     <TextField
                       {...field}
