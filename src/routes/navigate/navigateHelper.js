@@ -21,7 +21,10 @@ export const useNavigationHelpers = () => {
   const navigateToAdmin = () => {
     navigate(listPath.admin);
   };
-
+  
+  const navigateToForgotPassword = () => {
+    navigate(listPath.forgotPassword);
+  }
 
 
   return {
@@ -29,6 +32,7 @@ export const useNavigationHelpers = () => {
     navigateToSignUp,
     navigateToHome,
     navigateToAdmin,
+    navigateToForgotPassword,
    
   };
 };

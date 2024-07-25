@@ -12,3 +12,13 @@ export const login = (data) => {
     const url = '/auth/signup';
     return axiosClient.post(url, data);
   };
+
+  export const sendResetPasswordEmail = (data) => {
+    const url = '/account/forgot-password';
+    return axiosClient.post(url, data);
+  };
+
+  export const verifyEmail = (email) => {
+    const url = `/auth/verify/${email}`;
+    return axiosClient.get(url);
+  };
