@@ -18,6 +18,7 @@ export const HomeMainPage = lazy(() => import('src/pages/homemain'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'));
 export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 
+
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
 

@@ -15,8 +15,9 @@ axiosClient.interceptors.request.use(
 
   async config => {
     const accessToken = Cookies.get('accessToken');
-    if (accessToken) {
-      config.headers.Cookie = `accessToken=${accessToken}`;
+    const refreshToken = Cookies.get('refreshToken')
+    if (accessToken && refreshToken) {
+      config.headers.Cookies = `accessToken=${accessToken}; refreshToken=${refreshToken}`;
     }
   
     return config;
