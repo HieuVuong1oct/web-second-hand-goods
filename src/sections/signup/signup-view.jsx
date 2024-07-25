@@ -70,7 +70,7 @@ export default function SignUpView() {
         name,
         avatar,
       });
-      console.log(response);
+    
       setLoading(false);     
       if (response) {
         setSignUpSuccess(true);
@@ -79,7 +79,7 @@ export default function SignUpView() {
         setError('Đăng ký không thành công. Vui lòng thử lại.');
       }
     } catch (err) {
-      console.error('Error details:', err);
+    
       const errorMsg =
         err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
       setError(errorMsg);

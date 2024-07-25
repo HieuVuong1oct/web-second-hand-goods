@@ -1,5 +1,6 @@
 import axios from 'axios';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
+
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -11,8 +12,20 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(
-  async config =>  config,
-  error => Promise.reject(error)
+
+  async config => {
+    const accessToken = Cookies.get('accessToken');
+    if (accessToken) {
+      config.headers.Cookie = `accessToken=${accessToken}`;
+    }
+    console.log('Sending request to:', config.url);
+    return config;
+  },
+  error => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+
 );
 
 axiosClient.interceptors.response.use(

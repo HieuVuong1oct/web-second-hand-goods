@@ -67,7 +67,7 @@ export default function LoginView() {
       }
     } catch (err) {
       setLoading(false);
-      console.error('Error details:', err);
+   
       const errorMsg =
         err.response.data.message ||
         'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.';
