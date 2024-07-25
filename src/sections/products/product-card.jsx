@@ -1,4 +1,6 @@
+import React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,9 +13,13 @@ import { fCurrency } from 'src/utils/format-number';
 import Label from 'src/components/label';
 import { ColorPreview } from 'src/components/color-utils';
 
-// ----------------------------------------------------------------------
-
 export default function ShopProductCard({ product }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/product-detail', { state: { product } });
+  };
+
   const renderStatus = (
     <Label
       variant="filled"
@@ -63,10 +69,9 @@ export default function ShopProductCard({ product }) {
   );
 
   return (
-    <Card>
+    <Card onClick={handleClick} sx={{ cursor: 'pointer' }}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         {product.status && renderStatus}
-
         {renderImg}
       </Box>
 
@@ -85,5 +90,5 @@ export default function ShopProductCard({ product }) {
 }
 
 ShopProductCard.propTypes = {
-  product: PropTypes.object,
+  product: PropTypes.object.isRequired,
 };

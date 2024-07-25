@@ -10,14 +10,13 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const SignUpPage = lazy(() => import('src/pages/signup'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
+export const ProductDetailPage = lazy(() => import('src/pages/ProductDetail'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const HomeMainPage = lazy(() => import('src/pages/homemain'));
 
-// ----------------------------------------------------------------------
-
 export default function Router() {
-  const isAuthenticated = Cookies.get('accessToken'); // Kiểm tra token trong cookie
-  console.log(isAuthenticated);
+  const isAuthenticated = Cookies.get('accessToken');
+
   const routes = useRoutes([
     {
       element: isAuthenticated ? (
@@ -27,12 +26,13 @@ export default function Router() {
           </Suspense>
         </DashboardLayout>
       ) : (
-        <Navigate to="/login" replace />
+        <Navigate to="/homemain"replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'product-detail', element: <ProductDetailPage /> },
       ],
     },
     {
@@ -45,7 +45,7 @@ export default function Router() {
     },
     {
       path: 'homemain',
-      element: !isAuthenticated ? <Navigate to="/homemain" replace /> : <HomeMainPage />,
+      element: <HomeMainPage />,
     },
     {
       path: '404',

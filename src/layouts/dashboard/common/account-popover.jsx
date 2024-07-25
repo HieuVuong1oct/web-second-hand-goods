@@ -1,48 +1,38 @@
-import Cookies from 'js-cookie';
-import { useState } from 'react';
 
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Divider from '@mui/material/Divider';
-import Popover from '@mui/material/Popover';
-import { alpha } from '@mui/material/styles';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import { useState } from 'react'
 
-import { useRouter } from 'src/routes/hooks';
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import Divider from '@mui/material/Divider'
+import Popover from '@mui/material/Popover'
+import { alpha } from '@mui/material/styles'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
 
-import { account } from 'src/_mock/account';
+import { useRouter } from 'src/routes/hooks'
 
-
-// ----------------------------------------------------------------------
-
-
-
-// ----------------------------------------------------------------------
+import Account from 'src/_mock/account'
+import { clearCookies } from 'src/cookie/setCookies';
 
 export default function AccountPopover() {
-  const [open, setOpen] = useState(null);
-  const router = useRouter();
+  const account = Account()
+  const [open, setOpen] = useState(null)
+  const router = useRouter()
   const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
+    setOpen(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setOpen(null);
-    
-    
-  };
+    setOpen(null)
+  }
 
   const handleHome = () => {
-    setOpen(null);
+    setOpen(null)
     router.push('/homemain')
-    
-  };
+  }
   const logOut = () => {
-    
-    Cookies.remove('accessToken');
-    Cookies.remove('refreshToken');
+    clearCookies();
     router.push('/login');
   }
   return (
@@ -119,5 +109,5 @@ export default function AccountPopover() {
         </MenuItem>
       </Popover>
     </>
-  );
+  )
 }

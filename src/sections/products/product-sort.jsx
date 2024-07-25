@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
-import Menu from '@mui/material/Menu';
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import { listClasses } from '@mui/material/List';
-import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu'
+import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
+import { listClasses } from '@mui/material/List'
+import Typography from '@mui/material/Typography'
 
-import Iconify from 'src/components/iconify';
+import Iconify from 'src/components/iconify'
 
 // ----------------------------------------------------------------------
 
@@ -15,18 +15,18 @@ const SORT_OPTIONS = [
   { value: 'newest', label: 'Newest' },
   { value: 'priceDesc', label: 'Price: High-Low' },
   { value: 'priceAsc', label: 'Price: Low-High' },
-];
+]
 
 export default function ShopProductSort() {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(null)
 
   const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
+    setOpen(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setOpen(null);
-  };
+    setOpen(null)
+  }
 
   return (
     <>
@@ -65,5 +65,5 @@ export default function ShopProductSort() {
         ))}
       </Menu>
     </>
-  );
+  )
 }

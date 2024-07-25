@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import Popover from '@mui/material/Popover';
-import TableRow from '@mui/material/TableRow';
-import Checkbox from '@mui/material/Checkbox';
-import MenuItem from '@mui/material/MenuItem';
-import TableCell from '@mui/material/TableCell';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Stack from '@mui/material/Stack'
+import Avatar from '@mui/material/Avatar'
+import Popover from '@mui/material/Popover'
+import TableRow from '@mui/material/TableRow'
+import Checkbox from '@mui/material/Checkbox'
+import MenuItem from '@mui/material/MenuItem'
+import TableCell from '@mui/material/TableCell'
+import Typography from '@mui/material/Typography'
+import IconButton from '@mui/material/IconButton'
 
-import Label from 'src/components/label';
-import Iconify from 'src/components/iconify';
+import Label from 'src/components/label'
+import Iconify from 'src/components/iconify'
 
 // ----------------------------------------------------------------------
 
@@ -26,15 +26,15 @@ export default function UserTableRow({
   status,
   handleClick,
 }) {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(null)
 
   const handleOpenMenu = (event) => {
-    setOpen(event.currentTarget);
-  };
+    setOpen(event.currentTarget)
+  }
 
   const handleCloseMenu = () => {
-    setOpen(null);
-  };
+    setOpen(null)
+  }
 
   return (
     <>
@@ -90,7 +90,7 @@ export default function UserTableRow({
         </MenuItem>
       </Popover>
     </>
-  );
+  )
 }
 
 UserTableRow.propTypes = {
@@ -102,4 +102,4 @@ UserTableRow.propTypes = {
   role: PropTypes.any,
   selected: PropTypes.any,
   status: PropTypes.string,
-};
+}

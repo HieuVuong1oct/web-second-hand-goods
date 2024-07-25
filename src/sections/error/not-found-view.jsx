@@ -1,11 +1,11 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
 
-import { RouterLink } from 'src/routes/components';
+import { RouterLink } from 'src/routes/components'
 
-import Logo from 'src/components/logo';
+import Logo from 'src/components/logo'
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +24,7 @@ export default function NotFoundView() {
     >
       <Logo />
     </Box>
-  );
+  )
 
   return (
     <>
@@ -69,5 +69,5 @@ export default function NotFoundView() {
         </Box>
       </Container>
     </>
-  );
+  )
 }

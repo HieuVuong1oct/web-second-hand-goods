@@ -1,40 +1,38 @@
-import { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import Drawer from '@mui/material/Drawer';
-import Avatar from '@mui/material/Avatar';
-import { alpha } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
-import ListItemButton from '@mui/material/ListItemButton';
+import Box from '@mui/material/Box'
+import Stack from '@mui/material/Stack'
+import Drawer from '@mui/material/Drawer'
+import Avatar from '@mui/material/Avatar'
+import { alpha } from '@mui/material/styles'
+import Typography from '@mui/material/Typography'
+import ListItemButton from '@mui/material/ListItemButton'
 
-import { usePathname } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
+import { usePathname } from 'src/routes/hooks'
+import { RouterLink } from 'src/routes/components'
 
-import { useResponsive } from 'src/hooks/use-responsive';
+import { useResponsive } from 'src/hooks/use-responsive'
 
-import { account } from 'src/_mock/account';
+import Logo from 'src/components/logo'
+import Scrollbar from 'src/components/scrollbar'
 
-import Logo from 'src/components/logo';
-import Scrollbar from 'src/components/scrollbar';
-
-import { NAV } from './config-layout';
-import navConfig from './config-navigation';
-
-// ----------------------------------------------------------------------
+import { NAV } from './config-layout'
+import Account from '../../_mock/account'
+import navConfig from './config-navigation'
 
 export default function Nav({ openNav, onCloseNav }) {
-  const pathname = usePathname();
+  const account = Account()
+  const pathname = usePathname()
 
-  const upLg = useResponsive('up', 'lg');
+  const upLg = useResponsive('up', 'lg')
 
   useEffect(() => {
     if (openNav) {
-      onCloseNav();
+      onCloseNav()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [pathname])
 
   const renderAccount = (
     <Box
@@ -59,7 +57,7 @@ export default function Nav({ openNav, onCloseNav }) {
         </Typography>
       </Box>
     </Box>
-  );
+  )
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
@@ -67,9 +65,7 @@ export default function Nav({ openNav, onCloseNav }) {
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
-  );
-
-  
+  )
 
   const renderContent = (
     <Scrollbar
@@ -89,10 +85,8 @@ export default function Nav({ openNav, onCloseNav }) {
       {renderMenu}
 
       <Box sx={{ flexGrow: 1 }} />
-
-     
     </Scrollbar>
-  );
+  )
 
   return (
     <Box
@@ -126,20 +120,18 @@ export default function Nav({ openNav, onCloseNav }) {
         </Drawer>
       )}
     </Box>
-  );
+  )
 }
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
-};
-
-// ----------------------------------------------------------------------
+}
 
 function NavItem({ item }) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
-  const active = item.path === pathname;
+  const active = item.path === pathname
 
   return (
     <ListItemButton
@@ -168,9 +160,9 @@ function NavItem({ item }) {
 
       <Box component="span">{item.title} </Box>
     </ListItemButton>
-  );
+  )
 }
 
 NavItem.propTypes = {
   item: PropTypes.object,
-};
+}

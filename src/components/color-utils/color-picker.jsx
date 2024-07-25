@@ -1,34 +1,34 @@
-import PropTypes from 'prop-types';
-import { forwardRef, useCallback } from 'react';
+import PropTypes from 'prop-types'
+import { forwardRef, useCallback } from 'react'
 
-import Stack from '@mui/material/Stack';
-import { alpha } from '@mui/material/styles';
-import ButtonBase from '@mui/material/ButtonBase';
+import Stack from '@mui/material/Stack'
+import { alpha } from '@mui/material/styles'
+import ButtonBase from '@mui/material/ButtonBase'
 
-import Iconify from '../iconify';
+import Iconify from '../iconify'
 
 // ----------------------------------------------------------------------
 
 const ColorPicker = forwardRef(
   ({ colors, selected, onSelectColor, limit = 'auto', sx, ...other }, ref) => {
-    const singleSelect = typeof selected === 'string';
+    const singleSelect = typeof selected === 'string'
 
     const handleSelect = useCallback(
       (color) => {
         if (singleSelect) {
           if (color !== selected) {
-            onSelectColor(color);
+            onSelectColor(color)
           }
         } else {
           const newSelected = selected.includes(color)
             ? selected.filter((value) => value !== color)
-            : [...selected, color];
+            : [...selected, color]
 
-          onSelectColor(newSelected);
+          onSelectColor(newSelected)
         }
       },
       [onSelectColor, selected, singleSelect]
-    );
+    )
 
     return (
       <Stack
@@ -46,7 +46,7 @@ const ColorPicker = forwardRef(
         {...other}
       >
         {colors.map((color) => {
-          const hasSelected = singleSelect ? selected === color : selected.includes(color);
+          const hasSelected = singleSelect ? selected === color : selected.includes(color)
 
           return (
             <ButtonBase
@@ -57,7 +57,7 @@ const ColorPicker = forwardRef(
                 borderRadius: '50%',
               }}
               onClick={() => {
-                handleSelect(color);
+                handleSelect(color)
               }}
             >
               <Stack
@@ -93,12 +93,12 @@ const ColorPicker = forwardRef(
                 />
               </Stack>
             </ButtonBase>
-          );
+          )
         })}
       </Stack>
-    );
+    )
   }
-);
+)
 
 ColorPicker.propTypes = {
   colors: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
@@ -106,6 +106,6 @@ ColorPicker.propTypes = {
   onSelectColor: PropTypes.func,
   selected: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   sx: PropTypes.object,
-};
+}
 
-export default ColorPicker;
+export default ColorPicker

@@ -1,16 +1,16 @@
-import Box from '@mui/material/Box';
-import { alpha, styled } from '@mui/material/styles';
+import Box from '@mui/material/Box'
+import { alpha, styled } from '@mui/material/styles'
 
 // ----------------------------------------------------------------------
 
 export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
-  const lightMode = theme.palette.mode === 'light';
+  const lightMode = theme.palette.mode === 'light'
 
-  const filledVariant = ownerState.variant === 'filled';
+  const filledVariant = ownerState.variant === 'filled'
 
-  const outlinedVariant = ownerState.variant === 'outlined';
+  const outlinedVariant = ownerState.variant === 'outlined'
 
-  const softVariant = ownerState.variant === 'soft';
+  const softVariant = ownerState.variant === 'soft'
 
   const defaultStyle = {
     ...(ownerState.color === 'default' && {
@@ -31,7 +31,7 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
         backgroundColor: alpha(theme.palette.grey[500], 0.16),
       }),
     }),
-  };
+  }
 
   const colorStyle = {
     ...(ownerState.color !== 'default' && {
@@ -52,7 +52,7 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
         backgroundColor: alpha(theme.palette[ownerState.color].main, 0.16),
       }),
     }),
-  };
+  }
 
   return {
     height: 24,
@@ -73,5 +73,5 @@ export const StyledLabel = styled(Box)(({ theme, ownerState }) => {
     }),
     ...defaultStyle,
     ...colorStyle,
-  };
-});
+  }
+})
