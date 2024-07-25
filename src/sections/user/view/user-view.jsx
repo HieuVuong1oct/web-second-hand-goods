@@ -33,10 +33,6 @@ const UserPage = () => {
     fetchUsers();
   }, []);
 
-
-
-;
-
   return (
     <Box sx={{ padding: 4 }}>
       {error ? (
@@ -72,7 +68,11 @@ const UserPage = () => {
                     <IconButton color="primary">
                       <Edit />
                     </IconButton>
-                    <IconButton color="secondary">
+                    
+                    <IconButton  color="primary">
+                      <Edit />
+                    </IconButton>
+                    <IconButton  color="secondary">
                       <Delete />
                     </IconButton>
                   </TableCell>

@@ -70,7 +70,7 @@ export default function SignUpView() {
         name,
         avatar,
       });
-    
+
       setLoading(false);     
       if (response) {
         setSignUpSuccess(true);
