@@ -46,7 +46,7 @@ export default function ResetPasswordView() {
       setError('');
     } catch (err) {
       setLoading(false);
-      console.error('Chi tiết lỗi:', err);
+     
       const errorMsg = err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đặt lại mật khẩu. Vui lòng thử lại sau.';
       setError(errorMsg);
       setMessage('');

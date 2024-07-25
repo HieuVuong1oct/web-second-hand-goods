@@ -46,7 +46,7 @@ export default function ForgotPasswordView() {
       setError('');
     } catch (err) {
       setLoading(false);
-      console.error('Error details:', err);
+     
       const errorMsg = err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.';
       setError(errorMsg);
       setMessage('');
