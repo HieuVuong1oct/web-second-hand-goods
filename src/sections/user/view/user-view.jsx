@@ -33,16 +33,9 @@ const UserPage = () => {
     fetchUsers();
   }, []);
 
-  const handleEdit = (userId) => {
-    console.log('Edit user with ID:', userId);
-  };
+ 
 
-  const handleDelete = (userId) => {
-    if (window.confirm('Bạn có chắc chắn muốn xóa người dùng này không?')) {
-      console.log('Delete user with ID:', userId);
-     
-    }
-  };
+ 
 
   return (
     <Box sx={{ padding: 4 }}>
@@ -76,10 +69,10 @@ const UserPage = () => {
                   <TableCell align="left">{user.email}</TableCell>
                   <TableCell align="left">{/* Số sản phẩm đang bán */}</TableCell>
                   <TableCell align="left">
-                    <IconButton onClick={() => handleEdit(user.userId)} color="primary">
+                    <IconButton  color="primary">
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(user.userId)} color="secondary">
+                    <IconButton  color="secondary">
                       <Delete />
                     </IconButton>
                   </TableCell>
