@@ -12,13 +12,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
+
 import {  verifyEmail,sendResetPasswordEmail, } from 'src/api/account';
 
 export default function ForgotPasswordView() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-
+  const { navigateToResetPassword } = useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
   });
@@ -51,6 +53,9 @@ export default function ForgotPasswordView() {
     }
   };
 
+  const handleClickReset = () => {
+    navigateToResetPassword()
+  }
   return (
     
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
@@ -96,6 +101,7 @@ export default function ForgotPasswordView() {
               color="inherit"
               loading={loading}
               sx={{ mt: 3 }}
+              onClick={handleClickReset}
             >
               Gửi yêu cầu đặt lại mật khẩu
             </LoadingButton>

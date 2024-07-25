@@ -26,6 +26,9 @@ export const useNavigationHelpers = () => {
     navigate(listPath.forgotPassword);
   }
 
+  const navigateToResetPassword = () => {
+    navigate(listPath.resetPassword);
+  }
 
   return {
     navigateToLogin,
@@ -33,6 +36,7 @@ export const useNavigationHelpers = () => {
     navigateToHome,
     navigateToAdmin,
     navigateToForgotPassword,
+    navigateToResetPassword,
    
   };
 };
