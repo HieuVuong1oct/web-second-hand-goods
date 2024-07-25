@@ -14,18 +14,16 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { signup } from 'src/api/account';
-import { bgGradient } from 'src/theme/css';
 
 import Iconify from 'src/components/iconify';
 
 export default function SignUpView() {
-  const theme = useTheme();
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -98,19 +96,7 @@ export default function SignUpView() {
   };
 
   return (
-    <Box
-      sx={{
-        ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
-        }),
-        height: 1,
-        backgroundImage: 'url(/favicon/bg1.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+   
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
           <Card
@@ -293,6 +279,6 @@ export default function SignUpView() {
           </Card>
         </Stack>
       </form>
-    </Box>
+   
   );
 }

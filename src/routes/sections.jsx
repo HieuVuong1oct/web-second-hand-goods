@@ -2,7 +2,9 @@ import Cookies from 'js-cookie';
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import AuthLayout from 'src/layouts/authLayout';
 import DashboardLayout from 'src/layouts/dashboard';
+
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 
@@ -13,20 +15,30 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const ProductDetailPage = lazy(() => import('src/pages/ProductDetail'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const HomeMainPage = lazy(() => import('src/pages/homemain'));
+export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'));
 
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
 
   const routes = useRoutes([
     {
+      path: '/',
+      element: isAuthenticated ? (
+        <Navigate to="/homemain" replace />
+      ) : (
+        <Navigate to="/login" replace />
+      ),
+    },
+    {
+      path: '/',
       element: isAuthenticated ? (
         <DashboardLayout>
-          <Suspense>
+          <Suspense fallback={<div>Loading...</div>}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
       ) : (
-        <Navigate to="/homemain"replace />
+        <Navigate to="/login" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
@@ -36,12 +48,21 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />,
-    },
-    {
-      path: 'signup',
-      element: isAuthenticated ? <Navigate to="/" replace /> : <SignUpPage />,
+      path: '/',
+      element: !isAuthenticated ? (
+        <AuthLayout>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Outlet />
+          </Suspense>
+        </AuthLayout>
+      ) : (
+        <Navigate to="/homemain" replace />
+      ),
+      children: [
+        { path: 'login', element: <LoginPage /> },
+        { path: 'signup', element: <SignUpPage /> },
+        { path: 'forgotPassword', element: <ForgotPasswordPage /> },
+      ],
     },
     {
       path: 'homemain',

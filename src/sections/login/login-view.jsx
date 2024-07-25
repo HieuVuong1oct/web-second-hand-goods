@@ -13,23 +13,21 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { alpha, useTheme } from '@mui/material/styles';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { login } from 'src/api/account';
-import { bgGradient } from 'src/theme/css';
 import { setCookies } from 'src/cookie/setCookies';
 
 import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
-  const theme = useTheme();
+
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const {navigateToHome,navigateToAdmin, navigateToSignUp } = useNavigationHelpers();
+  const {navigateToHome,navigateToAdmin, navigateToSignUp, navigateToForgotPassword } = useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
     password: Yup.string()
@@ -81,6 +79,9 @@ export default function LoginView() {
     navigateToSignUp()
   };
 
+  const handleForgotPasswordClick = () => {
+    navigateToForgotPassword()
+  };
   const renderForm = (
     <>
       <Stack spacing={3}>
@@ -124,7 +125,7 @@ export default function LoginView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover" sx={{ cursor: 'pointer' }}>
+        <Link variant="subtitle2" underline="hover" sx={{ cursor: 'pointer' }} onClick={handleForgotPasswordClick}>
           Quên mật khẩu
         </Link>
       </Stack>
@@ -148,19 +149,7 @@ export default function LoginView() {
   );
 
   return (
-    <Box
-      sx={{
-        ...bgGradient({
-          color: alpha(theme.palette.background.default, 0.9),
-          imgUrl: '/assets/background/overlay_4.jpg',
-        }),
-        height: 1,
-        backgroundImage: 'url(/favicon/bg1.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+ 
       <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
         <Card
           sx={{
@@ -194,6 +183,6 @@ export default function LoginView() {
           </Typography>
         </Card>
       </Stack>
-    </Box>
+      
   );
 }

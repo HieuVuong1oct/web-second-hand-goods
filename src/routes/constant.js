@@ -3,4 +3,5 @@ export const listPath ={
     login:"/login",
     signUp:"/signup",
     admin:"/",
+    forgotPassword:"/forgotPassword"
 }
