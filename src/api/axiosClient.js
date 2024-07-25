@@ -18,13 +18,11 @@ axiosClient.interceptors.request.use(
     if (accessToken) {
       config.headers.Cookie = `accessToken=${accessToken}`;
     }
-    console.log('Sending request to:', config.url);
+  
     return config;
   },
-  error => {
-    console.error('Request error:', error);
-    return Promise.reject(error);
-  }
+  error =>  Promise.reject(error)
+  
 
 );
 

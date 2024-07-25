@@ -1,7 +1,9 @@
+
 export const listPath ={
     homePage:"/homemain",
     login:"/login",
     signUp:"/signup",
     admin:"/",
-    forgotPassword:"/forgotPassword"
+    forgotPassword:"/forgotPassword",
+    resetPassword:"/resetPassword",
 }
