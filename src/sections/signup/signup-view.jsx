@@ -1,4 +1,3 @@
-
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -9,7 +8,9 @@ import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -23,12 +24,11 @@ import { signup } from 'src/api/account';
 import Iconify from 'src/components/iconify';
 
 export default function SignUpView() {
-
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-  const {navigateToLogin } = useNavigationHelpers();
+  const { navigateToLogin } = useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
     password: Yup.string()
@@ -53,15 +53,15 @@ export default function SignUpView() {
 
   const onSubmit = async (data) => {
     const { email, password, checkPassword, username, name, avatar } = data;
-  
+
     setLoading(true);
-  
+
     if (password !== checkPassword) {
       setError('Mật khẩu và xác nhận mật khẩu không khớp.');
       setLoading(false);
       return;
     }
-  
+
     try {
       const response = await signup({
         email,
@@ -71,17 +71,19 @@ export default function SignUpView() {
         avatar,
       });
 
-      setLoading(false);     
+      setLoading(false);
       if (response) {
         setSignUpSuccess(true);
-        navigateToLogin()
+        setTimeout(() => {
+          navigateToLogin();
+        }, 5000); 
       } else {
         setError('Đăng ký không thành công. Vui lòng thử lại.');
       }
     } catch (err) {
-    
       const errorMsg =
-        err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau.';
+        err.response?.data?.message ||
+        'Đã xảy ra lỗi trong quá trình đăng ký. Kiểm tra lại thông tin và thử lại sau.';
       setError(errorMsg);
       setLoading(false);
     }
@@ -92,11 +94,11 @@ export default function SignUpView() {
   };
 
   const handleClickLogin = () => {
-    navigateToLogin()
+    navigateToLogin();
   };
 
   return (
-   
+    <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
           <Card
@@ -234,17 +236,9 @@ export default function SignUpView() {
               </Grid>
             </Grid>
 
-            {error && (
-              <Typography variant="body2" sx={{ color: 'error.main', mt: 1, textAlign: 'center' }}>
-                {error}
-              </Typography>
-            )}
 
             {signUpSuccess && (
-              <Typography
-                variant="body2"
-                sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}
-              >
+              <Typography variant="body2" sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}>
                 Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...
               </Typography>
             )}
@@ -279,6 +273,28 @@ export default function SignUpView() {
           </Card>
         </Stack>
       </form>
-   
+
+      <Snackbar
+        open={signUpSuccess}
+        autoHideDuration={3000}
+        onClose={() => setSignUpSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSignUpSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Mở email để xác nhận đăng ký tài khoản. Sau khi xác nhận bạn có thể dùng tài khoản để đăng nhập!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={3000}
+        onClose={() => setError('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

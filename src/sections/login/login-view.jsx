@@ -1,4 +1,3 @@
-
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,7 +7,9 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import Divider from '@mui/material/Divider';
+import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
@@ -23,11 +24,12 @@ import { setCookies } from 'src/cookie/setCookies';
 import Iconify from 'src/components/iconify';
 
 export default function LoginView() {
-
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const {navigateToHome,navigateToAdmin, navigateToSignUp, navigateToForgotPassword } = useNavigationHelpers();
+  const [success, setSuccess] = useState(false);
+  const { navigateToHome, navigateToAdmin, navigateToSignUp, navigateToForgotPassword } =
+    useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
     password: Yup.string()
@@ -49,19 +51,22 @@ export default function LoginView() {
       const response = await login(data);
       setLoading(false);
 
-
       const userData = response;
+      console.log(userData[0].data);
+      if (userData[0].data[0].userId) {
+        setCookies(userData[0].data);
 
-      if (userData[0].userId) {
-        setCookies(userData);
+        setSuccess(true); 
 
-        if (userData[0].role === 'ADMIN') {
-          navigateToAdmin()
-        } else if (userData[0].role === 'USER') {
-          navigateToHome()
-        } else {
-          setError('Bạn không có quyền truy cập trang này.');
-        }
+        setTimeout(() => {
+          if (userData[0].data[0].role === 'ADMIN') {
+            navigateToAdmin();
+          } else if (userData[0].data[0].role === 'USER') {
+            navigateToHome();
+          } else {
+            setError('Bạn không có quyền truy cập trang này.');
+          }
+        }, 3000); 
       } else {
         setError('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.');
       }
@@ -76,12 +81,13 @@ export default function LoginView() {
   };
 
   const clickSignUp = () => {
-    navigateToSignUp()
+    navigateToSignUp();
   };
 
   const handleForgotPasswordClick = () => {
-    navigateToForgotPassword()
+    navigateToForgotPassword();
   };
+
   const renderForm = (
     <>
       <Stack spacing={3}>
@@ -125,7 +131,12 @@ export default function LoginView() {
       </Stack>
 
       <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        <Link variant="subtitle2" underline="hover" sx={{ cursor: 'pointer' }} onClick={handleForgotPasswordClick}>
+        <Link
+          variant="subtitle2"
+          underline="hover"
+          sx={{ cursor: 'pointer' }}
+          onClick={handleForgotPasswordClick}
+        >
           Quên mật khẩu
         </Link>
       </Stack>
@@ -140,49 +151,65 @@ export default function LoginView() {
       >
         Đăng nhập
       </LoadingButton>
-      {error && (
-        <Typography variant="body2" sx={{ color: 'error.main', mt: 2 }}>
-          {error}
-        </Typography>
-      )}
+     
     </>
   );
 
   return (
- 
-      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-        <Card
-          sx={{
-            p: 5,
-            width: 1,
-            maxWidth: 420,
-          }}
-        >
-          <Stack direction="row" justifyContent="center" spacing={2} mb={5}>
-            <Box sx={{ mb: 3 }}>
-              <img
-                src="/favicon/logo-mor.jpg"
-                alt="Logo MOR"
-                style={{ width: '160px', height: '56px' }}
-              />
-            </Box>
-          </Stack>
+    <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+      <Card
+        sx={{
+          p: 5,
+          width: 1,
+          maxWidth: 420,
+        }}
+      >
+        <Stack direction="row" justifyContent="center" spacing={2} mb={5}>
+          <Box sx={{ mb: 3 }}>
+            <img
+              src="/favicon/logo-mor.jpg"
+              alt="Logo MOR"
+              style={{ width: '160px', height: '56px' }}
+            />
+          </Box>
+        </Stack>
 
-          <form onSubmit={handleSubmit(onSubmit)}>{renderForm}</form>
-          <Divider sx={{ my: 3 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Hoặc
-            </Typography>
-          </Divider>
-
-          <Typography variant="body2" sx={{ mt: 2, mb: 5, textAlign: 'center' }}>
-            Bạn không có tài khoản?
-            <Link onClick={clickSignUp} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
-              Đăng kí ngay
-            </Link>
+        <form onSubmit={handleSubmit(onSubmit)}>{renderForm}</form>
+        <Divider sx={{ my: 3 }}>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            Hoặc
           </Typography>
-        </Card>
-      </Stack>
-      
+        </Divider>
+
+        <Typography variant="body2" sx={{ mt: 2, mb: 5, textAlign: 'center' }}>
+          Bạn không có tài khoản?
+          <Link onClick={clickSignUp} variant="subtitle2" sx={{ ml: 0.5, cursor: 'pointer' }}>
+            Đăng kí ngay
+          </Link>
+        </Typography>
+      </Card>
+
+      <Snackbar
+        open={success}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccess(false)} severity="success" sx={{ width: '100%' }}>
+          Đăng nhập thành công
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={!!error}
+        autoHideDuration={3000}
+        onClose={() => setError('')}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
+          {error}
+        </Alert>
+      </Snackbar>
+    </Stack>
   );
 }

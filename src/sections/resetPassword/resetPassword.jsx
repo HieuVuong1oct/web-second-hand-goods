@@ -1,4 +1,3 @@
-
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -19,7 +18,9 @@ export default function ResetPasswordView() {
   const [error, setError] = useState('');
 
   const validationSchema = Yup.object({
-    newPassword: Yup.string().required('Vui lòng nhập mật khẩu mới').min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+    newPassword: Yup.string()
+      .required('Vui lòng nhập mật khẩu mới')
+      .min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('newPassword'), null], 'Mật khẩu xác nhận không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
@@ -40,14 +41,16 @@ export default function ResetPasswordView() {
       const token = new URLSearchParams(window.location.search).get('token');
 
       await resetPassword({ ...data, token });
-      
+
       setLoading(false);
       setMessage('Mật khẩu đã được đặt lại thành công.');
       setError('');
     } catch (err) {
       setLoading(false);
-     
-      const errorMsg = err.response?.data?.message || 'Đã xảy ra lỗi trong quá trình đặt lại mật khẩu. Vui lòng thử lại sau.';
+
+      const errorMsg =
+        err.response?.data?.message ||
+        'Đã xảy ra lỗi trong quá trình đặt lại mật khẩu. Vui lòng thử lại sau.';
       setError(errorMsg);
       setMessage('');
     }
