@@ -38,8 +38,6 @@ export default function ForgotPasswordView() {
     try {
       await verifyEmail(data.email);
 
-
-
       setLoading(false);
       setMessage('Đã gửi email đặt lại mật khẩu, vui lòng kiểm tra email của bạn.');
       setError('');

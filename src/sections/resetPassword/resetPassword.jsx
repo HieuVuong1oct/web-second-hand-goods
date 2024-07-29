@@ -37,10 +37,8 @@ export default function ResetPasswordView() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // lấy token từ URL hoặc nguồn tương tự
-      const token = new URLSearchParams(window.location.search).get('token');
 
-      await resetPassword({ ...data, token });
+      await resetPassword(data);
 
       setLoading(false);
       setMessage('Mật khẩu đã được đặt lại thành công.');

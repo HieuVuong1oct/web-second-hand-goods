@@ -31,24 +31,6 @@ const useStyles = makeStyles((theme) => ({
   buyNowButton: {
     marginTop: theme.spacing(2),
   },
-  featuredProductCard: {
-    display: 'flex',
-    marginBottom: '20px',
-    alignItems: 'center',
-  },
-  featuredCardContent: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  featuredProductImage: {
-    width: '300px',
-    height: '300px',
-    objectFit: 'cover',
-  },
-  featuredProductInfo: {
-    marginLeft: '50px',
-  },
 }));
 
 export default useStyles;

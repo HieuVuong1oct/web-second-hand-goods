@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Button, Toolbar, Container } from '@mui/material';
 
@@ -6,6 +7,15 @@ import useStyles from './NavbarStyles';
 
 const Navbar = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
+
+  const handleAddProduct = () => {
+    navigate('/addProduct');
+  };
+
+  const handleHomePage = () => {
+    navigate('/homemain');
+  };
 
   return (
     <AppBar
@@ -15,7 +25,7 @@ const Navbar = () => {
     >
       <Toolbar>
         <Container
-          className={classes.contanier}
+          className={classes.container}
           sx={{
             display: 'flex',
             justifyContent: 'space-around',
@@ -23,7 +33,7 @@ const Navbar = () => {
             width: '100%',
           }}
         >
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }}>
+          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }} onClick={handleHomePage}>
             TRANG CHỦ
           </Button>
           <span className={classes.separator}>|</span>
@@ -31,7 +41,7 @@ const Navbar = () => {
             HỒ SƠ
           </Button>
           <span className={classes.separator}>|</span>
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }}>
+          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }} onClick={handleAddProduct}>
             ĐĂNG BÁN
           </Button>
           <span className={classes.separator}>|</span>

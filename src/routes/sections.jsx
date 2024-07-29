@@ -18,6 +18,9 @@ export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'))
 export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 export const HomePage = lazy(() => import('src/pages/homePage'));
 export const ContentProductPage = lazy(() => import('src/pages/contentProduct'));
+export const AddProductPage = lazy(() => import('src/pages/addProduct'));
+export const ContentProductDetailPage = lazy(() => import('src/pages/contentProductDetail'));
+export const ListProductPage = lazy(() => import('src/pages/listProduct'));
 
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
@@ -80,13 +83,18 @@ export default function Router() {
       children: [
         { element: <Navigate to="contentProductPage" replace />, index: true },
         { path: 'contentProductPage', element: <ContentProductPage /> },
-        { path: 'ProductDetail', element: <ProductDetailPage /> },
+        { path: 'contentProductDetail', element: <ContentProductDetailPage /> },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'listProduct', element: <ListProductPage /> },
       ],
     },
     {
       path: 'homePage',
       element: <HomePage />,
+    },
+    {
+      path: 'addProduct',
+      element: <AddProductPage />,
     },
     {
       path: '404',

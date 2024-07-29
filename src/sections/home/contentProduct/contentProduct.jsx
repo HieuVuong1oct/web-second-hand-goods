@@ -14,7 +14,7 @@ import {
 
 import { products } from 'src/_mock/products';
 
-import useStyles from 'src/sections/home/content/ContentStyles';
+import useStyles from './ContentProductStyles';
 
 export default function ContentProductView() {
   const classes = useStyles();
@@ -24,18 +24,20 @@ export default function ContentProductView() {
 
   const startIndex = (currentPage - 1) * PAGE_SIZE;
   const endIndex = startIndex + PAGE_SIZE;
-  const paginatedProducts = products.slice(startIndex, endIndex);
+  const paginatedProducts = products.slice(0, endIndex);
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
   };
 
-  const handleCardClick = (productId) => {
-    navigate('/homemain/productdetail', { state: { productId } });
+  const handleCardClick = (product) => {
+    navigate('/homemain/contentProductDetail', { state: { product } });
   };
 
   const handleSeeMoreClick = () => {
-    navigate('/homemain/products');
+ 
+    navigate('/homemain/listProduct');
+  
   };
 
   const featuredProduct = {
@@ -61,9 +63,9 @@ export default function ContentProductView() {
           <Box className={classes.featuredProductInfo}>
             <Typography variant="h5">{featuredProduct.name}</Typography>
             <Typography variant="body1">{featuredProduct.describe}</Typography>
-            <Typography variant="body1">{`Giá: $${featuredProduct.price}`}</Typography>
-            <Typography variant="body1">{`Người bán: ${featuredProduct.seller}`}</Typography>
-            <Typography variant="body1">{`Số lượt mua: ${featuredProduct.purchases}`}</Typography>
+            <Typography variant="body1">Giá: ${featuredProduct.price}</Typography>
+            <Typography variant="body1">Người bán: {featuredProduct.seller}</Typography>
+            <Typography variant="body1">Số lượt mua: {featuredProduct.purchases}</Typography>
             <Button variant="contained" color="primary" className={classes.buyNowButton}>
               Mua ngay
             </Button>
@@ -75,18 +77,18 @@ export default function ContentProductView() {
       <Grid container spacing={2} className={classes.productList}>
         {paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
-            <Card className={classes.productCard} onClick={() => handleCardClick(product.id)}>
-              {' '}
-              {/* Xử lý click vào Card */}
+            <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">{`$${product.price}`}</Typography>
-                {product.priceSale && (
-                  <Typography variant="body2" color="textSecondary">
-                    {`$${product.priceSale}`}
-                  </Typography>
-                )}
+                <div className={classes.productInfo}>
+                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="body2">${product.price}</Typography>
+                  {product.priceSale && (
+                    <Typography variant="body2" color="textSecondary">
+                      ${product.priceSale}
+                    </Typography>
+                  )}
+                </div>
                 <Button variant="contained" color="primary" className={classes.buyNowButton}>
                   Mua ngay
                 </Button>
@@ -110,18 +112,18 @@ export default function ContentProductView() {
       <Grid container spacing={2} className={classes.productList}>
         {paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
-            <Card className={classes.productCard} onClick={() => handleCardClick(product.id)}>
-              {' '}
-              {/* Xử lý click vào Card */}
+            <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">{`$${product.price}`}</Typography>
-                {product.priceSale && (
-                  <Typography variant="body2" color="textSecondary">
-                    {`$${product.priceSale}`}
-                  </Typography>
-                )}
+                <div className={classes.productInfo}>
+                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="body2">${product.price}</Typography>
+                  {product.priceSale && (
+                    <Typography variant="body2" color="textSecondary">
+                      ${product.priceSale}
+                    </Typography>
+                  )}
+                </div>
                 <Button variant="contained" color="primary" className={classes.buyNowButton}>
                   Mua ngay
                 </Button>
@@ -145,18 +147,18 @@ export default function ContentProductView() {
       <Grid container spacing={2} className={classes.productList}>
         {paginatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
-            <Card className={classes.productCard} onClick={() => handleCardClick(product.id)}>
-              {' '}
-              {/* Xử lý click vào Card */}
+            <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">{`$${product.price}`}</Typography>
-                {product.priceSale && (
-                  <Typography variant="body2" color="textSecondary">
-                    {`$${product.priceSale}`}
-                  </Typography>
-                )}
+                <div className={classes.productInfo}>
+                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="body2">${product.price}</Typography>
+                  {product.priceSale && (
+                    <Typography variant="body2" color="textSecondary">
+                      ${product.priceSale}
+                    </Typography>
+                  )}
+                </div>
                 <Button variant="contained" color="primary" className={classes.buyNowButton}>
                   Mua ngay
                 </Button>
