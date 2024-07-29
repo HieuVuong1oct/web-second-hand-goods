@@ -7,6 +7,7 @@ const useStyles = makeStyles(() => ({
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     width: '100%',
+    position:''
   },
   container: {
     width: '60%',

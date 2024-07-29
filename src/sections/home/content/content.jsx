@@ -1,33 +1,12 @@
-import React,{ useState } from 'react';
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 
-import {
-  Box,
-  Card,
-  Grid,
-  Checkbox,
-  Pagination,
-  Typography,
-  CardContent,
-  FormControlLabel,
-  
-} from '@mui/material';
-
-import { products } from 'src/_mock/products';
+import { Box, Checkbox, Typography, FormControlLabel } from '@mui/material';
 
 import useStyles from './ContentStyles';
 
 const Content = () => {
-    const classes = useStyles();
-    const [currentPage, setCurrentPage] = useState(1);
-    const PAGE_SIZE = 8;
-
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedProducts = products.slice(startIndex, endIndex);
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
+  const classes = useStyles();
 
   return (
     <Box className={classes.container}>
@@ -53,40 +32,14 @@ const Content = () => {
             />
           </Box>
         </Box>
-        <Box className={classes.item2}>
-          <Grid container spacing={2} className={classes.productList}>
-            {paginatedProducts.map((product) => (
-              <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
-                <Card className={classes.productCard}>
-                  <CardContent className={classes.cardContent}>
-                    <img src={product.cover} alt={product.name} className={classes.productImage} />
-                    <Typography variant="h6">{product.name}</Typography>
-                    <Typography variant="body2">{`$${product.price}`}</Typography>
-                    {product.priceSale && (
-                      <Typography variant="body2" color="textSecondary">
-                        {`$${product.priceSale}`}
-                      </Typography>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
 
-          {/* Pagination */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-            <Pagination
-              count={Math.ceil(products.length / PAGE_SIZE)}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-            />
-          </Box>
+        <Box className={classes.item2}>
+          {/* Sản phẩm nổi bật */}
+          <Outlet />
         </Box>
       </Box>
     </Box>
   );
 };
 
-  
-  export default Content;
+export default Content;

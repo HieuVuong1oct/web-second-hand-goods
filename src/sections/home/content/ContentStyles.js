@@ -2,20 +2,23 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    width: '80%', 
+    width: '80%',
     margin: '0 auto',
+    paddingTop: '152px',
+
+    marginBottom: '100px',
   },
   row: {
     display: 'flex',
     flexDirection: 'row',
   },
   item1: {
-    flex: '1 1 16.6667%', 
+    flex: '1 1 16.6667%',
     display: 'flex',
     flexDirection: 'column',
     padding: '16px',
     borderRight: '1px solid rgba(255, 255, 255, 0.2)',
-    backgroundColor: '#f5f5f5', 
+    backgroundColor: '#f5f5f5',
   },
   menuList: {
     listStyleType: 'none',
@@ -36,8 +39,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '8px',
   },
   item2: {
-    flex: '5 1 83.3333%', // Chiếm 5/6 chiều ngang
-    display: 'flex',
+    flex: '5 1 83.3333%',
     flexDirection: 'column',
     padding: '16px',
   },
@@ -60,19 +62,42 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: '16px',
-    height: '300px', // Chiều cao cố định cho card
+    height: '300px',
   },
   productImage: {
     width: '100%',
     height: 'auto',
-    maxHeight: '150px', // Chiều cao tối đa cho hình ảnh
+    maxHeight: '150px',
     objectFit: 'contain',
   },
   cardContent: {
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    height: '100%', // Đảm bảo card content chiếm toàn bộ chiều cao
+    height: '100%',
+  },
+  buyNowButton: {
+    alignSelf: 'center',
+    marginTop: 'auto',
+  },
+  featuredProductCard: {
+    display: 'flex',
+    marginBottom: '20px',
+    alignItems: 'center',
+  },
+  featuredCardContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  featuredProductImage: {
+    width: '300px',
+    height: '300px',
+    objectFit: 'cover',
+  },
+  featuredProductInfo: {
+    marginLeft: '50px',
   },
 }));
 

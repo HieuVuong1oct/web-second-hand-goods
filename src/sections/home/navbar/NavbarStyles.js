@@ -3,16 +3,25 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles((theme) => ({
   navbar: {
     marginBottom: theme.spacing(4),
-    backgroundColor:'#fce4ec'
+ 
   },
-  logo: {
-    flexGrow: 1,
+  container:{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
   },
+  
   button: {
     margin: theme.spacing(1),
     marginLeft:'40px',
     marginRight:'20px',
-    color: '#9c27b0'
+    borderLeft:'1px'
+    
+  },
+  separator: {
+    margin: `0 ${theme.spacing(1)}`, 
+    color: '#9c27b0',
   },
 }));
 
