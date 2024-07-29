@@ -3,7 +3,7 @@ import React from 'react';
 import { Box, IconButton } from '@mui/material';
 import { YouTube, Facebook, Instagram } from '@mui/icons-material';
 
-import useStyles from './FooterStyles';
+import useStyles from './footerStyles';
 
 const Footer = () => {
   const classes = useStyles();

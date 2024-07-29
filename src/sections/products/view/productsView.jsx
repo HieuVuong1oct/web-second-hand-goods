@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 import { products } from 'src/_mock/products';
 
-import ProductCard from '../product-card';
+import ProductCard from '../productCard';
 
 export default function ProductsView() {
 

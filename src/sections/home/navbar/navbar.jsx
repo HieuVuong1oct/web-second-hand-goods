@@ -5,7 +5,7 @@ import { AppBar, Button, Toolbar, Container } from '@mui/material';
 
 import { listPath } from 'src/routes/constant'
 
-import useStyles from './NavbarStyles';
+import useStyles from './navbarStyles';
 
 
 const Navbar = () => {

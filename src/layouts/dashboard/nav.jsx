@@ -12,14 +12,14 @@ import ListItemButton from '@mui/material/ListItemButton'
 import { usePathname } from 'src/routes/hooks'
 import { RouterLink } from 'src/routes/components'
 
-import { useResponsive } from 'src/hooks/use-responsive'
+import { useResponsive } from 'src/hooks/useResponsive'
 
 import Logo from 'src/components/logo'
 import Scrollbar from 'src/components/scrollbar'
 
-import { NAV } from './config-layout'
+import { NAV } from './configLayout'
 import Account from '../../_mock/account'
-import navConfig from './config-navigation'
+import navConfig from './configNavigation'
 
 export default function Nav({ openNav, onCloseNav }) {
   const account = Account()

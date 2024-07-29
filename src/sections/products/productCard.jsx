@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import { listPath } from 'src/routes/constant'
 
-import { fCurrency } from 'src/utils/format-number';
+import { fCurrency } from 'src/utils/formatNumber';
 
 import Label from 'src/components/label';
 import { ColorPreview } from 'src/components/color-utils';

@@ -7,7 +7,7 @@ import { listPath } from 'src/routes/constant'
 
 import { products } from 'src/_mock/products';
 
-import useStyles from './ListProductStyles'
+import useStyles from './listProductStyles'
 
 export default function AllProductsView() {
   const classes = useStyles();

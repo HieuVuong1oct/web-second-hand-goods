@@ -2,7 +2,7 @@ import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
 
-import AppConversionRates from '../app-conversion-rates'
+import AppConversionRates from '../appConversionRates'
 
 export default function AppView() {
   return (

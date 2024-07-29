@@ -1,2 +1,2 @@
-export { useRouter } from './use-router'
-export { usePathname } from './use-pathname'
+export { useRouter } from './useRouter'
+export { usePathname } from './usePathname'

@@ -1,1 +1,1 @@
-export { default as HomePageView } from './homePage-view'
+export { default as HomePageView } from './homePageView'
