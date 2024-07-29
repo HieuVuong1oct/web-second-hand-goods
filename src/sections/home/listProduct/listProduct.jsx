@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Grid,  Card, Button, Container, Typography,  CardContent } from '@mui/material';
 
+import { listPath } from 'src/routes/constant'
+
 import { products } from 'src/_mock/products';
 
 import useStyles from './ListProductStyles'
@@ -12,7 +14,7 @@ export default function AllProductsView() {
   const navigate = useNavigate();
 
   const handleCardClick = (product) => {
-    navigate('/homemain/contentProductDetail', { state: { product } });
+    navigate(listPath.contentProductDetail, { state: { product } });
   };
 
   return (
