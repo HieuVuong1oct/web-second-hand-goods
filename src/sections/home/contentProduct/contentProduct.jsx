@@ -1,4 +1,4 @@
-import { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -8,7 +8,7 @@ import {
   Button,
   Divider,
   Typography,
-  Pagination,
+
   CardContent,
 } from '@mui/material';
 
@@ -19,25 +19,13 @@ import useStyles from './ContentProductStyles';
 export default function ContentProductView() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const PAGE_SIZE = 4;
-
-  const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedProducts = products.slice(0, endIndex);
-
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
 
   const handleCardClick = (product) => {
     navigate('/homemain/contentProductDetail', { state: { product } });
   };
 
-  const handleSeeMoreClick = () => {
- 
+  const handleViewAllClick = () => {
     navigate('/homemain/listProduct');
-  
   };
 
   const featuredProduct = {
@@ -50,6 +38,7 @@ export default function ContentProductView() {
     purchases: 150,
   };
 
+  const displayedProducts = products.slice(0, 4);
   return (
     <>
       <h1 style={{ fontSize: '24px' }}>Sản Phẩm Nổi Bật</h1>
@@ -72,10 +61,12 @@ export default function ContentProductView() {
           </Box>
         </CardContent>
       </Card>
+      
       <Divider />
+      
       <h1 style={{ fontSize: '24px' }}>Đồ Thời Trang</h1>
       <Grid container spacing={2} className={classes.productList}>
-        {paginatedProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
@@ -97,20 +88,16 @@ export default function ContentProductView() {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-        <Pagination
-          count={Math.ceil(products.length / PAGE_SIZE)}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
-        <Button onClick={handleSeeMoreClick}>Xem Thêm</Button>
-      </Box>
+       
+       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
+         Xem Thêm
+       </Button>
+     </Box>
       <Divider />
       <h1 style={{ fontSize: '24px' }}>Đồ Điện Tử</h1>
       <Grid container spacing={2} className={classes.productList}>
-        {paginatedProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
@@ -132,20 +119,17 @@ export default function ContentProductView() {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-        <Pagination
-          count={Math.ceil(products.length / PAGE_SIZE)}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
-        <Button onClick={handleSeeMoreClick}>Xem Thêm</Button>
-      </Box>
+       
+       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
+         Xem Thêm
+       </Button>
+     </Box>
       <Divider />
+
       <h1 style={{ fontSize: '24px' }}>Đồ Ăn</h1>
       <Grid container spacing={2} className={classes.productList}>
-        {paginatedProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
@@ -167,16 +151,12 @@ export default function ContentProductView() {
           </Grid>
         ))}
       </Grid>
-
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-        <Pagination
-          count={Math.ceil(products.length / PAGE_SIZE)}
-          page={currentPage}
-          onChange={handlePageChange}
-          color="primary"
-        />
-        <Button onClick={handleSeeMoreClick}>Xem Thêm</Button>
-      </Box>
+       
+       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
+         Xem Thêm
+       </Button>
+     </Box>
     </>
   );
 }

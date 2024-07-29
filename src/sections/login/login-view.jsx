@@ -52,7 +52,7 @@ export default function LoginView() {
       setLoading(false);
 
       const userData = response;
-      console.log(userData[0].data);
+   
       if (userData[0].data[0].userId) {
         setCookies(userData[0].data);
 
