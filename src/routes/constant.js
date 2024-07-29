@@ -6,4 +6,6 @@ export const listPath ={
     admin:"/",
     forgotPassword:"/forgotPassword",
     resetPassword:"/resetPassword",
+    addProduct:"/addProduct",
+    productDetail:"'/product-detail'"
 }

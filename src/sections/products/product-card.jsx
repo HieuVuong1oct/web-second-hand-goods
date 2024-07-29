@@ -8,16 +8,19 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
+import { listPath } from 'src/routes/constant'
+
 import { fCurrency } from 'src/utils/format-number';
 
 import Label from 'src/components/label';
 import { ColorPreview } from 'src/components/color-utils';
 
+
 export default function ShopProductCard({ product }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate('/product-detail', { state: { product } });
+    navigate(listPath.productDetail, { state: { product } });
   };
 
   const renderStatus = (
