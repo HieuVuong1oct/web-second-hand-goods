@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 
-import {  Grid,Card, Button, Container,  CardMedia, Typography } from '@mui/material';
+import { Grid, Card, Button, Container, CardMedia, Typography } from '@mui/material';
 
 const ContentProductDetailView = () => {
   const location = useLocation();
@@ -19,12 +19,7 @@ const ContentProductDetailView = () => {
       <Grid container spacing={2} sx={{ mt: 1 }}>
         <Grid item xs={12} md={6}>
           <Card>
-            <CardMedia
-              component="img"
-              height="400"
-              image={product.cover}
-              alt={product.name}
-            />
+            <CardMedia component="img" height="400" image={product.cover} alt={product.name} />
             <Grid container spacing={1} sx={{ mt: 1 }}>
               {images.slice(1).map((image, index) => (
                 <Grid item xs={4} key={index}>

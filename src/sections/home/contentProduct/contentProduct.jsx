@@ -1,16 +1,6 @@
-
 import { useNavigate } from 'react-router-dom';
 
-import {
-  Box,
-  Card,
-  Grid,
-  Button,
-  Divider,
-  Typography,
-
-  CardContent,
-} from '@mui/material';
+import { Box, Card, Grid, Button, Divider, Typography, CardContent } from '@mui/material';
 
 import { products } from 'src/_mock/products';
 
@@ -61,9 +51,9 @@ export default function ContentProductView() {
           </Box>
         </CardContent>
       </Card>
-      
+
       <Divider />
-      
+
       <h1 style={{ fontSize: '24px' }}>Đồ Thời Trang</h1>
       <Grid container spacing={2} className={classes.productList}>
         {displayedProducts.map((product) => (
@@ -72,7 +62,9 @@ export default function ContentProductView() {
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
                 <div className={classes.productInfo}>
-                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="h6" className={classes.productName}>
+                    {product.name}
+                  </Typography>
                   <Typography variant="body2">${product.price}</Typography>
                   {product.priceSale && (
                     <Typography variant="body2" color="textSecondary">
@@ -89,11 +81,15 @@ export default function ContentProductView() {
         ))}
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-       
-       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
-         Xem Thêm
-       </Button>
-     </Box>
+        <Typography
+          variant="contained"
+          color="secondary"
+          onClick={handleViewAllClick}
+          sx={{ cursor: 'pointer' }}
+        >
+          Xem Thêm
+        </Typography>
+      </Box>
       <Divider />
       <h1 style={{ fontSize: '24px' }}>Đồ Điện Tử</h1>
       <Grid container spacing={2} className={classes.productList}>
@@ -103,7 +99,9 @@ export default function ContentProductView() {
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
                 <div className={classes.productInfo}>
-                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="h6" className={classes.productName}>
+                    {product.name}
+                  </Typography>
                   <Typography variant="body2">${product.price}</Typography>
                   {product.priceSale && (
                     <Typography variant="body2" color="textSecondary">
@@ -120,11 +118,15 @@ export default function ContentProductView() {
         ))}
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-       
-       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
-         Xem Thêm
-       </Button>
-     </Box>
+        <Typography
+          variant="contained"
+          color="secondary"
+          onClick={handleViewAllClick}
+          sx={{ cursor: 'pointer' }}
+        >
+          Xem Thêm
+        </Typography>
+      </Box>
       <Divider />
 
       <h1 style={{ fontSize: '24px' }}>Đồ Ăn</h1>
@@ -135,7 +137,9 @@ export default function ContentProductView() {
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
                 <div className={classes.productInfo}>
-                  <Typography variant="h6" className={classes.productName}>{product.name}</Typography>
+                  <Typography variant="h6" className={classes.productName}>
+                    {product.name}
+                  </Typography>
                   <Typography variant="body2">${product.price}</Typography>
                   {product.priceSale && (
                     <Typography variant="body2" color="textSecondary">
@@ -152,11 +156,15 @@ export default function ContentProductView() {
         ))}
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-       
-       <Button variant="contained" color="secondary" onClick={handleViewAllClick}>
-         Xem Thêm
-       </Button>
-     </Box>
+        <Typography
+          variant="contained"
+          color="secondary"
+          onClick={handleViewAllClick}
+          sx={{ cursor: 'pointer' }}
+        >
+          Xem Thêm
+        </Typography>
+      </Box>
     </>
   );
 }

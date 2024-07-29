@@ -52,11 +52,11 @@ export default function LoginView() {
       setLoading(false);
 
       const userData = response;
-   
+
       if (userData[0].data[0].userId) {
         setCookies(userData[0].data);
 
-        setSuccess(true); 
+        setSuccess(true);
 
         setTimeout(() => {
           if (userData[0].data[0].role === 'ADMIN') {
@@ -66,7 +66,7 @@ export default function LoginView() {
           } else {
             setError('Bạn không có quyền truy cập trang này.');
           }
-        }, 3000); 
+        }, 3000);
       } else {
         setError('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.');
       }
@@ -151,7 +151,6 @@ export default function LoginView() {
       >
         Đăng nhập
       </LoadingButton>
-     
     </>
   );
 
