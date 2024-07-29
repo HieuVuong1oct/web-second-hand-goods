@@ -9,11 +9,11 @@ export const IndexPage = lazy(() => import('src/pages/app'));
 
 export const UserPage = lazy(() => import('src/pages/user'));
 export const LoginPage = lazy(() => import('src/pages/login'));
-export const SignUpPage = lazy(() => import('src/pages/signup'));
+export const SignUpPage = lazy(() => import('src/pages/signUp'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
-export const ProductDetailPage = lazy(() => import('src/pages/ProductDetail'));
-export const Page404 = lazy(() => import('src/pages/page-not-found'));
-export const HomeMainPage = lazy(() => import('src/pages/homemain'));
+export const ProductDetailPage = lazy(() => import('src/pages/productDetail'));
+export const Page404 = lazy(() => import('src/pages/pageNotFound'));
+export const HomeMainPage = lazy(() => import('src/pages/homeMain'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'));
 export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 export const HomePage = lazy(() => import('src/pages/homePage'));

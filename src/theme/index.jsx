@@ -9,7 +9,7 @@ import { palette } from './palette'
 import { shadows } from './shadows'
 import { overrides } from './overrides'
 import { typography } from './typography'
-import { customShadows } from './custom-shadows'
+import { customShadows } from './customShadows'
 
 // ----------------------------------------------------------------------
 

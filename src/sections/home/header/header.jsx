@@ -22,7 +22,7 @@ import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 import Account from 'src/_mock/account';
 import { clearCookies } from 'src/cookie/setCookies';
 
-import useStyles from './HeaderStyles';
+import useStyles from './headerStyles';
 
 const Header = () => {
   const account = Account();

@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 
 import { Box, Checkbox, Typography, FormControlLabel } from '@mui/material';
 
-import useStyles from './ContentStyles';
+import useStyles from 'src/sections/home/content/contentStyles';
 
 const Content = () => {
   const classes = useStyles();

@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { Box, Checkbox, Typography, FormControlLabel } from '@mui/material';
 
 import Header from 'src/sections/home/header';
-import useStyles from 'src/sections/home/content/ContentStyles';
+import useStyles from 'src/sections/home/content/contentStyles';
 
 import Footer from './footer';
 import Navbar from './navbar/navbar';

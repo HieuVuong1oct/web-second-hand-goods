@@ -1,7 +1,7 @@
 import { Search as SearchIcon } from '@mui/icons-material';
 import { AppBar, Button ,InputBase,InputAdornment,  } from '@mui/material';
 
-import useStyles from './HeaderHomePageStyles';
+import useStyles from './headerHomePageStyles';
 
 const HeaderHomePage = () => {
 

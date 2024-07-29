@@ -3,18 +3,21 @@ import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Button, Toolbar, Container } from '@mui/material';
 
-import useStyles from './NavbarStyles';
+import { listPath } from 'src/routes/constant'
+
+import useStyles from './navbarStyles';
+
 
 const Navbar = () => {
   const classes = useStyles();
   const navigate = useNavigate();
 
   const handleAddProduct = () => {
-    navigate('/addProduct');
+    navigate(listPath.addProduct);
   };
 
   const handleHomePage = () => {
-    navigate('/homemain');
+    navigate(listPath.homePage);
   };
 
   return (

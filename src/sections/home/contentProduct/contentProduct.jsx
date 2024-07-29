@@ -2,20 +2,23 @@ import { useNavigate } from 'react-router-dom';
 
 import { Box, Card, Grid, Button, Divider, Typography, CardContent } from '@mui/material';
 
+import { listPath } from 'src/routes/constant'
+
 import { products } from 'src/_mock/products';
 
-import useStyles from './ContentProductStyles';
+import useStyles from './contentProductStyles';
+
 
 export default function ContentProductView() {
   const classes = useStyles();
   const navigate = useNavigate();
 
   const handleCardClick = (product) => {
-    navigate('/homemain/contentProductDetail', { state: { product } });
+    navigate(listPath.contentProductDetail, { state: { product } });
   };
 
   const handleViewAllClick = () => {
-    navigate('/homemain/listProduct');
+    navigate(listPath.listProduct);
   };
 
   const featuredProduct = {

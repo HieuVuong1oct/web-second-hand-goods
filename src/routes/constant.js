@@ -1,4 +1,5 @@
 
+
 export const listPath ={
     homePage:"/homemain",
     login:"/login",
@@ -6,4 +7,9 @@ export const listPath ={
     admin:"/",
     forgotPassword:"/forgotPassword",
     resetPassword:"/resetPassword",
+    addProduct:"/addProduct",
+    productDetail:"'/product-detail'",
+    contentProductDetail:'/homemain/contentProductDetail',
+    listProduct:'/homemain/listProduct',
+
 }
