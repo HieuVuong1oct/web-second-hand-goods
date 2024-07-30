@@ -54,7 +54,10 @@ const AddProductView = () => {
     },
   });
 
-
+  const onSubmit = (data) => {
+    console.log(data);
+   
+  };
   return (
     <div>
       <Header />
@@ -62,7 +65,7 @@ const AddProductView = () => {
       <Container width="80%" sx={{ paddingTop: '160px' }}>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           sx={{
             display: 'flex',
             flexDirection: 'column',
