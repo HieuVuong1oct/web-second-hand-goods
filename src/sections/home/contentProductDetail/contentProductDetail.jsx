@@ -1,19 +1,38 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import React, {  useState ,useEffect,} from 'react';
 
-import { Grid, Card, Button, Container, CardMedia, Typography } from '@mui/material';
+import { Grid, Card, Button, Container, CardMedia, Typography,CircularProgress } from '@mui/material';
+
+import { getProductById } from 'src/api/product';
+
+
 
 const ContentProductDetailView = () => {
-  const location = useLocation();
-  const { state } = location;
-  const product = state?.product;
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(null);
 
-  if (!product) {
-    return <Typography variant="h6">Product not found</Typography>;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await getProductById(productId);
+        setProduct(response.data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchProduct();
+  }, [productId]);
+
+  if (error) {
+    return <Typography variant="h6">Error: {error}</Typography>;
   }
 
+  if (!product) {
+    return <CircularProgress />;
+  }
   const images = Array.isArray(product.images) ? product.images : [];
-
   return (
     <Container maxWidth="md" sx={{ mt: 1 }}>
       <Grid container spacing={2} sx={{ mt: 1 }}>

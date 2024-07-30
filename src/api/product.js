@@ -10,3 +10,9 @@ export const addProduct = (data) => {
     const response = await axiosClient.get(url);
     return response;
   };
+
+  export const getProductById = async (id) => {
+    const url = `/product/get-by-id/${id}`;
+    const response = await axiosClient.get(url);
+    return response;
+  };
