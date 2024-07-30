@@ -30,7 +30,11 @@ export default function SignUpView() {
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const { navigateToLogin } = useNavigationHelpers();
   const validationSchema = Yup.object({
-    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    email: Yup.string()
+    .email('Địa chỉ email không hợp lệ')
+    .min(11,'Email phải có ít nhất 11 ký tự')
+    .max(64, 'Email tối đa 64 ký tự')
+    .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
@@ -39,8 +43,14 @@ export default function SignUpView() {
     checkPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
-    username: Yup.string().required('Vui lòng nhập tên tài khoản'),
-    name: Yup.string().required('Vui lòng nhập tên người dùng'),
+    username: Yup.string()
+    .min(1,'Tên tài khoản phải có ít nhất 1 ký tự')
+    .max(30, 'Tên tài khoản tối đa 30 ký tự')
+    .required('Vui lòng nhập tên tài khoản'),
+    name: Yup.string()
+    .min(1,'Tên phải có ít nhất 1 ký tự')
+    .max(30, 'Tên tối đa 30 ký tự')
+    .required('Vui lòng nhập tên người dùng'),
     avatar: Yup.string().required('Vui lòng tải lên avatar'),
   });
   const {

@@ -7,32 +7,34 @@ import {
   Box,
   Grid,
   Button,
-  Select,
-  MenuItem,
   Container,
   TextField,
-  InputLabel,
   Typography,
-  FormControl,
+
 } from '@mui/material';
+
+import { addProduct } from 'src/api/product';
 
 import Header from 'src/sections/home/header';
 import Footer from 'src/sections/home/footer';
 import Navbar from 'src/sections/home/navbar';
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Tên sản phẩm là bắt buộc'),
-  description: Yup.string().required('Mô tả là bắt buộc'),
+  name: Yup.string()
+  .min(1,'Tên sản phẩm phải có ít nhất 1 ký tự')
+  .max(30, 'Tên sản phẩm tối đa 30 ký tự')
+  .required('Tên sản phẩm là bắt buộc'),
+  description: Yup.string()
+  .min(1,'Mô tả phải có ít nhất 1 ký tự')
+  .max(300, 'Mô tả tối đa 300 ký tự')
+  .required('Mô tả là bắt buộc'),
   image: Yup.string().url('Hãy nhập một URL hợp lệ').required('Hình ảnh là bắt buộc'),
   price: Yup.number().required('Giá là bắt buộc').positive('Giá phải là số dương'),
   cover: Yup.string().url('Hãy nhập một URL hợp lệ').required('Bìa là bắt buộc'),
-  status: Yup.string()
-    .oneOf(['Selling', 'Sold'], 'Trạng thái không hợp lệ')
-    .required('Trạng thái là bắt buộc'),
   categoryId: Yup.number()
     .required('ID danh mục là bắt buộc')
     .positive('ID danh mục phải là số dương'),
-  userId: Yup.number().positive('ID người dùng phải là số dương'),
+  
 });
 
 const AddProductView = () => {
@@ -48,16 +50,22 @@ const AddProductView = () => {
       image: '',
       price: '',
       cover: '',
-      status: 'Selling',
       categoryId: '',
-      userId: '',
+     
     },
   });
-
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    console.log(data)
+    try {
+      const response = await addProduct(data);
+      console.log('Sản phẩm đã được thêm:', response);
    
+    } catch (error) {
+      console.error('Lỗi khi thêm sản phẩm:', error);
+
+    }
   };
+
   return (
     <div>
       <Header />
@@ -155,24 +163,7 @@ const AddProductView = () => {
                   />
                 )}
               />
-              <FormControl fullWidth sx={{ marginTop: 2 }}>
-                <InputLabel>Trạng thái</InputLabel>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select {...field} error={!!errors.status} required>
-                      <MenuItem value="Selling">Đang bán</MenuItem>
-                      <MenuItem value="Sold">Đã bán</MenuItem>
-                    </Select>
-                  )}
-                />
-                {errors.status && (
-                  <Typography color="error" variant="caption">
-                    {errors.status.message}
-                  </Typography>
-                )}
-              </FormControl>
+          
               <Controller
                 name="categoryId"
                 control={control}
@@ -188,21 +179,7 @@ const AddProductView = () => {
                   />
                 )}
               />
-              <Controller
-                name="userId"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    label="ID người dùng"
-                    type="number"
-                    {...field}
-                    error={!!errors.userId}
-                    helperText={errors.userId?.message}
-                    fullWidth
-                    sx={{ marginTop: 2 }}
-                  />
-                )}
-              />
+            
             </Grid>
           </Grid>
 

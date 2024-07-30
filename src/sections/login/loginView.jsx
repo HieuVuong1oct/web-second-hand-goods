@@ -31,7 +31,11 @@ export default function LoginView() {
   const { navigateToHome, navigateToAdmin, navigateToSignUp, navigateToForgotPassword } =
     useNavigationHelpers();
   const validationSchema = Yup.object({
-    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    email: Yup.string()
+    .email('Địa chỉ email không hợp lệ')
+    .min(11,'Email phải có ít nhất 11 ký tự')
+    .max(64, 'Email tối đa 64 ký tự')
+    .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .required('Vui lòng nhập mật khẩu'),
