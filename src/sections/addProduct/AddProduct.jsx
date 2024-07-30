@@ -1,12 +1,15 @@
-import React from 'react';
+
 import * as Yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
+import React,{ useState }  from 'react';
+import {useForm,Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
   Grid,
-  Button,
   Container,
   TextField,
   Typography,
@@ -38,11 +41,10 @@ const schema = Yup.object().shape({
 });
 
 const AddProductView = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: '' });
+
+  const { control, handleSubmit, formState: { errors } ,reset} = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
@@ -51,19 +53,30 @@ const AddProductView = () => {
       price: '',
       cover: '',
       categoryId: '',
-     
     },
   });
+
   const onSubmit = async (data) => {
-    console.log(data)
+    setLoading(true);
     try {
       const response = await addProduct(data);
-      console.log('Sản phẩm đã được thêm:', response);
-   
+    
+      if (response) {
+        setNotification({ open: true, message: 'Thêm sản phẩm thành công!', severity: 'success' });
+        setTimeout(() => {
+          reset();
+        }, 1000);
+       
+      } 
     } catch (error) {
-      console.error('Lỗi khi thêm sản phẩm:', error);
-
+      setNotification({ open: true, message: 'Lỗi khi thêm sản phẩm!', severity: 'error' });
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
   };
 
   return (
@@ -163,7 +176,6 @@ const AddProductView = () => {
                   />
                 )}
               />
-          
               <Controller
                 name="categoryId"
                 control={control}
@@ -179,15 +191,15 @@ const AddProductView = () => {
                   />
                 )}
               />
-            
             </Grid>
           </Grid>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-            <Button
+            <LoadingButton
               type="submit"
               variant="contained"
               color="primary"
+              loading={loading}
               sx={{
                 width: '60%',
                 backgroundColor: '#1976d2',
@@ -197,11 +209,20 @@ const AddProductView = () => {
               }}
             >
               Thêm sản phẩm
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
       </Container>
       <Footer />
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+      >
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

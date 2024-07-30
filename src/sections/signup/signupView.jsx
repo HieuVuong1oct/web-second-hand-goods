@@ -286,12 +286,12 @@ export default function SignUpView() {
 
       <Snackbar
         open={signUpSuccess}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={() => setSignUpSuccess(false)}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={() => setSignUpSuccess(false)} severity="success" sx={{ width: '100%' }}>
-          Mở email để xác nhận đăng ký tài khoản. Sau khi xác nhận bạn có thể dùng tài khoản để đăng nhập!
+          Mở email để xác nhận đăng ký tài khoản. Nếu không xác nhận tài khoản sẽ bị khóa sau 15 phút!
         </Alert>
       </Snackbar>
 

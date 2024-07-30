@@ -70,7 +70,7 @@ export default function LoginView() {
           } else {
             setError('Bạn không có quyền truy cập trang này.');
           }
-        }, 3000);
+        }, 1000);
       } else {
         setError('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.');
       }

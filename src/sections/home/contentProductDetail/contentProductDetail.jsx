@@ -38,25 +38,19 @@ const ContentProductDetailView = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
-            {product.name}
+            Tên sản phẩm :{product.name}
           </Typography>
           <Typography variant="h5" color="text.secondary" gutterBottom>
-            ${product.price}
-          </Typography>
-          <Typography variant="body1" color="text.primary" gutterBottom>
-            Seller: {product.seller}
+            Giá : ${product.price}
           </Typography>
           <Typography variant="body1" color="text.secondary" gutterBottom>
-            {product.description}
+            Thông tin :{product.description}
           </Typography>
           <Typography variant="body1" color="text.secondary" gutterBottom>
             Trạng thái: {product.status}
           </Typography>
           <Typography variant="body1" color="text.secondary" gutterBottom>
             ID danh mục: {product.categoryId}
-          </Typography>
-          <Typography variant="body1" color="text.secondary" gutterBottom>
-            ID người dùng: {product.userId}
           </Typography>
           <Button variant="contained" color="primary" sx={{ mt: 2 }}>
             Mua ngay

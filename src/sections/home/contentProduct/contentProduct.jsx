@@ -1,10 +1,11 @@
 import { useNavigate } from 'react-router-dom';
+import React, { useState,useEffect,  } from 'react';
 
 import { Box, Card, Grid, Button, Divider, Typography, CardContent } from '@mui/material';
 
 import { listPath } from 'src/routes/constant'
 
-import { products } from 'src/_mock/products';
+import { getAllProduct } from 'src/api/product';
 
 import useStyles from './contentProductStyles';
 
@@ -12,7 +13,21 @@ import useStyles from './contentProductStyles';
 export default function ContentProductView() {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [products, setProducts] = useState([])
 
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try{
+        const response = await getAllProduct()
+        setProducts(response.data);
+      }catch(error){
+        alert(`Error: ${error.message}`);
+      }
+    }
+    fetchProducts()
+  },[])
+  
   const handleCardClick = (product) => {
     navigate(listPath.contentProductDetail, { state: { product } });
   };
@@ -60,7 +75,7 @@ export default function ContentProductView() {
       <h1 style={{ fontSize: '24px' }}>Đồ Thời Trang</h1>
       <Grid container spacing={2} className={classes.productList}>
         {displayedProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
+          <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
@@ -97,7 +112,7 @@ export default function ContentProductView() {
       <h1 style={{ fontSize: '24px' }}>Đồ Điện Tử</h1>
       <Grid container spacing={2} className={classes.productList}>
         {displayedProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
+          <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
@@ -135,7 +150,7 @@ export default function ContentProductView() {
       <h1 style={{ fontSize: '24px' }}>Đồ Ăn</h1>
       <Grid container spacing={2} className={classes.productList}>
         {displayedProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
+          <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
             <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
               <CardContent className={classes.cardContent}>
                 <img src={product.cover} alt={product.name} className={classes.productImage} />
