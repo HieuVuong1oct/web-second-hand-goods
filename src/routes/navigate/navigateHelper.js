@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { listPath } from '../constant';
+import { listPath } from '../../constant/constant';
 
 
 export const useNavigationHelpers = () => {

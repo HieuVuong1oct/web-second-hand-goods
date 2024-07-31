@@ -1,44 +1,48 @@
-import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { useNavigate, } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { Grid, Card, Button, Container, Pagination, Typography, CardContent } from '@mui/material';
 
-import { listPath } from 'src/routes/constant';
-
 import { getAllProduct } from 'src/api/product';
+import { listPath } from 'src/constant/constant';
 
 import useStyles from './listProductStyles';
 
-export default function AllProductsView() {
+export default function AllProductsView({ categoryId }) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const productsPerPage = 12; 
+  const productsPerPage = 12;
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts =async () => {
       try {
         const response = await getAllProduct();
-        setProducts(response.data);
-        setTotalPages(Math.ceil(response.data.length / productsPerPage));
-      } catch (error) {
-        alert(`Error: ${error.message}`);
+        const allProducts = response.data;
+        const filtered = categoryId ? allProducts.filter(product => product.categoryId === categoryId) : allProducts
+      
+        setFilteredProducts(filtered)
+        setTotalPages(Math.ceil(filtered.length/productsPerPage))
+      } catch(error){
+        alert(`Error:${error.message}`)
       }
-    };
-    fetchProducts();
-  }, []);
+    }
+    fetchProducts()
+  },[categoryId])
 
   const handleCardClick = (product) => {
-    navigate(`${listPath.contentProductDetail}/${product.productId}`);
+    navigate(`${listPath.contentProductDetail}/${product.categoryId}`);
   };
 
   const handleChangePage = (event, value) => {
     setPage(value);
   };
 
-  const paginatedProducts = products.slice((page - 1) * productsPerPage, page * productsPerPage);
+  const paginatedProducts = filteredProducts.slice((page - 1) * productsPerPage, page * productsPerPage);
 
   return (
     <Container>
@@ -76,3 +80,6 @@ export default function AllProductsView() {
     </Container>
   );
 }
+AllProductsView.propTypes = {
+  categoryId: PropTypes.number, 
+};

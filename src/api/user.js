@@ -1,8 +1,8 @@
+import { listPath } from 'src/constant/constant'
+
 import axiosClient from './axiosClient';
 
 export const getUsers = async () => {
-  const url = '/user/get-all';
-
-  const response = await axiosClient.get(url);
+  const response = await axiosClient.get(listPath.urlGetAllUser);
   return response;
 };

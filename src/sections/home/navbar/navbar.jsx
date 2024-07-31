@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Button, Toolbar, Container } from '@mui/material';
 
-import { listPath } from 'src/routes/constant'
+import { listPath } from 'src/constant/constant'
 
 import useStyles from './navbarStyles';
 
