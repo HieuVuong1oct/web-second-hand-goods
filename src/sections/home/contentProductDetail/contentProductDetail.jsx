@@ -49,7 +49,6 @@ const ContentProductDetailView = () => {
           </Card>
         </Grid>
         
-        {/* Phần thông tin sản phẩm */}
         <Grid item xs={12} md={6}>
           <Typography variant="h4" gutterBottom>
             Tên sản phẩm: {product.name}
