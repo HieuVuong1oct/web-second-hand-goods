@@ -20,6 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { signup } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant'
 
 import Iconify from 'src/components/iconify';
 
@@ -67,7 +68,7 @@ export default function SignUpView() {
     setLoading(true);
 
     if (password !== checkPassword) {
-      setError('Mật khẩu và xác nhận mật khẩu không khớp.');
+      setError(MESSAGES.ERROR_CHECKPASSWORD);
       setLoading(false);
       return;
     }
@@ -88,12 +89,12 @@ export default function SignUpView() {
           navigateToLogin();
         }, 5000); 
       } else {
-        setError('Đăng ký không thành công. Vui lòng thử lại.');
+        setError(MESSAGES.ERROR_SIGN_UP_WRONG);
       }
     } catch (err) {
       const errorMsg =
-        err.response?.data?.message ||
-        'Đã xảy ra lỗi trong quá trình đăng ký. Kiểm tra lại thông tin và thử lại sau.';
+        err.response?.data?.message || MESSAGES.ERROR_SIGN_UP
+        
       setError(errorMsg);
       setLoading(false);
     }

@@ -10,7 +10,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { resetPassword } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant'
 
 export default function ResetPasswordView() {
   const [loading, setLoading] = useState(false);
@@ -38,17 +38,15 @@ export default function ResetPasswordView() {
     setLoading(true);
     try {
 
-      await resetPassword(data);
-
       setLoading(false);
-      setMessage('Mật khẩu đã được đặt lại thành công.');
+      setMessage(MESSAGES.SUCCESS_NEW_PASSWORD);
       setError('');
     } catch (err) {
       setLoading(false);
 
       const errorMsg =
-        err.response?.data?.message ||
-        'Đã xảy ra lỗi trong quá trình đặt lại mật khẩu. Vui lòng thử lại sau.';
+        err.response?.data?.message || MESSAGES.ERROR_NEW_PASSWORD
+       
       setError(errorMsg);
       setMessage('');
     }

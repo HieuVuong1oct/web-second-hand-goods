@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { verifyEmail} from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant'
 
 export default function ForgotPasswordView() {
   const [loading, setLoading] = useState(false);
@@ -39,15 +40,15 @@ export default function ForgotPasswordView() {
       await verifyEmail(data.email);
 
       setLoading(false);
-      setMessage('Đã gửi email đặt lại mật khẩu, vui lòng kiểm tra email của bạn.');
+      setMessage(MESSAGES.SEND_EMAIL);
       setError('');
    
     } catch (err) {
       setLoading(false);
 
       const errorMsg =
-        err.response?.data?.message ||
-        'Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.';
+        err.response?.data?.message || MESSAGES.ERROR_SEND_EMAIL
+        
       setError(errorMsg);
       setMessage('');
     }

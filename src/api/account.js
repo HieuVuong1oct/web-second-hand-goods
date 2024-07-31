@@ -1,21 +1,19 @@
+import { listPath } from 'src/constant/constant'
+
 import axiosClient from './axiosClient';
 
-export const login = (data) => {
-  const url = '/auth/login';
-  return axiosClient.post(url, data);
-};
+export const login = (data) => 
+ axiosClient.post(listPath.urlLogin, data);
 
-export const signup = (data) => {
-  const url = '/auth/signup';
-  return axiosClient.post(url, data);
-};
 
-export const verifyEmail = (email) => {
-  const url = `/auth/verify/${email}`;
-  return axiosClient.get(url);
-};
+export const signup = (data) => 
+  axiosClient.post(listPath.urlSignUp, data);
 
-export const resetPassword = (data) => {
-  const url = '/auth/refresh-token';
-  return axiosClient.post(url, data);
-};
+
+export const verifyEmail = (email) => 
+   axiosClient.get(listPath.urlVerifyEmail(email));
+
+
+export const resetToken = (data) => 
+   axiosClient.post(listPath.urlRefreshToken, data);
+

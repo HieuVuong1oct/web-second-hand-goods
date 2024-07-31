@@ -17,10 +17,13 @@ import {
 } from '@mui/material';
 
 import { addProduct } from 'src/api/product';
+import { MESSAGES } from 'src/constant/constant'
 
 import Header from 'src/sections/home/header';
 import Footer from 'src/sections/home/footer';
 import Navbar from 'src/sections/home/navbar';
+
+
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -62,14 +65,14 @@ const AddProductView = () => {
       const response = await addProduct(data);
     
       if (response) {
-        setNotification({ open: true, message: 'Thêm sản phẩm thành công!', severity: 'success' });
+        setNotification({ open: true, message: MESSAGES.SUCCESS_ADD_PRODUCT, severity: 'success' });
         setTimeout(() => {
           reset();
         }, 1000);
        
       } 
     } catch (error) {
-      setNotification({ open: true, message: 'Lỗi khi thêm sản phẩm!', severity: 'error' });
+      setNotification({ open: true, message: MESSAGES.ERROR_ADD_PRODUCT, severity: 'error' });
     } finally {
       setLoading(false);
     }

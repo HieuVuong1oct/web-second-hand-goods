@@ -1,13 +1,18 @@
+import { listPath } from 'src/constant/constant'
+
 import axiosClient from './axiosClient';
 
-export const addProduct = (data) => {
-    const url = '/product/add-product';
-    return axiosClient.post(url, data);
-  };
+export const addProduct = (data) => 
+   axiosClient.post(listPath.urlAddProduct, data);
+  
 
   export const getAllProduct = async () => {
-    const url = '/product/get-all';
-    const response = await axiosClient.get(url);
+    const response = await axiosClient.get(listPath.urlGetAllProduct);
+    return response;
+  };
+
+  export const getProductById = async (id) => {
+    const response = await axiosClient.get(listPath.urlGetProductById(id));
     return response;
   };
 
