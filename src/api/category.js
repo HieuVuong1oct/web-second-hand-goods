@@ -1,8 +1,9 @@
-import { listPath } from 'src/constant/constant'
+import { listPathApi } from 'src/constant/constant'
 
 import axiosClient from './axiosClient';
 
+
 export const getAllCategory = async () => {
-  const response = await axiosClient.get(listPath.urlGetAllCategory);
+  const response = await axiosClient.get(listPathApi.urlGetAllCategory);
   return response;
 };

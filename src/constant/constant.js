@@ -11,6 +11,10 @@ export const listPath ={
     productDetail:'/product-detail',
     contentProductDetail:'/homemain/contentProductDetail',
     listProduct:'/homemain/listProduct',
+   
+}
+
+export const listPathApi = {
     urlLogin:'/auth/login',
     urlSignUp:'/auth/signup',
     urlVerifyEmail:(email) => `/auth/verify/${email}`,
@@ -20,7 +24,6 @@ export const listPath ={
     urlGetProductById:(id) => `/product/get-by-id/${id}`,
     urlGetAllCategory:'/category/get-all',
     urlGetAllUser:'/user/get-all',
-    
 }
 
 export const MESSAGES = {
