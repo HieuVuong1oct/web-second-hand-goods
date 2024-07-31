@@ -1,8 +1,9 @@
+import { listPathApi } from 'src/constant/constant'
+
 import axiosClient from './axiosClient';
 
-export const getUsers = async () => {
-  const url = '/user/get-all';
 
-  const response = await axiosClient.get(url);
+export const getUsers = async () => {
+  const response = await axiosClient.get(listPathApi.urlGetAllUser);
   return response;
 };

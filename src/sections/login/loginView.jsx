@@ -19,9 +19,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { login } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant'
 import { setCookies } from 'src/cookie/setCookies';
 
 import Iconify from 'src/components/iconify';
+
 
 export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,7 +33,11 @@ export default function LoginView() {
   const { navigateToHome, navigateToAdmin, navigateToSignUp, navigateToForgotPassword } =
     useNavigationHelpers();
   const validationSchema = Yup.object({
-    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    email: Yup.string()
+    .email('Địa chỉ email không hợp lệ')
+    .min(11,'Email phải có ít nhất 11 ký tự')
+    .max(64, 'Email tối đa 64 ký tự')
+    .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .required('Vui lòng nhập mật khẩu'),
@@ -64,18 +70,18 @@ export default function LoginView() {
           } else if (userData[0].data[0].role === 'USER') {
             navigateToHome();
           } else {
-            setError('Bạn không có quyền truy cập trang này.');
+            setError(MESSAGES.ERROR_ACCESS);
           }
-        }, 3000);
+        }, 1000);
       } else {
-        setError('Đăng nhập không thành công. Vui lòng kiểm tra lại email và mật khẩu.');
+        setError(MESSAGES.ERROR_LOGIN_WRONG);
       }
     } catch (err) {
       setLoading(false);
 
       const errorMsg =
-        err.response.data.message ||
-        'Đã xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau.';
+        err.response.data.message || MESSAGES.ERROR_LOGIN
+        
       setError(errorMsg);
     }
   };

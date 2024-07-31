@@ -1,46 +1,53 @@
-import React from 'react';
+
 import * as Yup from 'yup';
-import { useForm, Controller } from 'react-hook-form';
+import React,{ useState }  from 'react';
+import {useForm,Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
   Grid,
-  Button,
-  Select,
-  MenuItem,
   Container,
   TextField,
-  InputLabel,
   Typography,
-  FormControl,
+
 } from '@mui/material';
+
+import { addProduct } from 'src/api/product';
+import { MESSAGES } from 'src/constant/constant'
 
 import Header from 'src/sections/home/header';
 import Footer from 'src/sections/home/footer';
 import Navbar from 'src/sections/home/navbar';
 
+
+
 const schema = Yup.object().shape({
-  name: Yup.string().required('Tên sản phẩm là bắt buộc'),
-  description: Yup.string().required('Mô tả là bắt buộc'),
+  name: Yup.string()
+  .min(1,'Tên sản phẩm phải có ít nhất 1 ký tự')
+  .max(30, 'Tên sản phẩm tối đa 30 ký tự')
+  .required('Tên sản phẩm là bắt buộc'),
+  description: Yup.string()
+  .min(1,'Mô tả phải có ít nhất 1 ký tự')
+  .max(300, 'Mô tả tối đa 300 ký tự')
+  .required('Mô tả là bắt buộc'),
   image: Yup.string().url('Hãy nhập một URL hợp lệ').required('Hình ảnh là bắt buộc'),
   price: Yup.number().required('Giá là bắt buộc').positive('Giá phải là số dương'),
   cover: Yup.string().url('Hãy nhập một URL hợp lệ').required('Bìa là bắt buộc'),
-  status: Yup.string()
-    .oneOf(['Selling', 'Sold'], 'Trạng thái không hợp lệ')
-    .required('Trạng thái là bắt buộc'),
   categoryId: Yup.number()
     .required('ID danh mục là bắt buộc')
     .positive('ID danh mục phải là số dương'),
-  userId: Yup.number().positive('ID người dùng phải là số dương'),
+  
 });
 
 const AddProductView = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState({ open: false, message: '', severity: '' });
+
+  const { control, handleSubmit, formState: { errors } ,reset} = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
@@ -48,12 +55,32 @@ const AddProductView = () => {
       image: '',
       price: '',
       cover: '',
-      status: 'Selling',
       categoryId: '',
-      userId: '',
     },
   });
 
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await addProduct(data);
+    
+      if (response) {
+        setNotification({ open: true, message: MESSAGES.SUCCESS_ADD_PRODUCT, severity: 'success' });
+        setTimeout(() => {
+          reset();
+        }, 1000);
+       
+      } 
+    } catch (error) {
+      setNotification({ open: true, message: MESSAGES.ERROR_ADD_PRODUCT, severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCloseNotification = () => {
+    setNotification({ ...notification, open: false });
+  };
 
   return (
     <div>
@@ -62,7 +89,7 @@ const AddProductView = () => {
       <Container width="80%" sx={{ paddingTop: '160px' }}>
         <Box
           component="form"
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -152,24 +179,6 @@ const AddProductView = () => {
                   />
                 )}
               />
-              <FormControl fullWidth sx={{ marginTop: 2 }}>
-                <InputLabel>Trạng thái</InputLabel>
-                <Controller
-                  name="status"
-                  control={control}
-                  render={({ field }) => (
-                    <Select {...field} error={!!errors.status} required>
-                      <MenuItem value="Selling">Đang bán</MenuItem>
-                      <MenuItem value="Sold">Đã bán</MenuItem>
-                    </Select>
-                  )}
-                />
-                {errors.status && (
-                  <Typography color="error" variant="caption">
-                    {errors.status.message}
-                  </Typography>
-                )}
-              </FormControl>
               <Controller
                 name="categoryId"
                 control={control}
@@ -185,29 +194,15 @@ const AddProductView = () => {
                   />
                 )}
               />
-              <Controller
-                name="userId"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    label="ID người dùng"
-                    type="number"
-                    {...field}
-                    error={!!errors.userId}
-                    helperText={errors.userId?.message}
-                    fullWidth
-                    sx={{ marginTop: 2 }}
-                  />
-                )}
-              />
             </Grid>
           </Grid>
 
           <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-            <Button
+            <LoadingButton
               type="submit"
               variant="contained"
               color="primary"
+              loading={loading}
               sx={{
                 width: '60%',
                 backgroundColor: '#1976d2',
@@ -217,11 +212,22 @@ const AddProductView = () => {
               }}
             >
               Thêm sản phẩm
-            </Button>
+            </LoadingButton>
           </Box>
         </Box>
       </Container>
       <Footer />
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={6000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

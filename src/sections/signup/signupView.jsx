@@ -20,6 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { signup } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant'
 
 import Iconify from 'src/components/iconify';
 
@@ -30,7 +31,11 @@ export default function SignUpView() {
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const { navigateToLogin } = useNavigationHelpers();
   const validationSchema = Yup.object({
-    email: Yup.string().email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    email: Yup.string()
+    .email('Địa chỉ email không hợp lệ')
+    .min(11,'Email phải có ít nhất 11 ký tự')
+    .max(64, 'Email tối đa 64 ký tự')
+    .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
@@ -39,8 +44,14 @@ export default function SignUpView() {
     checkPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
-    username: Yup.string().required('Vui lòng nhập tên tài khoản'),
-    name: Yup.string().required('Vui lòng nhập tên người dùng'),
+    username: Yup.string()
+    .min(1,'Tên tài khoản phải có ít nhất 1 ký tự')
+    .max(30, 'Tên tài khoản tối đa 30 ký tự')
+    .required('Vui lòng nhập tên tài khoản'),
+    name: Yup.string()
+    .min(1,'Tên phải có ít nhất 1 ký tự')
+    .max(30, 'Tên tối đa 30 ký tự')
+    .required('Vui lòng nhập tên người dùng'),
     avatar: Yup.string().required('Vui lòng tải lên avatar'),
   });
   const {
@@ -57,7 +68,7 @@ export default function SignUpView() {
     setLoading(true);
 
     if (password !== checkPassword) {
-      setError('Mật khẩu và xác nhận mật khẩu không khớp.');
+      setError(MESSAGES.ERROR_CHECKPASSWORD);
       setLoading(false);
       return;
     }
@@ -78,12 +89,12 @@ export default function SignUpView() {
           navigateToLogin();
         }, 5000); 
       } else {
-        setError('Đăng ký không thành công. Vui lòng thử lại.');
+        setError(MESSAGES.ERROR_SIGN_UP_WRONG);
       }
     } catch (err) {
       const errorMsg =
-        err.response?.data?.message ||
-        'Đã xảy ra lỗi trong quá trình đăng ký. Kiểm tra lại thông tin và thử lại sau.';
+        err.response?.data?.message || MESSAGES.ERROR_SIGN_UP
+        
       setError(errorMsg);
       setLoading(false);
     }
@@ -276,12 +287,12 @@ export default function SignUpView() {
 
       <Snackbar
         open={signUpSuccess}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={() => setSignUpSuccess(false)}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
         <Alert onClose={() => setSignUpSuccess(false)} severity="success" sx={{ width: '100%' }}>
-          Mở email để xác nhận đăng ký tài khoản. Sau khi xác nhận bạn có thể dùng tài khoản để đăng nhập!
+          Mở email để xác nhận đăng ký tài khoản. Nếu không xác nhận tài khoản sẽ bị khóa sau 15 phút!
         </Alert>
       </Snackbar>
 

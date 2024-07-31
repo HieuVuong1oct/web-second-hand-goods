@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const axiosClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -10,11 +11,15 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(
-  async (config) =>   config,
-  
+  async (config) => {
+    const accessToken = Cookies.get('accessToken');
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
   (error) => Promise.reject(error)
 );
-
 axiosClient.interceptors.response.use(
   (response) => {
     if (response && response.data) {

@@ -1,21 +1,20 @@
+import { listPathApi } from 'src/constant/constant'
+
 import axiosClient from './axiosClient';
 
-export const login = (data) => {
-  const url = '/auth/login';
-  return axiosClient.post(url, data);
-};
 
-export const signup = (data) => {
-  const url = '/auth/signup';
-  return axiosClient.post(url, data);
-};
+export const login = (data) => 
+ axiosClient.post(listPathApi.urlLogin, data);
 
-export const verifyEmail = (email) => {
-  const url = `/auth/verify/${email}`;
-  return axiosClient.get(url);
-};
 
-export const resetPassword = (data) => {
-  const url = '/auth/refresh-token';
-  return axiosClient.post(url, data);
-};
+export const signup = (data) => 
+  axiosClient.post(listPathApi.urlSignUp, data);
+
+
+export const verifyEmail = (email) => 
+   axiosClient.get(listPathApi.urlVerifyEmail(email));
+
+
+export const resetToken = (data) => 
+   axiosClient.post(listPathApi.urlRefreshToken, data);
+
