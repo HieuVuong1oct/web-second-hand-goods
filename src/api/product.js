@@ -16,8 +16,4 @@ export const addProduct = (data) =>
     return response;
   };
 
-  export const getProductById = async (id) => {
-    const url = `/product/get-by-id/${id}`;
-    const response = await axiosClient.get(url);
-    return response;
-  };
+ 
