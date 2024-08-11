@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import Cookies from 'js-cookie';
 
 import { listPathApi } from 'src/constant/constant';
@@ -37,13 +37,15 @@ export const getProductById = async (id) => {
 export const getProductByCategoryId = async (categoryId, page, itemsPerPage) =>
    {
   try {
-    const response = await axios.get(listPathApi.urlGetProductByCategoryId, {
+    
+    const response = await axiosClient.get(listPathApi.urlGetProductByCategoryId, {
       params: {
         categoryId,
         page,
         limit: itemsPerPage,
       },
     });
+   
     return response; 
   } catch (error) {
     alert('Lỗi')

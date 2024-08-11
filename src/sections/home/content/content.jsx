@@ -53,16 +53,23 @@ const ProductPage = () => {
   }));
 
   return (
-    <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' }}>
+    <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' , 
+    background: 'linear-gradient(90deg, #d7ac38, #ed3334), linear-gradient(90deg, #d7ac38, #ed3334)',
+    borderRadius:'10px'
+    }}>
+       
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
           <div style={{ width: '80%', margin: '0 auto' }}>
+          <Typography  sx={{ marginBottom: 2, fontSize:'15px' }}>
+             MOR MARKET 
+            </Typography>
             <Typography variant="h4" sx={{ marginBottom: 2 }}>
               Sản Phẩm Nổi Bật
             </Typography>
             <Card
               className={classes.featuredProductCard}
-              sx={{ backgroundColor: '#ADD8E6', marginBottom: '16px', borderRadius: '10px' }}
+              sx={{  marginBottom: '16px', borderRadius: '10px' }}
             >
               <CardContent className={classes.featuredCardContent}>
                 <CardMedia

@@ -5,11 +5,11 @@ export const listPath = {
   admin: '/',
   forgotPassword: '/forgotPassword',
   resetPassword: '/resetPassword',
-  addProduct: '/addProduct',
+  addProduct: '/homeMain/addProduct',
   productDetail: '/product-detail',
   contentProductDetail: '/homeMain/contentProductDetail',
-  listProductById:(productId) => `/product/get-by-id/${productId}`,
-  productByCategoryId:(categoryId) => `/categories/${categoryId}/products`
+  listProductById:(productId) => `/homeMain/product/get-by-id/${productId}`,
+  productByCategoryId:(categoryId) => `/homeMain/categories/${categoryId}/products`
 };
 
 export const listPathApi = {
@@ -26,7 +26,7 @@ export const listPathApi = {
   urlSendOtp: '/auth/forgot-password',
   urlNewPassword: '/auth/set-password',
   urlLogout: '/auth/logout',
-  urlGetProductByCategoryId:'product/list-product',
+  urlGetProductByCategoryId:'/product/list-product',
   urlGetCategoryById:(categoryId) => `category/get-by-id/${categoryId}`
 };
 

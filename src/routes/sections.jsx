@@ -19,6 +19,7 @@ export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 export const HomePage = lazy(() => import('src/pages/homePage'));
 export const AddProductPage = lazy(() => import('src/pages/addProduct'));
 export const ViewAllProductPage = lazy(() => import('src/pages/viewAllProduct'));
+export const ContentPage  = lazy(() => import('src/pages/content'));
 
 
 export default function Router() {
@@ -55,10 +56,10 @@ export default function Router() {
       path: '/',
       element: !isAuthenticated ? (
         <AuthLayout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        </AuthLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </AuthLayout> 
       ) : (
         <Navigate to="/homeMain" replace />
       ),
@@ -70,21 +71,34 @@ export default function Router() {
       ],
     },
     {
-      path: 'product/get-by-id/:productId',
-      element: <ProductDetailPage />,
-    },
-    {
-      path: 'categories/:categoryId/products',
-      element: <ViewAllProductPage />,
-    },
-    {
       path: 'homeMain',
-      element: <HomeMainPage />,
+      element:(
+        <HomeMainPage>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </HomeMainPage> 
+      ) ,
+      children: [
+        { element: <ContentPage />, index: true },
+        { path: 'product/get-by-id/:productId', element: <ProductDetailPage /> },
+        { path: 'categories/:categoryId/products', element: <ViewAllProductPage /> },
+        { path: 'addProduct', element: <AddProductPage /> },
+      ],
     },
-    {
-      path: 'addProduct',
-      element: <AddProductPage />,
-    },
+    // {
+    //   path: 'product/get-by-id/:productId',
+    //   element: <ProductDetailPage />,
+    // },
+    // {
+    //   path: 'categories/:categoryId/products',
+    //   element: <ViewAllProductPage />,
+    // },
+  
+    // {
+    //   path: 'addProduct',
+    //   element: <AddProductPage />,
+    // },
     {
       path: '404',
       element: <Page404 />,

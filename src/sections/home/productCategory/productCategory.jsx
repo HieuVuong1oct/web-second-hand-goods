@@ -24,6 +24,7 @@ const ProductList = ({ category, products }) => {
 
   const handleViewAllClick = (categoryId) => {
     navigate(listPath.productByCategoryId(categoryId));
+   
   };
 
   const displayedProducts = products.slice(0, 8);
@@ -77,9 +78,9 @@ const ProductList = ({ category, products }) => {
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginY: 2 }}>
         <Button
-          variant="outlined"
-          color="primary"
+         variant="contained" color="primary"
           onClick={() => handleViewAllClick(category.categoryId)}
+        
         >
           Xem thêm
         </Button>

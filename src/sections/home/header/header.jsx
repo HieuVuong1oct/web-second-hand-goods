@@ -33,6 +33,23 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) { 
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   useEffect(() => {
     const token = Cookies.get('accessToken');
     if (token) {
@@ -80,7 +97,17 @@ const Header = () => {
     navigate(listPath.homePage);
   };
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar
+    position="fixed"
+    className={classes.appBar}
+    style={{
+      background: scrolled
+      
+         ? 'white'
+        : 'transparent', 
+      transition: 'background 0.3s ease', 
+    }}
+  >
       <div className={classes.container}>
         <div className={classes.item2}>
           <div
@@ -91,7 +118,7 @@ const Header = () => {
             onClick={handleHomePage}
             onKeyDown={handleHomePage}
           >
-            <img src="/favicon/logo-1.png" alt="Logo" style={{ cursor: 'pointer' }} />
+            <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer',width:'150px', height:'50px' }} />
           </div>
           <Box className={classes.searchContainer}>
             {isLoggedIn ? (

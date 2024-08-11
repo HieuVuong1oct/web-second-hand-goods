@@ -16,11 +16,7 @@ import {
 } from '@mui/material';
 
 import { addProduct } from 'src/api/product';
-import { MESSAGES } from 'src/constant/constant'
-
-import Header from 'src/sections/home/header';
-import Footer from 'src/sections/home/footer';
-import Navbar from 'src/sections/home/navbar';
+import { MESSAGES } from 'src/constant/constant';
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -108,9 +104,7 @@ const AddProductView = () => {
 
   return (
     <div>
-      <Header />
-      <Navbar />
-      <Container width="80%" sx={{ paddingTop: '160px' }}>
+      <Container width="80%" sx={{ paddingTop: '10px', paddingBottom:'50px' }}>
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -210,7 +204,6 @@ const AddProductView = () => {
                     sx={{ marginTop: 1 }}
                   >
                     <MenuItem value={1}>Đang bán</MenuItem>
-                    
                   </TextField>
                 )}
               />
@@ -236,7 +229,6 @@ const AddProductView = () => {
           </Box>
         </Box>
       </Container>
-      <Footer />
 
       <Snackbar
         open={notification.open}
