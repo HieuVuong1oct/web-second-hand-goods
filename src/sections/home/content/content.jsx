@@ -1,92 +1,107 @@
-import React,{ useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import {
-  Box,
-  Card,
-  Grid,
-  Checkbox,
-  Pagination,
-  Typography,
-  CardContent,
-  FormControlLabel,
-  
-} from '@mui/material';
+import { Box, Card, Grid, Divider, CardMedia, Typography, CardContent } from '@mui/material';
 
-import { products } from 'src/_mock/products';
+import { getAllProduct } from 'src/api/product';
+import { getAllCategory } from 'src/api/category';
 
-import useStyles from './ContentStyles';
+import useStyles from './contentStyles';
+import ProductList from '../productCategory/productCategory';
 
-const Content = () => {
-    const classes = useStyles();
-    const [currentPage, setCurrentPage] = useState(1);
-    const PAGE_SIZE = 8;
+const featuredProduct = {
+  cover: '/assets/images/products/product_1.jpg',
+  name: 'Giày xanh',
+  describe:
+    'Apple đã cho ra mắt iPhone 15 Pro Max thuộc dòng iPhone 15 Series trong sự kiện "Wonderlust" cùng Apple Watch Series 9 và Apple Watch Ultra 2. Đây là phiên bản iPhone cao cấp nhất của iPhone 15 Series với nhiều những cải tiến vượt bật cả về thiết kế và hiệu năng.',
+  price: 1000,
+  seller: 'Người bán ABC',
+  purchases: 150,
+};
 
-    const startIndex = (currentPage - 1) * PAGE_SIZE;
-  const endIndex = startIndex + PAGE_SIZE;
-  const paginatedProducts = products.slice(startIndex, endIndex);
+const ProductPage = () => {
+  const classes = useStyles();
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [categoriesResponse, productsResponse] = await Promise.all([
+          getAllCategory(),
+          getAllProduct(),
+        ]);
+
+        setCategories(categoriesResponse);
+
+        setProducts(Array.isArray(productsResponse.data) ? productsResponse.data : []);
+      } catch (error) {
+        alert('Lỗi');
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const groupedProducts = categories.map((category) => ({
+    ...category,
+    products: products
+      .filter((product) => Number(category.categoryId) === Number(product.categoryId))
+      .map((product) => ({
+        ...product,
+        productId: Number(product.productId),
+      })),
+  }));
 
   return (
-    <Box className={classes.container}>
-      <Box className={classes.row}>
-        <Box className={classes.item1}>
-          <Typography variant="h6">Danh mục</Typography>
-          <ul className={classes.menuList}>
-            <li className={classes.menuItem}>Đồ điện tử</li>
-            <li className={classes.menuItem}>Thời trang</li>
-            <li className={classes.menuItem}>Đồ ăn</li>
-          </ul>
-          <Box className={classes.filterSection}>
-            <Typography variant="h6">Bộ lọc</Typography>
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Sắp xếp theo giá"
-              className={classes.filterLabel}
-            />
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Sắp xếp theo thời gian bán"
-              className={classes.filterLabel}
-            />
-          </Box>
-        </Box>
-        <Box className={classes.item2}>
-          <Grid container spacing={2} className={classes.productList}>
-            {paginatedProducts.map((product) => (
-              <Grid item xs={12} sm={6} md={3} lg={3} key={product.id}>
-                <Card className={classes.productCard}>
-                  <CardContent className={classes.cardContent}>
-                    <img src={product.cover} alt={product.name} className={classes.productImage} />
-                    <Typography variant="h6">{product.name}</Typography>
-                    <Typography variant="body2">{`$${product.price}`}</Typography>
-                    {product.priceSale && (
-                      <Typography variant="body2" color="textSecondary">
-                        {`$${product.priceSale}`}
-                      </Typography>
-                    )}
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+    <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' , 
+    background: 'linear-gradient(90deg, #d7ac38, #ed3334), linear-gradient(90deg, #d7ac38, #ed3334)',
+    borderRadius:'10px'
+    }}>
+       
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12}>
+          <div style={{ width: '80%', margin: '0 auto' }}>
+          <Typography  sx={{ marginBottom: 2, fontSize:'15px' }}>
+             MOR MARKET 
+            </Typography>
+            <Typography variant="h4" sx={{ marginBottom: 2 }}>
+              Sản Phẩm Nổi Bật
+            </Typography>
+            <Card
+              className={classes.featuredProductCard}
+              sx={{  marginBottom: '16px', borderRadius: '10px' }}
+            >
+              <CardContent className={classes.featuredCardContent}>
+                <CardMedia
+                  component="img"
+                  height="400"
+                  image={featuredProduct.cover}
+                  alt={featuredProduct.name}
+                  className={classes.featuredProductImage}
+                />
+                <Box className={classes.featuredProductInfo}>
+                  <Typography variant="h5">{featuredProduct.name}</Typography>
+                  <Typography variant="body1">{featuredProduct.describe}</Typography>
+                  <Typography variant="body1">Giá: ${featuredProduct.price}</Typography>
+                  <Typography variant="body1">Người bán: {featuredProduct.seller}</Typography>
+                  <Typography variant="body1">Số lượt mua: {featuredProduct.purchases}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+            <Divider sx={{ marginY: 2 }} />
+          </div>
 
-          {/* Pagination */}
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-            <Pagination
-              count={Math.ceil(products.length / PAGE_SIZE)}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
+          {groupedProducts.map((category) => (
+            <ProductList
+              key={category.categoryId}
+              category={category}
+              products={category.products}
             />
-          </Box>
-        </Box>
-      </Box>
+          ))}
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-  
-  export default Content;
+export default ProductPage;

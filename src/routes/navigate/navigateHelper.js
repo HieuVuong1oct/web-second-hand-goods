@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 
-import { listPath } from '../constant';
+import { listPath } from '../../constant/constant';
 
 
 export const useNavigationHelpers = () => {
@@ -30,6 +30,11 @@ export const useNavigationHelpers = () => {
     navigate(listPath.resetPassword);
   }
 
+  const navigateProductById = (id) => {
+    navigate(listPath.listProductById(id))
+  }
+
+  
   return {
     navigateToLogin,
     navigateToSignUp,
@@ -37,6 +42,6 @@ export const useNavigationHelpers = () => {
     navigateToAdmin,
     navigateToForgotPassword,
     navigateToResetPassword,
-   
+    navigateProductById,
   };
 };

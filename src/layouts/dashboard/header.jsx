@@ -7,15 +7,15 @@ import Toolbar from '@mui/material/Toolbar'
 import { useTheme } from '@mui/material/styles'
 import IconButton from '@mui/material/IconButton'
 
-import { useResponsive } from 'src/hooks/use-responsive'
+import { useResponsive } from 'src/hooks/useResponsive'
 
 import { bgBlur } from 'src/theme/css'
 
 import Iconify from 'src/components/iconify'
 
 import Searchbar from './common/searchbar'
-import { NAV, HEADER } from './config-layout'
-import AccountPopover from './common/account-popover'
+import { NAV, HEADER } from './configLayout'
+import AccountPopover from './common/accountPopover'
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme()

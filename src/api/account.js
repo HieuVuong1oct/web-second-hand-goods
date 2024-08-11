@@ -1,29 +1,45 @@
-import axiosClient from './axiosClient'; 
 
 
-export const login = (data) => {
-    const url = '/auth/login';
-    return axiosClient.post(url, data);
-  };
+import { listPathApi } from 'src/constant/constant'
+
+import axiosClient from './axiosClient';
+
+
+export const login = (data) => 
+ axiosClient.post(listPathApi.urlLogin, data);
+
+
+export const signUp = (data) => 
+   axiosClient.post(listPathApi.urlSignUp, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+
+export const verifyEmail = (email) => 
+   axiosClient.get(listPathApi.urlVerifyEmail(email));
+
+export const resetToken = (data) => 
+   axiosClient.get(listPathApi.urlRefreshToken, data);
+
+export const sendOtp = (data) => 
+   axiosClient.post(listPathApi.urlSendOtp, data);
+
+export const setPassword = (email, otp, password) => 
+   axiosClient.put(listPathApi.urlNewPassword, {
+    email,
+    otp,
+    password
+  });
+
+
+
+export const logout = async () => {
 
   
-
-  export const signup = (data) => {
-    const url = '/auth/signup';
-    return axiosClient.post(url, data);
-  };
-
-  export const sendResetPasswordEmail = (data) => {
-    const url = '/auth/forgot-password';
-    return axiosClient.post(url, data);
-  };
-
-  export const verifyEmail = (email) => {
-    const url = `/auth/verify/${email}`;
-    return axiosClient.get(url);
-  };
-
-  export const resetPassword = (data) => {
-    const url = '/auth/refresh-token';
-    return axiosClient.post(url, data);
-  };
+     await axiosClient.post(listPathApi.urlLogout, {}, {
+      withCredentials: true
+     })
+   
+ };
