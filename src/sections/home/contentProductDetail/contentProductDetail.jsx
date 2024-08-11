@@ -1,5 +1,4 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
@@ -19,10 +18,13 @@ import {
   DialogActions,
 } from '@mui/material';
 
+import { getProductById } from 'src/api/product'
+
 import Header from 'src/sections/home/header';
 
 import Footer from '../footer/footer';
 import Navbar from '../navbar/navbar';
+
 
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
@@ -40,15 +42,8 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const token = Cookies.get('accessToken');
-        const response = await axios.get(
-          `http://localhost:3001/api/product/get-by-id/${productId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        
+        const response = await getProductById(productId)
         setProduct(response.data.data[0]);
       } catch (error) {
         alert('Lỗi');

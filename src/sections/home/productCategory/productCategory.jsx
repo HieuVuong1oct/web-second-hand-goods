@@ -13,15 +13,17 @@ import {
   CardContent,
 } from '@mui/material';
 
+import { listPath } from 'src/constant/constant'
+
 const ProductList = ({ category, products }) => {
   const navigate = useNavigate();
 
   const handleProductClick = (productId) => {
-    navigate(`/product/get-by-id/${productId}`);
+    navigate(listPath.listProductById(productId));
   };
 
   const handleViewAllClick = (categoryId) => {
-    navigate(`/categories/${categoryId}/products`);
+    navigate(listPath.productByCategoryId(categoryId));
   };
 
   const displayedProducts = products.slice(0, 8);

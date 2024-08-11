@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 
 import { addProduct } from 'src/api/product';
+import { MESSAGES } from 'src/constant/constant'
 
 import Header from 'src/sections/home/header';
 import Footer from 'src/sections/home/footer';
@@ -85,7 +86,7 @@ const AddProductView = () => {
       if (response) {
         setNotification({
           open: true,
-          message: 'Đăng bán thành công! Sản phẩm được gửi cho ADMIN duyệt! ',
+          message: MESSAGES.SUCCESS_ADD_PRODUCT,
           severity: 'success',
         });
         setTimeout(() => {
@@ -95,7 +96,7 @@ const AddProductView = () => {
         }, 1000);
       }
     } catch (error) {
-      setNotification({ open: true, message: 'Đăng bán thất bại!', severity: 'error' });
+      setNotification({ open: true, message: MESSAGES.ERROR_ADD_PRODUCT, severity: 'error' });
     } finally {
       setLoading(false);
     }
@@ -209,7 +210,7 @@ const AddProductView = () => {
                     sx={{ marginTop: 1 }}
                   >
                     <MenuItem value={1}>Đang bán</MenuItem>
-                    {/* <MenuItem value={2}>Đã bán</MenuItem> */}
+                    
                   </TextField>
                 )}
               />

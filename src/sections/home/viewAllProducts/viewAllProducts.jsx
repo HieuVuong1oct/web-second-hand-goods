@@ -1,6 +1,6 @@
-import axios from 'axios';
+
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 
 import {
   Box,
@@ -14,10 +14,15 @@ import {
   CircularProgress,
 } from '@mui/material';
 
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
+
+import { getCategoryById, getProductByCategoryId } from 'src/api/product'
+
 import Header from 'src/sections/home/header';
 
 import Footer from '../footer/footer';
 import Navbar from '../navbar/navbar';
+
 
 const AllProductsPage = () => {
   const { categoryId } = useParams();
@@ -27,14 +32,12 @@ const AllProductsPage = () => {
   const [error, setError] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 8;
-  const navigate = useNavigate();
-
   const [searchParams, setSearchParams] = useSearchParams();
-
   const page = parseInt(searchParams.get('page'), 10) || 1;
 
+  const {navigateProductById} = useNavigationHelpers
   const handleProductClick = (productId) => {
-    navigate(`/product/get-by-id/${productId}`);
+    navigateProductById(productId)
   };
 
   const handlePageChange = (event, newPage) => {
@@ -45,13 +48,8 @@ const AllProductsPage = () => {
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`http://localhost:3001/api/product/list-product`, {
-          params: {
-            categoryId,
-            page,
-            limit: itemsPerPage,
-          },
-        });
+        const response = await getProductByCategoryId(categoryId, page, itemsPerPage)
+        
         setProducts(response.data.data);
         setTotalPages(response.data.meta.total);
       } catch (err) {
@@ -63,9 +61,7 @@ const AllProductsPage = () => {
 
     const fetchCategories = async () => {
       try {
-        const categoriesResponse = await axios.get(
-          `http://localhost:3001/api/category/get-by-id/${categoryId}`
-        );
+        const categoriesResponse = await getCategoryById(categoryId)
         setCategories(categoriesResponse.data);
       } catch (err) {
         alert('Lỗi');

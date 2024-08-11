@@ -1,3 +1,4 @@
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
 import { listPathApi } from 'src/constant/constant';
@@ -23,6 +24,34 @@ export const getAllProduct = async () => {
 };
 
 export const getProductById = async (id) => {
-  const response = await axiosClient.get(listPathApi.urlGetProductById(id));
+  
+  const response = await axiosClient.get(listPathApi.urlGetProductById(id),
+  {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return response;
+};
+
+export const getProductByCategoryId = async (categoryId, page, itemsPerPage) =>
+   {
+  try {
+    const response = await axios.get(listPathApi.urlGetProductByCategoryId, {
+      params: {
+        categoryId,
+        page,
+        limit: itemsPerPage,
+      },
+    });
+    return response; 
+  } catch (error) {
+    alert('Lỗi')
+    throw error;
+  }
+}
+
+export const getCategoryById = async (id) => {
+  const response = await axiosClient.get(listPathApi.urlGetCategoryById(id));
   return response;
 };

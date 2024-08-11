@@ -8,6 +8,8 @@ export const listPath = {
   addProduct: '/addProduct',
   productDetail: '/product-detail',
   contentProductDetail: '/homeMain/contentProductDetail',
+  listProductById:(productId) => `/product/get-by-id/${productId}`,
+  productByCategoryId:(categoryId) => `/categories/${categoryId}/products`
 };
 
 export const listPathApi = {
@@ -24,11 +26,13 @@ export const listPathApi = {
   urlSendOtp: '/auth/forgot-password',
   urlNewPassword: '/auth/set-password',
   urlLogout: '/auth/logout',
+  urlGetProductByCategoryId:'product/list-product',
+  urlGetCategoryById:(categoryId) => `category/get-by-id/${categoryId}`
 };
 
 export const MESSAGES = {
-  SUCCESS_ADD_PRODUCT: 'Thêm sản phẩm thành công!',
-  ERROR_ADD_PRODUCT: 'Lỗi khi thêm sản phẩm!',
+  SUCCESS_ADD_PRODUCT: 'Đăng bán thành công! Sản phẩm được gửi cho ADMIN duyệt! ',
+  ERROR_ADD_PRODUCT: 'Đăng bán thất bại!',
   SEND_EMAIL: 'Đã gửi email đặt lại mật khẩu, vui lòng kiểm tra email của bạn.',
   ERROR_SEND_EMAIL: 'Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.',
   ERROR_ACCESS: 'Bạn không có quyền truy cập trang này.',

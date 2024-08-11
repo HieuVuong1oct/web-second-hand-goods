@@ -194,7 +194,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Snackbar for displaying messages */}
+    
       <Snackbar
         open={success !== null}
         autoHideDuration={3000}
