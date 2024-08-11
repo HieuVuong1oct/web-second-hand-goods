@@ -7,3 +7,7 @@ export const getAllCategory = async () => {
   const response = await axiosClient.get(listPathApi.urlGetAllCategory);
   return response;
 };
+
+export const addCategory = (data) => 
+  axiosClient.post(listPathApi.urlAddCategory, data);
+

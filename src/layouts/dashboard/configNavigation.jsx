@@ -24,7 +24,7 @@ const navConfig = [
   },
   {
     title: 'signup',
-    path: '/signup',
+    path: '/signUp',
     icon: icon('ic_signup'),
   },
 

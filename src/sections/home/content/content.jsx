@@ -1,45 +1,100 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 
-import { Box, Checkbox, Typography, FormControlLabel } from '@mui/material';
+import { Box, Card, Grid, Divider, CardMedia, Typography, CardContent } from '@mui/material';
 
-import useStyles from 'src/sections/home/content/contentStyles';
+import { getAllProduct } from 'src/api/product';
+import { getAllCategory } from 'src/api/category';
 
-const Content = () => {
+import useStyles from './contentStyles';
+import ProductList from '../productCategory/productCategory';
+
+const featuredProduct = {
+  cover: '/assets/images/products/product_1.jpg',
+  name: 'Giày xanh',
+  describe:
+    'Apple đã cho ra mắt iPhone 15 Pro Max thuộc dòng iPhone 15 Series trong sự kiện "Wonderlust" cùng Apple Watch Series 9 và Apple Watch Ultra 2. Đây là phiên bản iPhone cao cấp nhất của iPhone 15 Series với nhiều những cải tiến vượt bật cả về thiết kế và hiệu năng.',
+  price: 1000,
+  seller: 'Người bán ABC',
+  purchases: 150,
+};
+
+const ProductPage = () => {
   const classes = useStyles();
+  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const [categoriesResponse, productsResponse] = await Promise.all([
+          getAllCategory(),
+          getAllProduct(),
+        ]);
+
+        setCategories(categoriesResponse);
+
+        setProducts(Array.isArray(productsResponse.data) ? productsResponse.data : []);
+      } catch (error) {
+        alert('Lỗi');
+      }
+    };
+
+    fetchInitialData();
+  }, []);
+
+  const groupedProducts = categories.map((category) => ({
+    ...category,
+    products: products
+      .filter((product) => Number(category.categoryId) === Number(product.categoryId))
+      .map((product) => ({
+        ...product,
+        productId: Number(product.productId),
+      })),
+  }));
 
   return (
-    <Box className={classes.container}>
-      <Box className={classes.row}>
-        <Box className={classes.item1}>
-          <Typography variant="h6">Danh mục</Typography>
-          <ul className={classes.menuList}>
-            <li className={classes.menuItem}>Đồ điện tử</li>
-            <li className={classes.menuItem}>Thời trang</li>
-            <li className={classes.menuItem}>Đồ ăn</li>
-          </ul>
-          <Box className={classes.filterSection}>
-            <Typography variant="h6">Bộ lọc</Typography>
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Sắp xếp theo giá"
-              className={classes.filterLabel}
-            />
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Sắp xếp theo thời gian bán"
-              className={classes.filterLabel}
-            />
-          </Box>
-        </Box>
+    <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={12}>
+          <div style={{ width: '80%', margin: '0 auto' }}>
+            <Typography variant="h4" sx={{ marginBottom: 2 }}>
+              Sản Phẩm Nổi Bật
+            </Typography>
+            <Card
+              className={classes.featuredProductCard}
+              sx={{ backgroundColor: '#ADD8E6', marginBottom: '16px', borderRadius: '10px' }}
+            >
+              <CardContent className={classes.featuredCardContent}>
+                <CardMedia
+                  component="img"
+                  height="400"
+                  image={featuredProduct.cover}
+                  alt={featuredProduct.name}
+                  className={classes.featuredProductImage}
+                />
+                <Box className={classes.featuredProductInfo}>
+                  <Typography variant="h5">{featuredProduct.name}</Typography>
+                  <Typography variant="body1">{featuredProduct.describe}</Typography>
+                  <Typography variant="body1">Giá: ${featuredProduct.price}</Typography>
+                  <Typography variant="body1">Người bán: {featuredProduct.seller}</Typography>
+                  <Typography variant="body1">Số lượt mua: {featuredProduct.purchases}</Typography>
+                </Box>
+              </CardContent>
+            </Card>
+            <Divider sx={{ marginY: 2 }} />
+          </div>
 
-        <Box className={classes.item2}>
-          {/* Sản phẩm nổi bật */}
-          <Outlet />
-        </Box>
-      </Box>
+          {groupedProducts.map((category) => (
+            <ProductList
+              key={category.categoryId}
+              category={category}
+              products={category.products}
+            />
+          ))}
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-export default Content;
+export default ProductPage;

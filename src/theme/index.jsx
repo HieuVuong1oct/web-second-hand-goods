@@ -2,16 +2,13 @@ import { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import CssBaseline from '@mui/material/CssBaseline'
-import createTheme from "@mui/material/styles/createTheme";
-import {  ThemeProvider as MUIThemeProvider } from '@mui/material/styles'
+import { createTheme, ThemeProvider as MUIThemeProvider} from '@mui/material/styles';
 
 import { palette } from './palette'
 import { shadows } from './shadows'
 import { overrides } from './overrides'
 import { typography } from './typography'
 import { customShadows } from './customShadows'
-
-// ----------------------------------------------------------------------
 
 export default function ThemeProvider({ children }) {
   const memoizedValue = useMemo(

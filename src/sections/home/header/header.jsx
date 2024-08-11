@@ -1,25 +1,27 @@
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { alpha } from '@mui/material/styles';
-import { ShoppingCart, Search as SearchIcon } from '@mui/icons-material';
 import {
   Box,
+  Alert,
   Avatar,
   AppBar,
   Button,
   Divider,
   Popover,
   MenuItem,
-  InputBase,
+  Snackbar,
   IconButton,
   Typography,
-  InputAdornment,
 } from '@mui/material';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import Account from 'src/_mock/account';
+import { logout } from 'src/api/account';
+import { listPath } from 'src/constant/constant';
 import { clearCookies } from 'src/cookie/setCookies';
 
 import useStyles from './headerStyles';
@@ -29,7 +31,8 @@ const Header = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
   useEffect(() => {
     const token = Cookies.get('accessToken');
     if (token) {
@@ -51,45 +54,52 @@ const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const logOut = () => {
-    clearCookies();
-    navigateToLogin();
+  const logOut = async () => {
+    try {
+      await logout();
+      setSuccess(true);
+      setTimeout(() => {
+        clearCookies();
+        navigateToLogin();
+      }, 3000);
+    } catch (error) {
+      setSuccess(false);
+    } finally {
+      setIsLoggedIn(false);
+      setAnchorEl(null);
+    }
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleAddProduct = () => {
+    navigate(listPath.addProduct);
+  };
+  const handleHomePage = () => {
+    navigate(listPath.homePage);
+  };
   return (
     <AppBar position="fixed" className={classes.appBar}>
       <div className={classes.container}>
-        {/* <div className={classes.item1}> */}
-
-        {/* </div> */}
         <div className={classes.item2}>
-          <div className={classes.logo}>
-            <img src="/favicon/logo-1.png" alt="Logo" />
+          <div
+            className={classes.logo}
+            role="button"
+            aria-label="Logo"
+            tabIndex={0}
+            onClick={handleHomePage}
+            onKeyDown={handleHomePage}
+          >
+            <img src="/favicon/logo-1.png" alt="Logo" style={{ cursor: 'pointer' }} />
           </div>
           <Box className={classes.searchContainer}>
-            <div className={classes.search}>
-              <InputBase
-                placeholder="Tìm kiếm…"
-                className={classes.searchInput}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon className={classes.searchIcon} />
-                  </InputAdornment>
-                }
-              />
-            </div>
-            <IconButton sx={{ color: '#9c27b0' }} className={classes.shoppingCartIcon}>
-              <ShoppingCart />
-            </IconButton>
             {isLoggedIn ? (
               <>
                 <IconButton
                   onClick={handleOpen}
                   sx={{
+                    marginLeft: '200px',
                     width: 40,
                     height: 40,
                     background: (theme) => alpha(theme.palette.grey[500], 0.08),
@@ -138,6 +148,23 @@ const Header = () => {
                   <MenuItem
                     disableRipple
                     disableTouchRipple
+                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                  >
+                    Lịch sử
+                  </MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  <MenuItem
+                    disableRipple
+                    disableTouchRipple
+                    onClick={handleAddProduct}
+                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                  >
+                    Đăng bán
+                  </MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  <MenuItem
+                    disableRipple
+                    disableTouchRipple
                     onClick={logOut}
                     sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
                   >
@@ -166,6 +193,22 @@ const Header = () => {
           </Box>
         </div>
       </div>
+
+      {/* Snackbar for displaying messages */}
+      <Snackbar
+        open={success !== null}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSuccess(null)}
+          severity={success ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {success ? 'Bạn đã đăng xuất thành công!' : 'Đăng xuất không thành công.'}
+        </Alert>
+      </Snackbar>
     </AppBar>
   );
 };

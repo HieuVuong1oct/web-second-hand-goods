@@ -30,6 +30,8 @@ export const useNavigationHelpers = () => {
     navigate(listPath.resetPassword);
   }
 
+  
+
   return {
     navigateToLogin,
     navigateToSignUp,

@@ -2,7 +2,7 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   appBar: {
-    backgroundImage: 'url(/favicon/bg2.jpg)',
+    backgroundImage: 'url(/favicon/bg3.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -70,7 +70,8 @@ const useStyles = makeStyles(() => ({
   logo: {
     display: 'flex',
     alignItems: 'center',
-    marginRight: '16px',
+    marginRight: '150px',
+    marginLeft: '130px',
     color: '#9c27b0',
   },
 }));

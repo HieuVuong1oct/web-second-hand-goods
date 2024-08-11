@@ -3,18 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { AppBar, Button, Toolbar, Container } from '@mui/material';
 
-import { listPath } from 'src/constant/constant'
+import { listPath } from 'src/constant/constant';
 
 import useStyles from './navbarStyles';
-
 
 const Navbar = () => {
   const classes = useStyles();
   const navigate = useNavigate();
-
-  const handleAddProduct = () => {
-    navigate(listPath.addProduct);
-  };
 
   const handleHomePage = () => {
     navigate(listPath.homePage);
@@ -24,7 +19,7 @@ const Navbar = () => {
     <AppBar
       position="fixed"
       className={classes.navbar}
-      sx={{ backgroundColor: '#fce4ec', mt: '88px' }}
+      sx={{ backgroundColor: '#ADD8E6', mt: '88px' }}
     >
       <Toolbar>
         <Container
@@ -36,20 +31,13 @@ const Navbar = () => {
             width: '100%',
           }}
         >
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }} onClick={handleHomePage}>
-            TRANG CHỦ
-          </Button>
-          <span className={classes.separator}>|</span>
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }}>
-            HỒ SƠ
-          </Button>
-          <span className={classes.separator}>|</span>
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }} onClick={handleAddProduct}>
-            ĐĂNG BÁN
-          </Button>
-          <span className={classes.separator}>|</span>
-          <Button color="inherit" className={classes.button} sx={{ color: '#9c27b0' }}>
-            QUẢN LÝ ĐƠN HÀNG
+          <Button
+            color="inherit"
+            className={classes.button}
+            sx={{ color: '#8080C5', fontSize: '25px' }}
+            onClick={handleHomePage}
+          >
+            MOR MARKET
           </Button>
         </Container>
       </Toolbar>

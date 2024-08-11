@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ProductDetailView } from 'src/sections/products/productDetail';
+import ProductDetail from 'src/sections/home/contentProductDetail/contentProductDetail';
 
 export default function ProductDetailPage() {
   return (
@@ -9,7 +9,7 @@ export default function ProductDetailPage() {
         <title> ProductDetail | Minimal UI </title>
       </Helmet>
 
-      <ProductDetailView />
+      <ProductDetail />
     </>
   );
 }

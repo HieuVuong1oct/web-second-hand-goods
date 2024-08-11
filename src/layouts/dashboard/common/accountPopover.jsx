@@ -1,40 +1,50 @@
+import { useState } from 'react';
 
-import { useState } from 'react'
-
-import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
-import Divider from '@mui/material/Divider'
-import Popover from '@mui/material/Popover'
-import { alpha } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
+import Box from '@mui/material/Box';
+import Alert from '@mui/material/Alert';
+import Avatar from '@mui/material/Avatar';
+import Divider from '@mui/material/Divider';
+import Popover from '@mui/material/Popover';
+import { alpha } from '@mui/material/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Snackbar from '@mui/material/Snackbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
-import Account from 'src/_mock/account'
+import Account from 'src/_mock/account';
 import { clearCookies } from 'src/cookie/setCookies';
 
 export default function AccountPopover() {
-  const account = Account()
-  const [open, setOpen] = useState(null)
-  const {navigateToHome,navigateToLogin } = useNavigationHelpers();
+  const account = Account();
+  const [open, setOpen] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const { navigateToHome, navigateToLogin } = useNavigationHelpers();
+
   const handleOpen = (event) => {
-    setOpen(event.currentTarget)
-  }
+    setOpen(event.currentTarget);
+  };
 
   const handleClose = () => {
-    setOpen(null)
-  }
+    setOpen(null);
+  };
 
   const handleHome = () => {
-    setOpen(null)
-    navigateToHome()
-  }
+    setOpen(null);
+    navigateToHome();
+  };
+
   const logOut = () => {
-    clearCookies()
-    navigateToLogin()
-  }
+    try {
+      clearCookies();
+      setSuccess(true);
+      navigateToLogin();
+    } catch (error) {
+      setSuccess(false);
+    }
+  };
+
   return (
     <>
       <IconButton
@@ -108,6 +118,28 @@ export default function AccountPopover() {
           Đăng xuất
         </MenuItem>
       </Popover>
+
+      <Snackbar
+        open={success === true}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccess(null)} severity="success" sx={{ width: '100%' }}>
+          Bạn đã đăng xuất thành công!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={success === false}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSuccess(null)} severity="error" sx={{ width: '100%' }}>
+          Đăng xuất không thành công.
+        </Alert>
+      </Snackbar>
     </>
-  )
+  );
 }
