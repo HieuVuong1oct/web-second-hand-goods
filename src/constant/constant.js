@@ -9,7 +9,8 @@ export const listPath = {
   productDetail: '/product-detail',
   contentProductDetail: '/homeMain/contentProductDetail',
   listProductById:(productId) => `/homeMain/product/get-by-id/${productId}`,
-  productByCategoryId:(categoryId) => `/homeMain/categories/${categoryId}/products`
+  productByCategoryId:(categoryId) => `/homeMain/categories/${categoryId}/products`,
+  history:'/homeMain/history'
 };
 
 export const listPathApi = {

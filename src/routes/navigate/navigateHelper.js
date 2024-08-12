@@ -31,6 +31,7 @@ export const useNavigationHelpers = () => {
   }
 
   const navigateProductById = (id) => {
+   
     navigate(listPath.listProductById(id))
   }
 

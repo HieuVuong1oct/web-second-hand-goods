@@ -6,7 +6,7 @@ export default function ContentPage() {
   return (
     <>
       <Helmet>
-        <title> ContentProductDetailView | Minimal UI </title>
+        <title> Content | Minimal UI </title>
       </Helmet>
 
       <ProductPage />

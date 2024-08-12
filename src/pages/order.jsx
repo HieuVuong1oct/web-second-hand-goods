@@ -6,7 +6,7 @@ export default function OrderPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> Order | Minimal UI </title>
       </Helmet>
 
       <OrderManagement />

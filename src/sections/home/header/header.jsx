@@ -35,6 +35,7 @@ const Header = () => {
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) { 
@@ -69,6 +70,7 @@ const Header = () => {
   const handleAdminPage = () => {
     navigate(listPath.admin); 
   };
+  
   const handleLoginClick = () => {
     navigateToLogin();
   };
@@ -78,7 +80,7 @@ const Header = () => {
   };
 
   const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    setAnchorEl(event.currentTarget); // Đặt anchorEl là phần tử DOM
   };
 
   const logOut = async () => {
@@ -100,24 +102,28 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const handleAddProduct = () => {
     navigate(listPath.addProduct);
   };
+
   const handleHomePage = () => {
     navigate(listPath.homePage);
   };
+
+  const handleHistory = () => {
+    navigate(listPath.history);
+  };
+
   return (
     <AppBar
-    position="fixed"
-    className={classes.appBar}
-    style={{
-      background: scrolled
-      
-         ? 'white'
-        : 'transparent', 
-      transition: 'background 0.3s ease', 
-    }}
-  >
+      position="fixed"
+      className={classes.appBar}
+      style={{
+        background: scrolled ? 'white' : 'transparent', 
+        transition: 'background 0.3s ease', 
+      }}
+    >
       <div className={classes.container}>
         <div className={classes.item2}>
           <div
@@ -128,7 +134,7 @@ const Header = () => {
             onClick={handleHomePage}
             onKeyDown={handleHomePage}
           >
-            <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer',width:'150px', height:'50px' }} />
+            <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer', width: '150px', height: '50px' }} />
           </div>
           <Box className={classes.searchContainer}>
             {isLoggedIn ? (
@@ -160,7 +166,7 @@ const Header = () => {
                 </IconButton>
                 <Popover
                   open={Boolean(anchorEl)}
-                  anchorEl={anchorEl}
+                  anchorEl={anchorEl} // Đảm bảo anchorEl là một phần tử DOM hợp lệ
                   onClose={handleClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -186,6 +192,7 @@ const Header = () => {
                     disableRipple
                     disableTouchRipple
                     sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                    onClick={handleHistory}
                   >
                     Lịch sử
                   </MenuItem>
@@ -226,15 +233,13 @@ const Header = () => {
             ) : (
               <div className={classes.loginButtons}>
                 <Button
-                
-                  sx={{  ml: '20px', }}
+                  sx={{ ml: '20px' }}
                   className={classes.loginButton}
                   onClick={handleLoginClick}
                 >
                   Đăng nhập
                 </Button>
                 <Button
-                
                   className={classes.loginButton}
                   onClick={handleRegisterClick}
                 >
@@ -246,7 +251,6 @@ const Header = () => {
         </div>
       </div>
 
-    
       <Snackbar
         open={success !== null}
         autoHideDuration={3000}

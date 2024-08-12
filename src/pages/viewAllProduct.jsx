@@ -6,7 +6,7 @@ export default function ViewAllProductPage() {
   return (
     <>
       <Helmet>
-        <title> SignUp | Minimal UI </title>
+        <title> ViewAll | Minimal UI </title>
       </Helmet>
 
       <AllProductsPage />

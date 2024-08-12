@@ -18,7 +18,7 @@ import {
   DialogContentText,
 } from '@mui/material';
 
-import { approveProduct, getApprovedProducts } from 'src/api/product';
+import { rejectProduct,approveProduct, getApprovedProducts,  } from 'src/api/product';
 
 const OrderManagement = () => {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
@@ -27,6 +27,7 @@ const OrderManagement = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([]);
   const [productIdToApprove, setProductIdToApprove] = useState(null); // State để lưu productId cần phê duyệt
+  const [rejectProductId, setRejectProductId] = useState(null); // State để lưu productId cần từ chối
   const categoryId = 1;
 
   const username = Cookies.get('username');
@@ -35,7 +36,6 @@ const OrderManagement = () => {
     const fetchInitialData = async () => {
       try {
         const approvedProducts = await getApprovedProducts(categoryId);
-      
         setOrders(approvedProducts);
       } catch (error) {
         alert('Lỗi');
@@ -45,7 +45,7 @@ const OrderManagement = () => {
     fetchInitialData();
   }, []);
 
-  const approved = async () => {
+  const approve = async () => {
     try {
       await approveProduct(productIdToApprove);
       handleCloseConfirmDialog(); 
@@ -55,18 +55,31 @@ const OrderManagement = () => {
     }
   };
 
+  const reject = async () => {
+    if (!rejectProductId || !rejectReason) {
+      alert('Vui lòng nhập lý do từ chối.');
+      return;
+    }
+
+    try {
+      await rejectProduct(rejectProductId, rejectReason); // Gọi API từ chối với lý do
+      handleCloseRejectDialog(); 
+      setOrders(await getApprovedProducts(categoryId)); 
+    } catch (error) {
+      alert('Lỗi');
+    }
+  };
+
   const handleOpenRejectDialog = (order) => {
     setSelectedOrder(order);
+    setRejectProductId(order.productId); // Lưu productId để từ chối
     setOpenRejectDialog(true);
   };
 
   const handleCloseRejectDialog = () => {
     setOpenRejectDialog(false);
     setRejectReason('');
-  };
-
-  const handleRejectOrder = () => {
-    handleCloseRejectDialog();
+    setRejectProductId(null); // Reset productId khi đóng dialog
   };
 
   const handleOpenConfirmDialog = (productId) => {
@@ -130,7 +143,7 @@ const OrderManagement = () => {
           <Button onClick={handleCloseConfirmDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={approved} color="secondary">
+          <Button onClick={approve} color="secondary">
             Xác nhận
           </Button>
         </DialogActions>
@@ -158,7 +171,7 @@ const OrderManagement = () => {
           <Button onClick={handleCloseRejectDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleRejectOrder} color="secondary">
+          <Button onClick={reject} color="secondary">
             Gửi
           </Button>
         </DialogActions>
@@ -167,4 +180,4 @@ const OrderManagement = () => {
   );
 };
 
-export default OrderManagement; 
+export default OrderManagement;

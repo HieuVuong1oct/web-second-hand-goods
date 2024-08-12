@@ -66,22 +66,22 @@ export const submitProductForApproval = async (productData) => {
   
     const response = await axios.post(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/${categoryId}/products`, {
       ...productData,
-      status: true, 
+      status: 'pending', 
     });
     return response.data;
   } catch (error) {
-    console.error('Error submitting product for approval:', error);
+   alert('Lỗi')
     throw error;
   }
 };
 export const getProducts = async (categoryId) => {
- 
+      
   try {
     const response = await axios.get(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/${categoryId}/products`);
-   
+    
     return response.data;
   } catch (error) {
-    console.error('Error fetching products:', error);
+    alert('Lỗi')
     throw error;
   }
 }
@@ -91,11 +91,11 @@ export const getApprovedProducts = async (categoryId) => {
   try {
     const products = await getProducts(categoryId);
    
-    const approvedProducts = products.filter(product => product.status === true);
+    const approvedProducts = products.filter(product => product.status === 'pending');
    
     return approvedProducts;
   } catch (error) {
-    console.error('Error filtering approved products:', error);
+    alert('Lỗi')
     throw error;
   }
 };
@@ -104,12 +104,28 @@ export const approveProduct = async (productId) => {
   try {
    
     const response = await axios.put(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/1/products/${productId}`, {
-      status: false, 
+      status: 'approve', 
     });
    
     return response.data;
   } catch (error) {
-    console.error('Error approving product:', error);
+    alert('Lỗi')
+    throw error;
+  }
+};
+
+
+export const rejectProduct = async (productId,mess) => {
+  try {
+   
+    const response = await axios.put(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/1/products/${productId}`, {
+      status:'reject', 
+      reject:mess,
+    });
+   
+    return response.data;
+  } catch (error) {
+    alert('Lỗi')
     throw error;
   }
 };
