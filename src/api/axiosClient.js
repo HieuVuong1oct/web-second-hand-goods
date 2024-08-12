@@ -13,27 +13,39 @@ const axiosClient = axios.create({
 const refreshAccessToken = async () => {
   try {
     const refreshToken = Cookies.get('refreshToken');
+
     if (refreshToken) {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth/refresh-token`, { refreshToken });
-      const newAccessToken = response.data.accessToken;
-      Cookies.set('accessToken', newAccessToken);
-      return newAccessToken;
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
+        headers: {
+          Authorization: `Bearer ${refreshToken}`,
+        },
+      });
+      const token = response.data;
+
+      Cookies.set('accessToken', token.data.accessToken);
+      Cookies.set('refreshToken', token.data.refreshToken);
+
+      return {
+        accessToken: token.data.accessToken,
+        refreshToken: token.data.refreshToken,
+      };
     }
   } catch (error) {
-    alert('Lỗi xảy ra')
+    alert('Lỗi xảy ra');
   }
   return null;
 };
 
 axiosClient.interceptors.request.use(
   async (config) => {
-    let accessToken = Cookies.get('accessToken');
+    const accessToken = Cookies.get('accessToken');
+
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     } else {
-      accessToken = await refreshAccessToken();
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+      const tokens = await refreshAccessToken();
+      if (tokens && tokens.accessToken) {
+        config.headers.Authorization = `Bearer ${tokens.accessToken}`;
       }
     }
     return config;
@@ -52,9 +64,9 @@ axiosClient.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const newAccessToken = await refreshAccessToken();
-      if (newAccessToken) {
-        axios.defaults.headers.common.Authorization = `Bearer ${newAccessToken}`;
+      const tokens = await refreshAccessToken();
+      if (tokens && tokens.accessToken) {
+        axios.defaults.headers.common.Authorization = `Bearer ${tokens.accessToken}`;
         return axiosClient(originalRequest);
       }
     }
@@ -65,7 +77,7 @@ axiosClient.interceptors.response.use(
 const startTokenRefreshInterval = () => {
   setInterval(async () => {
     await refreshAccessToken();
-  }, 15 * 60 * 1000); 
+  }, 60 * 1000);
 };
 
 startTokenRefreshInterval();

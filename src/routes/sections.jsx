@@ -17,10 +17,10 @@ export const HomeMainPage = lazy(() => import('src/pages/homeMain'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/forgotPassword'));
 export const ResetPasswordPage = lazy(() => import('src/pages/resetPassword'));
 export const HomePage = lazy(() => import('src/pages/homePage'));
-export const ContentProductPage = lazy(() => import('src/pages/contentProduct'));
 export const AddProductPage = lazy(() => import('src/pages/addProduct'));
-export const ContentProductDetailPage = lazy(() => import('src/pages/contentProductDetail'));
-export const ListProductPage = lazy(() => import('src/pages/listProduct'));
+export const ViewAllProductPage = lazy(() => import('src/pages/viewAllProduct'));
+export const ContentPage  = lazy(() => import('src/pages/content'));
+
 
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
@@ -29,9 +29,9 @@ export default function Router() {
     {
       path: '/',
       element: isAuthenticated ? (
-        <Navigate to="/homemain/contentProductPage" replace />
+        <Navigate to="/homeMain/contentProduct" replace />
       ) : (
-        <Navigate to="/homemain" replace />
+        <Navigate to="/homeMain" replace />
       ),
     },
     {
@@ -43,59 +43,50 @@ export default function Router() {
           </Suspense>
         </DashboardLayout>
       ) : (
-        <Navigate to="/homemain" replace />
+        <Navigate to="/homeMain" replace />
       ),
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'product-detail', element: <ProductDetailPage /> },
+        { path: 'product-detail/:productId', element: <ProductDetailPage /> },
       ],
     },
     {
       path: '/',
       element: !isAuthenticated ? (
         <AuthLayout>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        </AuthLayout>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </AuthLayout> 
       ) : (
-        <Navigate to="/homemain/contentProductPage" replace />
+        <Navigate to="/homeMain" replace />
       ),
       children: [
         { path: 'login', element: <LoginPage /> },
-        { path: 'signup', element: <SignUpPage /> },
+        { path: 'signUp', element: <SignUpPage /> },
         { path: 'forgotPassword', element: <ForgotPasswordPage /> },
         { path: 'resetPassword', element: <ResetPasswordPage /> },
       ],
     },
-
     {
-      path: 'homemain',
-      element: (
+      path: 'homeMain',
+      element:(
         <HomeMainPage>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Outlet />
-          </Suspense>
-        </HomeMainPage>
-      ),
+        <Suspense fallback={<div>Loading...</div>}>
+          <Outlet />
+        </Suspense>
+      </HomeMainPage> 
+      ) ,
       children: [
-        { element: <Navigate to="contentProductPage" replace />, index: true },
-        { path: 'contentProductPage', element: <ContentProductPage /> },
-        { path: 'contentProductDetail', element: <ContentProductDetailPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'listProduct', element: <ListProductPage /> },
+        { element: <ContentPage />, index: true },
+        { path: 'product/get-by-id/:productId', element: <ProductDetailPage /> },
+        { path: 'categories/:categoryId/products', element: <ViewAllProductPage /> },
+        { path: 'addProduct', element: <AddProductPage /> },
       ],
     },
-    {
-      path: 'homePage',
-      element: <HomePage />,
-    },
-    {
-      path: 'addProduct',
-      element: <AddProductPage />,
-    },
+ 
     {
       path: '404',
       element: <Page404 />,

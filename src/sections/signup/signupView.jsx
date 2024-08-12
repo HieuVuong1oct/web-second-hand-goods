@@ -9,6 +9,7 @@ import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -19,8 +20,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
-import { signup } from 'src/api/account';
-import { MESSAGES } from 'src/constant/constant'
+import { signUp } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant';
 
 import Iconify from 'src/components/iconify';
 
@@ -29,13 +30,16 @@ export default function SignUpView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
+  const [avatarFile, setAvatarFile] = useState(null);
   const { navigateToLogin } = useNavigationHelpers();
+  const [successMessage, setSuccessMessage] = useState('');
+
   const validationSchema = Yup.object({
     email: Yup.string()
-    .email('Địa chỉ email không hợp lệ')
-    .min(11,'Email phải có ít nhất 11 ký tự')
-    .max(64, 'Email tối đa 64 ký tự')
-    .required('Vui lòng nhập email'),
+      .email('Địa chỉ email không hợp lệ')
+      .min(11, 'Email phải có ít nhất 11 ký tự')
+      .max(64, 'Email tối đa 64 ký tự')
+      .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
@@ -45,15 +49,15 @@ export default function SignUpView() {
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
     username: Yup.string()
-    .min(1,'Tên tài khoản phải có ít nhất 1 ký tự')
-    .max(30, 'Tên tài khoản tối đa 30 ký tự')
-    .required('Vui lòng nhập tên tài khoản'),
+      .min(1, 'Tên tài khoản phải có ít nhất 1 ký tự')
+      .max(30, 'Tên tài khoản tối đa 30 ký tự')
+      .required('Vui lòng nhập tên tài khoản'),
     name: Yup.string()
-    .min(1,'Tên phải có ít nhất 1 ký tự')
-    .max(30, 'Tên tối đa 30 ký tự')
-    .required('Vui lòng nhập tên người dùng'),
-    avatar: Yup.string().required('Vui lòng tải lên avatar'),
+      .min(1, 'Tên phải có ít nhất 1 ký tự')
+      .max(30, 'Tên tối đa 30 ký tự')
+      .required('Vui lòng nhập tên người dùng'),
   });
+
   const {
     handleSubmit,
     control,
@@ -63,10 +67,8 @@ export default function SignUpView() {
   });
 
   const onSubmit = async (data) => {
-    const { email, password, checkPassword, username, name, avatar } = data;
-
+    const { email, password, checkPassword, username, name } = data;
     setLoading(true);
-
     if (password !== checkPassword) {
       setError(MESSAGES.ERROR_CHECKPASSWORD);
       setLoading(false);
@@ -74,27 +76,31 @@ export default function SignUpView() {
     }
 
     try {
-      const response = await signup({
-        email,
-        password,
-        username,
-        name,
-        avatar,
-      });
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('username', username);
+      formData.append('name', name);
+      if (avatarFile) {
+        formData.append('avatar', avatarFile);
+      }
+
+      const response = await signUp(formData);
 
       setLoading(false);
       if (response) {
         setSignUpSuccess(true);
+        setSuccessMessage(
+          'Mở email để xác nhận tài khoản. Nếu không xác nhận tài khoản sẽ bị xóa sau 15 phút!'
+        );
         setTimeout(() => {
           navigateToLogin();
-        }, 5000); 
+        }, 5000);
       } else {
         setError(MESSAGES.ERROR_SIGN_UP_WRONG);
       }
     } catch (err) {
-      const errorMsg =
-        err.response?.data?.message || MESSAGES.ERROR_SIGN_UP
-        
+      const errorMsg = err.response?.data?.message || MESSAGES.ERROR_SIGN_UP;
       setError(errorMsg);
       setLoading(false);
     }
@@ -107,7 +113,11 @@ export default function SignUpView() {
   const handleClickLogin = () => {
     navigateToLogin();
   };
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
 
+    setAvatarFile(file);
+  };
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -229,27 +239,23 @@ export default function SignUpView() {
                     />
                   )}
                 />
-                <Controller
-                  name="avatar"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      sx={{ mt: 2 }}
-                      {...field}
-                      label="Nhập avatar"
-                      error={!!errors.avatar}
-                      helperText={errors.avatar ? errors.avatar.message : ''}
-                      fullWidth
-                    />
-                  )}
-                />
+                <Button variant="contained" component="label" sx={{ mt: 2 }}>
+                  Tải lên avatar
+                  <input type="file" hidden accept="image/*" onChange={handleAvatarChange} />
+                </Button>
+                {avatarFile && (
+                  <Typography variant="body2" sx={{ mt: 1 }}>
+                    Đã chọn file: {avatarFile.name}
+                  </Typography>
+                )}
               </Grid>
             </Grid>
 
-
             {signUpSuccess && (
-              <Typography variant="body2" sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}
+              >
                 Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...
               </Typography>
             )}
@@ -273,39 +279,40 @@ export default function SignUpView() {
 
             <Typography variant="body2" sx={{ mt: 2, mb: 5, textAlign: 'center' }}>
               Bạn đã có tài khoản?
-              <Link
-                onClick={handleClickLogin}
-                variant="subtitle2"
-                sx={{ ml: 0.5, cursor: 'pointer' }}
-              >
-                Đăng nhập
+              <Link variant="subtitle2" onClick={handleClickLogin} sx={{ cursor: 'pointer' }}>
+                {' '}
+                Đăng Nhập
               </Link>
             </Typography>
           </Card>
         </Stack>
       </form>
 
-      <Snackbar
-        open={signUpSuccess}
-        autoHideDuration={5000}
-        onClose={() => setSignUpSuccess(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setSignUpSuccess(false)} severity="success" sx={{ width: '100%' }}>
-          Mở email để xác nhận đăng ký tài khoản. Nếu không xác nhận tài khoản sẽ bị khóa sau 15 phút!
-        </Alert>
-      </Snackbar>
+      {successMessage && (
+        <Snackbar
+          open={Boolean(successMessage)}
+          onClose={() => setSuccessMessage('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          autoHideDuration={6000}
+        >
+          <Alert onClose={() => setSuccessMessage('')} severity="success" sx={{ width: '100%' }}>
+            {successMessage}
+          </Alert>
+        </Snackbar>
+      )}
 
-      <Snackbar
-        open={!!error}
-        autoHideDuration={3000}
-        onClose={() => setError('')}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
-          {error}
-        </Alert>
-      </Snackbar>
+      {error && (
+        <Snackbar
+          open={Boolean(error)}
+          onClose={() => setError('')}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          autoHideDuration={6000}
+        >
+          <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+        </Snackbar>
+      )}
     </>
   );
 }

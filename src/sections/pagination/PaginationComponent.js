@@ -1,18 +1,35 @@
-import React from 'react';
+import React from "react";
+import PropTypes from "prop-types";
 
-import {  Box ,Pagination as MuiPagination} from '@mui/material';
+import {  PaginationItem,Pagination as MUIPagination, } from "@mui/material";
 
-const PaginationComponent = ({ count, page, onPageChange }) => {
-  
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-      <MuiPagination
-        count={count}
-        page={page}
-        onChange={onPageChange}
-        color="primary"
-      />
-    </Box>
-  
+
+const Pagination = ({ totalPages, currentPage, setCurrentPage }) => {
+  const handleClick = (event, pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  return (
+    <MUIPagination
+      count={totalPages}
+      page={currentPage}
+      onChange={handleClick}
+      variant="outlined"
+      shape="rounded"
+      renderItem={(item) => (
+        <PaginationItem
+          {...item}
+          className={item.page === currentPage ? "active" : ""}
+        />
+      )}
+    />
+  );
 };
 
-export default PaginationComponent;
+Pagination.propTypes = {
+  totalPages: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
+};
+
+export default Pagination;

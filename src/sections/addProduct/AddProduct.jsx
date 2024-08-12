@@ -1,76 +1,96 @@
-
 import * as Yup from 'yup';
-import React,{ useState }  from 'react';
-import {useForm,Controller } from 'react-hook-form';
+import React, { useState } from 'react';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import Alert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
   Grid,
+  Alert,
+  Snackbar,
+  MenuItem,
   Container,
   TextField,
   Typography,
-
 } from '@mui/material';
 
 import { addProduct } from 'src/api/product';
-import { MESSAGES } from 'src/constant/constant'
-
-import Header from 'src/sections/home/header';
-import Footer from 'src/sections/home/footer';
-import Navbar from 'src/sections/home/navbar';
-
-
+import { MESSAGES } from 'src/constant/constant';
 
 const schema = Yup.object().shape({
   name: Yup.string()
-  .min(1,'Tên sản phẩm phải có ít nhất 1 ký tự')
-  .max(30, 'Tên sản phẩm tối đa 30 ký tự')
-  .required('Tên sản phẩm là bắt buộc'),
+    .min(1, 'Tên sản phẩm phải có ít nhất 1 ký tự')
+    .max(30, 'Tên sản phẩm tối đa 30 ký tự')
+    .required('Tên sản phẩm là bắt buộc'),
   description: Yup.string()
-  .min(1,'Mô tả phải có ít nhất 1 ký tự')
-  .max(300, 'Mô tả tối đa 300 ký tự')
-  .required('Mô tả là bắt buộc'),
-  image: Yup.string().url('Hãy nhập một URL hợp lệ').required('Hình ảnh là bắt buộc'),
-  price: Yup.number().required('Giá là bắt buộc').positive('Giá phải là số dương'),
-  cover: Yup.string().url('Hãy nhập một URL hợp lệ').required('Bìa là bắt buộc'),
+    .min(1, 'Mô tả phải có ít nhất 1 ký tự')
+    .max(300, 'Mô tả tối đa 300 ký tự')
+    .required('Mô tả là bắt buộc'),
+  price: Yup.number()
+    .typeError('Bạn chưa nhập giá')
+    .required('Giá là bắt buộc')
+    .positive('Giá phải là số dương'),
+  images: Yup.mixed()
+    .typeError('Bạn chưa tải ảnh')
+    .required('Hình ảnh là bắt buộc')
+    .test('fileExists', 'Bạn chưa tải lên hình ảnh', (value) => value && value.length > 0),
   categoryId: Yup.number()
-    .required('ID danh mục là bắt buộc')
-    .positive('ID danh mục phải là số dương'),
-  
+    .typeError('Bạn chưa chọn trạng thái')
+    .required('Trạng thái là bắt buộc')
+    .oneOf([1, 2], 'Trạng thái không hợp lệ')
+    .positive('Trạng thái phải là đã bán hoặc đang bán'),
 });
 
 const AddProductView = () => {
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: '', severity: '' });
 
-  const { control, handleSubmit, formState: { errors } ,reset} = useForm({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
       name: '',
       description: '',
-      image: '',
       price: '',
-      cover: '',
       categoryId: '',
+      images: [],
     },
   });
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await addProduct(data);
-    
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('description', data.description);
+      formData.append('price', data.price);
+      formData.append('categoryId', data.categoryId);
+
+      if (data.images && data.images.length > 0) {
+        Array.from(data.images).forEach((file) => {
+          formData.append('images', file);
+        });
+      }
+
+      const response = await addProduct(formData);
       if (response) {
-        setNotification({ open: true, message: MESSAGES.SUCCESS_ADD_PRODUCT, severity: 'success' });
+        setNotification({
+          open: true,
+          message: MESSAGES.SUCCESS_ADD_PRODUCT,
+          severity: 'success',
+        });
         setTimeout(() => {
           reset();
+          setValue('images', []);
+          document.querySelector('input[type="file"]').value = null;
         }, 1000);
-       
-      } 
+      }
     } catch (error) {
       setNotification({ open: true, message: MESSAGES.ERROR_ADD_PRODUCT, severity: 'error' });
     } finally {
@@ -84,9 +104,7 @@ const AddProductView = () => {
 
   return (
     <div>
-      <Header />
-      <Navbar />
-      <Container width="80%" sx={{ paddingTop: '160px' }}>
+      <Container width="80%" sx={{ paddingTop: '10px', paddingBottom:'50px' }}>
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -101,7 +119,7 @@ const AddProductView = () => {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Thêm Sản Phẩm Mới
+            Đăng bán sản phẩm
           </Typography>
 
           <Grid container spacing={2}>
@@ -135,18 +153,24 @@ const AddProductView = () => {
                   />
                 )}
               />
+
               <Controller
-                name="image"
+                name="images"
                 control={control}
                 render={({ field }) => (
-                  <TextField
-                    label="Hình ảnh"
-                    {...field}
-                    error={!!errors.image}
-                    helperText={errors.image?.message}
-                    fullWidth
-                    sx={{ marginTop: 2 }}
-                  />
+                  <div>
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(e) => field.onChange(e.target.files)}
+                      style={{ marginTop: '16px' }}
+                    />
+                    {errors.images && (
+                      <Typography color="error" variant="caption">
+                        {errors.images?.message}
+                      </Typography>
+                    )}
+                  </div>
                 )}
               />
             </Grid>
@@ -165,33 +189,22 @@ const AddProductView = () => {
                   />
                 )}
               />
-              <Controller
-                name="cover"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    label="Bìa"
-                    {...field}
-                    error={!!errors.cover}
-                    helperText={errors.cover?.message}
-                    fullWidth
-                    sx={{ marginTop: 2 }}
-                  />
-                )}
-              />
+
               <Controller
                 name="categoryId"
                 control={control}
                 render={({ field }) => (
                   <TextField
-                    label="ID danh mục"
-                    type="number"
+                    select
+                    label="Trạng thái"
                     {...field}
                     error={!!errors.categoryId}
                     helperText={errors.categoryId?.message}
                     fullWidth
                     sx={{ marginTop: 1 }}
-                  />
+                  >
+                    <MenuItem value={1}>Đang bán</MenuItem>
+                  </TextField>
                 )}
               />
             </Grid>
@@ -211,20 +224,23 @@ const AddProductView = () => {
                 },
               }}
             >
-              Thêm sản phẩm
+              Đăng bán
             </LoadingButton>
           </Box>
         </Box>
       </Container>
-      <Footer />
+
       <Snackbar
         open={notification.open}
         autoHideDuration={6000}
         onClose={handleCloseNotification}
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       >
-        
-        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={handleCloseNotification}
+          severity={notification.severity}
+          sx={{ width: '100%' }}
+        >
           {notification.message}
         </Alert>
       </Snackbar>

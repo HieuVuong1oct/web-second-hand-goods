@@ -1,72 +1,109 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
-import { Box, Grid, Card, Button, Divider, Typography, CardContent } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Card,
+  Button,
+  Divider,
+  CardMedia,
+  Typography,
+  CardContent,
+} from '@mui/material';
 
-const ProductCategory = ({
-  categoryTitle,
-  categoryId,
-  displayedProducts,
-  handleCardClick,
-  handleViewAllClick,
-  classes,
-}) => (
-  <>
-    <h1 style={{ fontSize: '24px' }}>{categoryTitle}</h1>
-    <Grid container spacing={2} className={classes.productList}>
-      {displayedProducts.map((product) => (
-        <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
-          <Card className={classes.productCard} onClick={() => handleCardClick(product)}>
-            <CardContent className={classes.cardContent}>
-              <img src={product.cover} alt={product.name} className={classes.productImage} />
-              <div className={classes.productInfo}>
-                <Typography variant="h6" className={classes.productName}>
-                  {product.name}
-                </Typography>
+import { listPath } from 'src/constant/constant'
+
+const ProductList = ({ category, products }) => {
+  const navigate = useNavigate();
+
+  const handleProductClick = (productId) => {
+    navigate(listPath.listProductById(productId));
+  };
+
+  const handleViewAllClick = (categoryId) => {
+    navigate(listPath.productByCategoryId(categoryId));
+   
+  };
+
+  const displayedProducts = products.slice(0, 8);
+
+  return (
+    <div style={{ width: '80%', margin: '0 auto' }}>
+      <Typography
+        variant="h4"
+        sx={{ marginBottom: 2, cursor: 'pointer' }}
+        onClick={() => handleViewAllClick(category.categoryId)}
+      >
+        {category.categoryName}
+      </Typography>
+      <Grid container spacing={2}>
+        {displayedProducts.map((product) => (
+          <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
+            <Card
+              onClick={() => handleProductClick(Number(product.productId))}
+              sx={{ cursor: 'pointer' }}
+            >
+              <CardContent>
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={JSON.parse(product.images)[0]}
+                  alt={product.name}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://via.placeholder.com/200';
+                  }}
+                />
+                <Typography variant="h6">{product.name}</Typography>
                 <Typography variant="body2">${product.price}</Typography>
                 {product.priceSale && (
                   <Typography variant="body2" color="textSecondary">
                     ${product.priceSale}
                   </Typography>
                 )}
-              </div>
-              <Button variant="contained" color="primary" className={classes.buyNowButton}>
-                Mua ngay
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
-    <Box sx={{ display: 'flex', justifyContent: 'end', marginTop: 2 }}>
-      <Typography
-        variant="contained"
-        color="secondary"
-        onClick={() => handleViewAllClick(categoryId)}
-        sx={{ cursor: 'pointer' }}
-      >
-        Xem Thêm
-      </Typography>
-    </Box>
-    <Divider />
-  </>
-);
 
-ProductCategory.propTypes = {
-  categoryTitle: PropTypes.string.isRequired,
-  categoryId: PropTypes.number.isRequired,
-  displayedProducts: PropTypes.arrayOf(
+                {category.categoryName !== 'Đã bán' && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                    <Button variant="contained" color="primary" sx={{ mt: 2, ml: 2 }}>
+                      Mua ngay
+                    </Button>
+                  </Box>
+                )}
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginY: 2 }}>
+        <Button
+         variant="contained" color="primary"
+          onClick={() => handleViewAllClick(category.categoryId)}
+        
+        >
+          Xem thêm
+        </Button>
+      </Box>
+      <Divider sx={{ marginY: 2 }} />
+    </div>
+  );
+};
+
+ProductList.propTypes = {
+  category: PropTypes.shape({
+    categoryId: PropTypes.number.isRequired,
+    categoryName: PropTypes.string.isRequired,
+  }).isRequired,
+  products: PropTypes.arrayOf(
     PropTypes.shape({
       productId: PropTypes.number.isRequired,
-      cover: PropTypes.string.isRequired,
       name: PropTypes.string.isRequired,
       price: PropTypes.number.isRequired,
+      images: PropTypes.string.isRequired,
       priceSale: PropTypes.number,
     })
   ).isRequired,
-  handleCardClick: PropTypes.func.isRequired,
-  handleViewAllClick: PropTypes.func.isRequired,
-  classes: PropTypes.object.isRequired,
 };
 
-export default ProductCategory;
+export default ProductList;
