@@ -86,19 +86,7 @@ export default function Router() {
         { path: 'addProduct', element: <AddProductPage /> },
       ],
     },
-    // {
-    //   path: 'product/get-by-id/:productId',
-    //   element: <ProductDetailPage />,
-    // },
-    // {
-    //   path: 'categories/:categoryId/products',
-    //   element: <ViewAllProductPage />,
-    // },
-  
-    // {
-    //   path: 'addProduct',
-    //   element: <AddProductPage />,
-    // },
+ 
     {
       path: '404',
       element: <Page404 />,
