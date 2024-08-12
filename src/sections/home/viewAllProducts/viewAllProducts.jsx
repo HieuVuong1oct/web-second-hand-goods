@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, } from 'react-router-dom';
 
 import {
   Box,
@@ -13,8 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
-
+import { listPath } from 'src/constant/constant';
 import { getCategoryById, getProductByCategoryId } from 'src/api/product';
 
 const AllProductsPage = () => {
@@ -27,10 +26,10 @@ const AllProductsPage = () => {
   const itemsPerPage = 8;
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
+const navigate = useNavigate();
 
-  const { navigateProductById } = useNavigationHelpers;
   const handleProductClick = (productId) => {
-    navigateProductById(productId);
+    navigate(listPath.listProductById(productId));
   };
 
   const handlePageChange = (event, newPage) => {

@@ -54,7 +54,7 @@ const ProductPage = () => {
 
   return (
     <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' , 
-    background: 'linear-gradient(90deg, #d7ac38, #ed3334), linear-gradient(90deg, #d7ac38, #ed3334)',
+    backgroundColor:'#ADD8E6',
     borderRadius:'10px'
     }}>
        

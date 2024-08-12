@@ -33,6 +33,7 @@ const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -52,13 +53,22 @@ const Header = () => {
 
   useEffect(() => {
     const token = Cookies.get('accessToken');
+    const role = Cookies.get('role'); 
+    
     if (token) {
       setIsLoggedIn(true);
+    }
+
+    if (role === 'ADMIN') {
+      setIsAdmin(true);
     }
   }, []);
 
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
 
+  const handleAdminPage = () => {
+    navigate(listPath.admin); 
+  };
   const handleLoginClick = () => {
     navigateToLogin();
   };
@@ -189,6 +199,20 @@ const Header = () => {
                     Đăng bán
                   </MenuItem>
                   <Divider sx={{ borderStyle: 'dashed' }} />
+                  {isAdmin && (
+                    <>
+                      <Divider sx={{ borderStyle: 'dashed' }} />
+                      <MenuItem
+                        disableRipple
+                        disableTouchRipple
+                        onClick={handleAdminPage}
+                        sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                      >
+                        Quản trị
+                      </MenuItem>
+                    </>
+                  )}
+                  <Divider sx={{ borderStyle: 'dashed' }} />
                   <MenuItem
                     disableRipple
                     disableTouchRipple
@@ -202,14 +226,15 @@ const Header = () => {
             ) : (
               <div className={classes.loginButtons}>
                 <Button
-                  sx={{ color: '#9c27b0', ml: '20px' }}
+                
+                  sx={{  ml: '20px', }}
                   className={classes.loginButton}
                   onClick={handleLoginClick}
                 >
                   Đăng nhập
                 </Button>
                 <Button
-                  sx={{ color: '#9c27b0' }}
+                
                   className={classes.loginButton}
                   onClick={handleRegisterClick}
                 >

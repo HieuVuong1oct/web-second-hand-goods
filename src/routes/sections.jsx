@@ -20,7 +20,7 @@ export const HomePage = lazy(() => import('src/pages/homePage'));
 export const AddProductPage = lazy(() => import('src/pages/addProduct'));
 export const ViewAllProductPage = lazy(() => import('src/pages/viewAllProduct'));
 export const ContentPage  = lazy(() => import('src/pages/content'));
-
+export const OrderPage = lazy(() => import('src/pages/order'));
 
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
@@ -50,6 +50,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'product-detail/:productId', element: <ProductDetailPage /> },
+        { path: 'order', element: <OrderPage /> },
       ],
     },
     {

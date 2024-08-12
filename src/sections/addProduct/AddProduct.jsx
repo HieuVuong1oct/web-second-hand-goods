@@ -15,8 +15,10 @@ import {
   Typography,
 } from '@mui/material';
 
-import { addProduct } from 'src/api/product';
+// import { addProduct } from 'src/api/product';
 import { MESSAGES } from 'src/constant/constant';
+import { submitProductForApproval } from 'src/api/product';
+
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -77,8 +79,12 @@ const AddProductView = () => {
           formData.append('images', file);
         });
       }
+      // const response = await addProduct(formData);
+      const response =await submitProductForApproval(formData)
 
-      const response = await addProduct(formData);
+     
+ 
+    
       if (response) {
         setNotification({
           open: true,
