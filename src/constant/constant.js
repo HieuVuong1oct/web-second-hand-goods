@@ -8,9 +8,9 @@ export const listPath = {
   addProduct: '/homeMain/addProduct',
   productDetail: '/product-detail',
   contentProductDetail: '/homeMain/contentProductDetail',
-  listProductById:(productId) => `/homeMain/product/get-by-id/${productId}`,
-  productByCategoryId:(categoryId) => `/homeMain/categories/${categoryId}/products`,
-  history:'/homeMain/history'
+  listProductById: (productId) => `/homeMain/product/get-by-id/${productId}`,
+  productByCategoryId: (categoryId) => `/homeMain/categories/${categoryId}/products`,
+  history: '/homeMain/history',
 };
 
 export const listPathApi = {
@@ -27,11 +27,11 @@ export const listPathApi = {
   urlSendOtp: '/auth/forgot-password',
   urlNewPassword: '/auth/set-password',
   urlLogout: '/auth/logout',
-  urlGetProductByCategoryId:'/product/list-product',
-  urlGetCategoryById:(categoryId) => `/category/get-by-id/${categoryId}`,
-  urlApproveProduct:(id) => `/product/approve/${id}`,
-  urlRejectProduct:(id) => `/product/reject/${id}`,
-  urlPersonalProduct: `/user/personal-product`
+  urlGetProductByCategoryId: '/product/list-product',
+  urlGetCategoryById: (categoryId) => `/category/get-by-id/${categoryId}`,
+  urlApproveProduct: (id) => `/product/approve/${id}`,
+  urlRejectProduct: (id) => `/product/reject/${id}`,
+  urlPersonalProduct: `/user/personal-product`,
 };
 
 export const MESSAGES = {
@@ -54,5 +54,5 @@ export const MESSAGES = {
 };
 
 export const listStatus = {
-  REJECT:'REJECT'
-}
+  REJECT: 'REJECT',
+};
