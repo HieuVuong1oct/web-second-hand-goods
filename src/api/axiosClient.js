@@ -13,7 +13,7 @@ const axiosClient = axios.create({
 const refreshAccessToken = async () => {
   try {
     const refreshToken = Cookies.get('refreshToken');
-
+ 
     if (refreshToken) {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
         headers: {
@@ -77,7 +77,7 @@ axiosClient.interceptors.response.use(
 const startTokenRefreshInterval = () => {
   setInterval(async () => {
     await refreshAccessToken();
-  }, 60 * 1000);
+  }, 15*60*1000);
 };
 
 startTokenRefreshInterval();

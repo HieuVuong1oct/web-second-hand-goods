@@ -147,6 +147,7 @@ const HistoryScreen = () => {
             products={products}
             page={page}
             itemsPerPage={itemsPerPage}
+            handleOpenRejectDialog={handleOpenRejectDialog}
             handlePageChange={handlePageChange}
           />
         </TabPanel>
