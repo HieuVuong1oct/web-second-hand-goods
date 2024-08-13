@@ -30,6 +30,12 @@ export const useNavigationHelpers = () => {
     navigate(listPath.resetPassword);
   }
 
+  const navigateProductById = (id) => {
+   
+    navigate(listPath.listProductById(id))
+  }
+
+  
   return {
     navigateToLogin,
     navigateToSignUp,
@@ -37,6 +43,6 @@ export const useNavigationHelpers = () => {
     navigateToAdmin,
     navigateToForgotPassword,
     navigateToResetPassword,
-   
+    navigateProductById,
   };
 };

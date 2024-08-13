@@ -2,13 +2,20 @@ import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   appBar: {
-    backgroundImage: 'url(/favicon/bg2.jpg)',
+   
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
+
+   
     width: '100%',
-    position:''
+    position:'',
+    height:'90px',
+    borderBottom:'1px solid hsla(0, 0%, 100%, .15)',
+  
   },
+
+
   container: {
     width: '60%',
     margin: '0 auto',
@@ -32,7 +39,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
   loginButton: {
-    color: '#9c27b0', 
+   
     backgroundColor: 'transparent', 
     border: '1px solid #9c27b0', 
     marginLeft: '8px',
@@ -70,8 +77,10 @@ const useStyles = makeStyles(() => ({
   logo: {
     display: 'flex',
     alignItems: 'center',
-    marginRight: '16px',
+    marginRight: '150px',
+    marginLeft: '130px',
     color: '#9c27b0',
+    
   },
 }));
 

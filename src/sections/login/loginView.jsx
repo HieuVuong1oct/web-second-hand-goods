@@ -19,11 +19,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import { login } from 'src/api/account';
-import { MESSAGES } from 'src/constant/constant'
+import { MESSAGES } from 'src/constant/constant';
 import { setCookies } from 'src/cookie/setCookies';
 
 import Iconify from 'src/components/iconify';
-
 
 export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
@@ -34,10 +33,10 @@ export default function LoginView() {
     useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string()
-    .email('Địa chỉ email không hợp lệ')
-    .min(11,'Email phải có ít nhất 11 ký tự')
-    .max(64, 'Email tối đa 64 ký tự')
-    .required('Vui lòng nhập email'),
+      .email('Địa chỉ email không hợp lệ')
+      .min(11, 'Email phải có ít nhất 11 ký tự')
+      .max(64, 'Email tối đa 64 ký tự')
+      .required('Vui lòng nhập email'),
     password: Yup.string()
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .required('Vui lòng nhập mật khẩu'),
@@ -56,18 +55,17 @@ export default function LoginView() {
     try {
       const response = await login(data);
       setLoading(false);
-
       const userData = response;
 
-      if (userData[0].data[0].userId) {
-        setCookies(userData[0].data);
+      if (userData.data.user.userId) {
+        setCookies(userData.data);
 
         setSuccess(true);
 
         setTimeout(() => {
-          if (userData[0].data[0].role === 'ADMIN') {
+          if (userData.data.user.role === 'ADMIN') {
             navigateToAdmin();
-          } else if (userData[0].data[0].role === 'USER') {
+          } else if (userData.data.user.role === 'USER') {
             navigateToHome();
           } else {
             setError(MESSAGES.ERROR_ACCESS);
@@ -79,9 +77,8 @@ export default function LoginView() {
     } catch (err) {
       setLoading(false);
 
-      const errorMsg =
-        err.response.data.message || MESSAGES.ERROR_LOGIN
-        
+      const errorMsg = err.response?.data?.message || MESSAGES.ERROR_LOGIN;
+
       setError(errorMsg);
     }
   };

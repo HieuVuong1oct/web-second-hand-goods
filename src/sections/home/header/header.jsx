@@ -1,25 +1,27 @@
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { alpha } from '@mui/material/styles';
-import { ShoppingCart, Search as SearchIcon } from '@mui/icons-material';
 import {
   Box,
+  Alert,
   Avatar,
   AppBar,
   Button,
   Divider,
   Popover,
   MenuItem,
-  InputBase,
+  Snackbar,
   IconButton,
   Typography,
-  InputAdornment,
 } from '@mui/material';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
 import Account from 'src/_mock/account';
+import { logout } from 'src/api/account';
+import { listPath } from 'src/constant/constant';
 import { clearCookies } from 'src/cookie/setCookies';
 
 import useStyles from './headerStyles';
@@ -29,15 +31,45 @@ const Header = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [success, setSuccess] = useState(null);
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const token = Cookies.get('accessToken');
+    const role = Cookies.get('role');
+
     if (token) {
       setIsLoggedIn(true);
+    }
+
+    if (role === 'ADMIN') {
+      setIsAdmin(true);
     }
   }, []);
 
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
+
+  const handleAdminPage = () => {
+    navigate(listPath.admin);
+  };
 
   const handleLoginClick = () => {
     navigateToLogin();
@@ -48,48 +80,72 @@ const Header = () => {
   };
 
   const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget);
+    if (event.currentTarget) {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
-  const logOut = () => {
-    clearCookies();
-    navigateToLogin();
+  const logOut = async () => {
+    try {
+      await logout();
+      setSuccess(true);
+      setTimeout(() => {
+        clearCookies();
+        navigateToLogin();
+      }, 3000);
+    } catch (error) {
+      setSuccess(false);
+    } finally {
+      setIsLoggedIn(false);
+      setAnchorEl(null);
+    }
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  return (
-    <AppBar position="fixed" className={classes.appBar}>
-      <div className={classes.container}>
-        {/* <div className={classes.item1}> */}
+  const handleAddProduct = () => {
+    navigate(listPath.addProduct);
+    
+  };
 
-        {/* </div> */}
+  const handleHomePage = () => {
+    navigate(listPath.homePage);
+  };
+
+  const handleHistory = () => {
+    navigate(listPath.history);
+  };
+
+  return (
+    <AppBar
+      position="fixed"
+      className={classes.appBar}
+      style={{
+        background: scrolled ? 'white' : 'transparent',
+        transition: 'background 0.3s ease',
+      }}
+    >
+      <div className={classes.container}>
         <div className={classes.item2}>
-          <div className={classes.logo}>
-            <img src="/favicon/logo-1.png" alt="Logo" />
+          <div
+            className={classes.logo}
+            role="button"
+            aria-label="Logo"
+            tabIndex={0}
+            onClick={handleHomePage}
+            onKeyDown={handleHomePage}
+          >
+            <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer', width: '150px', height: '50px' }} />
           </div>
           <Box className={classes.searchContainer}>
-            <div className={classes.search}>
-              <InputBase
-                placeholder="Tìm kiếm…"
-                className={classes.searchInput}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon className={classes.searchIcon} />
-                  </InputAdornment>
-                }
-              />
-            </div>
-            <IconButton sx={{ color: '#9c27b0' }} className={classes.shoppingCartIcon}>
-              <ShoppingCart />
-            </IconButton>
             {isLoggedIn ? (
               <>
                 <IconButton
                   onClick={handleOpen}
                   sx={{
+                    marginLeft: '200px',
                     width: 40,
                     height: 40,
                     background: (theme) => alpha(theme.palette.grey[500], 0.08),
@@ -113,17 +169,15 @@ const Header = () => {
                 </IconButton>
                 <Popover
                   open={Boolean(anchorEl)}
-                  anchorEl={anchorEl}
+                  anchorEl={anchorEl} 
                   onClose={handleClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  PaperProps={{
-                    sx: {
-                      p: 0,
-                      mt: 1,
-                      ml: 0.75,
-                      width: 200,
-                    },
+                  sx={{
+                    p: 0,
+                    mt: 1,
+                    ml: 0.75,
+                    width: 200,
                   }}
                 >
                   <Box sx={{ my: 1.5, px: 2 }}>
@@ -138,6 +192,38 @@ const Header = () => {
                   <MenuItem
                     disableRipple
                     disableTouchRipple
+                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                    onClick={handleHistory}
+                  >
+                    Lịch sử
+                  </MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  <MenuItem
+                    disableRipple
+                    disableTouchRipple
+                    onClick={handleAddProduct}
+                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                  >
+                    Đăng bán
+                  </MenuItem>
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  {isAdmin && (
+                    <>
+                      <Divider sx={{ borderStyle: 'dashed' }} />
+                      <MenuItem
+                        disableRipple
+                        disableTouchRipple
+                        onClick={handleAdminPage}
+                        sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                      >
+                        Quản trị
+                      </MenuItem>
+                    </>
+                  )}
+                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  <MenuItem
+                    disableRipple
+                    disableTouchRipple
                     onClick={logOut}
                     sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
                   >
@@ -148,14 +234,13 @@ const Header = () => {
             ) : (
               <div className={classes.loginButtons}>
                 <Button
-                  sx={{ color: '#9c27b0', ml: '20px' }}
+                  sx={{ ml: '20px' }}
                   className={classes.loginButton}
                   onClick={handleLoginClick}
                 >
                   Đăng nhập
                 </Button>
                 <Button
-                  sx={{ color: '#9c27b0' }}
                   className={classes.loginButton}
                   onClick={handleRegisterClick}
                 >
@@ -166,6 +251,21 @@ const Header = () => {
           </Box>
         </div>
       </div>
+
+      <Snackbar
+        open={success !== null}
+        autoHideDuration={3000}
+        onClose={() => setSuccess(null)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert
+          onClose={() => setSuccess(null)}
+          severity={success ? 'success' : 'error'}
+          sx={{ width: '100%' }}
+        >
+          {success ? 'Bạn đã đăng xuất thành công!' : 'Đăng xuất không thành công.'}
+        </Alert>
+      </Snackbar>
     </AppBar>
   );
 };
