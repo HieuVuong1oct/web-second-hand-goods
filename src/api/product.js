@@ -8,6 +8,7 @@ import axiosClient from './axiosClient';
 const accessToken = Cookies.get('accessToken');
 
 export const addProduct = (data) => {
+
   const response = axiosClient.post(listPathApi.urlAddProduct, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -74,26 +75,26 @@ export const submitProductForApproval = async (productData) => {
     throw error;
   }
 };
-export const getProducts = async (categoryId) => {
+export const getProducts = async () => {
       
   try {
-    const response = await axios.get(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/${categoryId}/products`);
-    
-    return response.data;
+    const response = await axiosClient.get(listPathApi.urlPersonalProduct);
+
+    return response.data[0].userProduct;
   } catch (error) {
+ 
     alert('Lỗi')
     throw error;
   }
 }
 
-export const getApprovedProducts = async (categoryId) => {
+export const getApprovedProducts = async (categoryId,page,itemsPerPage) => {
 
   try {
-    const products = await getProducts(categoryId);
-   
-    const approvedProducts = products.filter(product => product.status === 'pending');
-   
-    return approvedProducts;
+    const response = await getProductByCategoryId(categoryId,page,itemsPerPage);
+    
+  
+    return response;
   } catch (error) {
     alert('Lỗi')
     throw error;
@@ -102,11 +103,7 @@ export const getApprovedProducts = async (categoryId) => {
 // Cập nhật trạng thái sản phẩm (đã duyệt)
 export const approveProduct = async (productId) => {
   try {
-   
-    const response = await axios.put(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/1/products/${productId}`, {
-      status: 'approve', 
-    });
-   
+    const response = await  axiosClient.put(listPathApi.urlApproveProduct(productId))
     return response.data;
   } catch (error) {
     alert('Lỗi')
@@ -118,9 +115,9 @@ export const approveProduct = async (productId) => {
 export const rejectProduct = async (productId,mess) => {
   try {
    
-    const response = await axios.put(`https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/1/products/${productId}`, {
-      status:'reject', 
-      reject:mess,
+   const response = await  axiosClient.put(listPathApi.urlRejectProduct(productId), {
+      
+      message:mess,
     });
    
     return response.data;

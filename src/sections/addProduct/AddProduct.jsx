@@ -9,15 +9,13 @@ import {
   Grid,
   Alert,
   Snackbar,
-  MenuItem,
   Container,
   TextField,
   Typography,
 } from '@mui/material';
 
-// import { addProduct } from 'src/api/product';
+import { addProduct } from 'src/api/product';
 import { MESSAGES } from 'src/constant/constant';
-import { submitProductForApproval } from 'src/api/product';
 
 
 const schema = Yup.object().shape({
@@ -37,11 +35,7 @@ const schema = Yup.object().shape({
     .typeError('Bạn chưa tải ảnh')
     .required('Hình ảnh là bắt buộc')
     .test('fileExists', 'Bạn chưa tải lên hình ảnh', (value) => value && value.length > 0),
-  categoryId: Yup.number()
-    .typeError('Bạn chưa chọn trạng thái')
-    .required('Trạng thái là bắt buộc')
-    .oneOf([1, 2], 'Trạng thái không hợp lệ')
-    .positive('Trạng thái phải là đã bán hoặc đang bán'),
+
 });
 
 const AddProductView = () => {
@@ -67,22 +61,21 @@ const AddProductView = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+
     try {
       const formData = new FormData();
       formData.append('name', data.name);
       formData.append('description', data.description);
       formData.append('price', data.price);
-      formData.append('categoryId', data.categoryId);
+   
 
       if (data.images && data.images.length > 0) {
         Array.from(data.images).forEach((file) => {
           formData.append('images', file);
         });
       }
-      // const response = await addProduct(formData);
-      const response =await submitProductForApproval(formData)
-
-     
+      const response = await addProduct(formData);
+    
  
     
       if (response) {
@@ -196,23 +189,7 @@ const AddProductView = () => {
                 )}
               />
 
-              <Controller
-                name="categoryId"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    select
-                    label="Trạng thái"
-                    {...field}
-                    error={!!errors.categoryId}
-                    helperText={errors.categoryId?.message}
-                    fullWidth
-                    sx={{ marginTop: 1 }}
-                  >
-                    <MenuItem value={1}>Đang bán</MenuItem>
-                  </TextField>
-                )}
-              />
+            
             </Grid>
           </Grid>
 

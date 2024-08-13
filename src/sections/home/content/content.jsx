@@ -30,10 +30,12 @@ const ProductPage = () => {
           getAllCategory(),
           getAllProduct(),
         ]);
-
+       
+        const productApprove = (productsResponse.data).filter(product => product.status === 'APPROVED');
+    
         setCategories(categoriesResponse);
 
-        setProducts(Array.isArray(productsResponse.data) ? productsResponse.data : []);
+        setProducts(Array.isArray(productApprove) ? productApprove : []);
       } catch (error) {
         alert('Lỗi');
       }

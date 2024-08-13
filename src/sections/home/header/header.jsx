@@ -38,7 +38,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) { 
+      if (window.scrollY > 20) {
         setScrolled(true);
       } else {
         setScrolled(false);
@@ -54,8 +54,8 @@ const Header = () => {
 
   useEffect(() => {
     const token = Cookies.get('accessToken');
-    const role = Cookies.get('role'); 
-    
+    const role = Cookies.get('role');
+
     if (token) {
       setIsLoggedIn(true);
     }
@@ -68,9 +68,9 @@ const Header = () => {
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
 
   const handleAdminPage = () => {
-    navigate(listPath.admin); 
+    navigate(listPath.admin);
   };
-  
+
   const handleLoginClick = () => {
     navigateToLogin();
   };
@@ -80,7 +80,9 @@ const Header = () => {
   };
 
   const handleOpen = (event) => {
-    setAnchorEl(event.currentTarget); // Đặt anchorEl là phần tử DOM
+    if (event.currentTarget) {
+      setAnchorEl(event.currentTarget);
+    }
   };
 
   const logOut = async () => {
@@ -105,6 +107,7 @@ const Header = () => {
 
   const handleAddProduct = () => {
     navigate(listPath.addProduct);
+    
   };
 
   const handleHomePage = () => {
@@ -120,8 +123,8 @@ const Header = () => {
       position="fixed"
       className={classes.appBar}
       style={{
-        background: scrolled ? 'white' : 'transparent', 
-        transition: 'background 0.3s ease', 
+        background: scrolled ? 'white' : 'transparent',
+        transition: 'background 0.3s ease',
       }}
     >
       <div className={classes.container}>
@@ -166,17 +169,15 @@ const Header = () => {
                 </IconButton>
                 <Popover
                   open={Boolean(anchorEl)}
-                  anchorEl={anchorEl} // Đảm bảo anchorEl là một phần tử DOM hợp lệ
+                  anchorEl={anchorEl} 
                   onClose={handleClose}
                   anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                   transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  PaperProps={{
-                    sx: {
-                      p: 0,
-                      mt: 1,
-                      ml: 0.75,
-                      width: 200,
-                    },
+                  sx={{
+                    p: 0,
+                    mt: 1,
+                    ml: 0.75,
+                    width: 200,
                   }}
                 >
                   <Box sx={{ my: 1.5, px: 2 }}>

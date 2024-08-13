@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import { useNavigate } from 'react-router-dom';
 import React, { useState,useEffect } from 'react';
+import { useNavigate , useSearchParams,} from 'react-router-dom';
 
 import {
   Box,
   Tab,
   Tabs,
- 
+ Stack,
   Table,
   Paper,
   Button,
@@ -15,6 +15,7 @@ import {
   TableBody,
   TableHead,
   TableCell,
+  Pagination,
   Typography,
   DialogTitle,
   DialogContent,
@@ -24,8 +25,9 @@ import {
 
 } from '@mui/material';
 
-import { getProducts } from 'src/api/product'
 import { listPath } from 'src/constant/constant'
+import { getProducts,getProductByCategoryId } from 'src/api/product'
+
 
 
 const TabPanel = ({ children, value, index, ...other }) => 
@@ -44,32 +46,37 @@ const TabPanel = ({ children, value, index, ...other }) =>
       )}
     </div>
   );
-
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    value: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
+  };
 
 const HistoryScreen = () => {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
-  const [productsSelling, setProductsSelling] = useState([]);
+  const [products, setProducts] = useState([]);
   const [productsSold, setProductsSold] = useState([]);
-  const [productsPending, setProductsPending] = useState([]);
-  const [productsReject, setProductsReject] = useState([]);
-  const [tabValue, setTabValue] = useState(0);
 
+  const [tabValue, setTabValue] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [status,setStatus] = useState('approved')
   const navigate = useNavigate();
-  const sellingId = 1;
-  const soldId = 2;
+  const categoryId = 1;
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  const itemsPerPage = 8;
+
+
 
   useEffect(() => {
     const fetchDataSelling = async () => {
       try {
-        const Products = await getProducts(sellingId);
 
-        const productSelling = Products.filter(product => product.status === 'approve');
-        setProductsSelling(productSelling);
-        const productPending = Products.filter(product => product.status === 'pending');
-        setProductsPending(productPending);
-        const productReject = Products.filter(product => product.status === 'reject');
-        setProductsReject(productReject);
+        const response = await getProductByCategoryId(categoryId, page, itemsPerPage,status);
+        
+        setProducts(response.data);
+      
+
       } catch (error) {
        
         alert('Lỗi');
@@ -78,8 +85,9 @@ const HistoryScreen = () => {
 
     const fetchDataSold = async () => {
       try {
-        const Products = await getProducts(soldId);
-        setProductsSold(Products);
+        const Products = await getProducts();
+        const productSold = Products.filter(product => product.categoryId === 2);
+        setProductsSold(productSold);
       } catch (error) {
         alert('Lỗi');
       }
@@ -87,7 +95,7 @@ const HistoryScreen = () => {
 
     fetchDataSelling();
     fetchDataSold();
-  }, []);
+  }, [page,status]);
 
   const handleOpenRejectDialog = (rejectMess) => {
     setRejectReason(rejectMess);
@@ -97,13 +105,21 @@ const HistoryScreen = () => {
   const handleCloseRejectDialog = () => {
     setOpenRejectDialog(false);
   };
-
-  const handleViewDetail = (productId) => {
+  const handlePageChange = (event, newPage) => {
+    setSearchParams({ page: newPage });
+  };
+  const handleViewDetail = (productId ) => {
     navigate(listPath.listProductById(productId));
+  
   };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+  };
+  const handleTabClick = (index, statusValue) => {
+    setTabValue(index);
+    setStatus(statusValue);
+    setSearchParams({ status: statusValue });
   };
 
   return (
@@ -116,10 +132,10 @@ const HistoryScreen = () => {
     >
       <Box width="80%" sx={{ backgroundColor: '#ADD8E6', padding: '0 20px 20px 20px', borderRadius: '10px' }} height="100vh">
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
-          <Tab label="Đang bán" />
-          <Tab label="Chờ duyệt" />
-          <Tab label="Admin từ chối" />
-          <Tab label="Đã bán" />
+        <Tab label="Đang bán" onClick={() => handleTabClick(0, 'approved')} />
+          <Tab label="Chờ duyệt" onClick={() => handleTabClick(1, 'pending')} />
+          <Tab label="Admin từ chối" onClick={() => handleTabClick(2, 'rejected')} />
+          <Tab label="Đã bán" onClick={() => handleTabClick(3, 'sold')} />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
@@ -135,16 +151,16 @@ const HistoryScreen = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productsSelling.map((product, index) => (
+                {products.map((product, index) => (
                   <TableRow key={product.productId}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
+                    <TableCell>${product.price}</TableCell>
                     <TableCell>
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleViewDetail(product.id)}
+                        onClick={() => handleViewDetail(product.productId, product.status)}
                       >
                         Xem
                       </Button>
@@ -154,6 +170,13 @@ const HistoryScreen = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(products.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
@@ -165,31 +188,26 @@ const HistoryScreen = () => {
                   <TableCell>STT</TableCell>
                   <TableCell>Tên sản phẩm</TableCell>
                   <TableCell>Giá</TableCell>
-                  <TableCell>Trạng thái</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productsPending.map((product, index) => (
+                {products.map((product, index) => (
                   <TableRow key={product.productId}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>
-                      {product.status === 'reject' ? (
-                        <Typography
-                          style={{ color: 'red', cursor: 'pointer' }}
-                        >
-                          {product.status}
-                        </Typography>
-                      ) : (
-                        product.status
-                      )}
-                    </TableCell>
+                    <TableCell>${product.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(products.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
         </TabPanel>
 
         <TabPanel value={tabValue} index={2}>
@@ -201,22 +219,22 @@ const HistoryScreen = () => {
                   <TableCell>STT</TableCell>
                   <TableCell>Tên sản phẩm</TableCell>
                   <TableCell>Giá</TableCell>
-                  <TableCell>Trạng thái</TableCell>
+                  <TableCell>Lý do từ chối</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {productsReject.map((product, index) => (
+                {products.map((product, index) => (
                   <TableRow key={product.productId}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
+                    <TableCell>${product.price}</TableCell>
                     <TableCell>
-                      {product.status === 'reject' ? (
+                      {product.status === 'REJECTED' ? (
                         <Typography
                           style={{ color: 'red', cursor: 'pointer' }}
-                          onClick={() => handleOpenRejectDialog(product.reject)}
+                          onClick={() => handleOpenRejectDialog(product.statusMessage)}
                         >
-                          {product.status}
+                          Xem lý do
                         </Typography>
                       ) : (
                         product.status
@@ -227,6 +245,13 @@ const HistoryScreen = () => {
               </TableBody>
             </Table>
           </TableContainer>
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(products.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
         </TabPanel>
 
         <TabPanel value={tabValue} index={3}>
@@ -238,7 +263,6 @@ const HistoryScreen = () => {
                   <TableCell>STT</TableCell>
                   <TableCell>Tên sản phẩm</TableCell>
                   <TableCell>Giá</TableCell>
-                  <TableCell>Chi tiết</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -246,21 +270,19 @@ const HistoryScreen = () => {
                   <TableRow key={product.productId}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{product.name}</TableCell>
-                    <TableCell>{product.price}</TableCell>
-                    <TableCell>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleViewDetail(product.id)}
-                      >
-                        Xem
-                      </Button>
-                    </TableCell>
+                    <TableCell>${product.price}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <Stack spacing={2}>
+            <Pagination
+              count={Math.ceil(productsSold.length / itemsPerPage)}
+              page={page}
+              onChange={handlePageChange}
+            />
+          </Stack>
         </TabPanel>
 
         <Dialog open={openRejectDialog} onClose={handleCloseRejectDialog}>
@@ -279,9 +301,4 @@ const HistoryScreen = () => {
   );
 };
 
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  value: PropTypes.number.isRequired,
-  index: PropTypes.number.isRequired,
-};
 export default HistoryScreen;

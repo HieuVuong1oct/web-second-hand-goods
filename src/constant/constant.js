@@ -28,7 +28,10 @@ export const listPathApi = {
   urlNewPassword: '/auth/set-password',
   urlLogout: '/auth/logout',
   urlGetProductByCategoryId:'/product/list-product',
-  urlGetCategoryById:(categoryId) => `category/get-by-id/${categoryId}`
+  urlGetCategoryById:(categoryId) => `/category/get-by-id/${categoryId}`,
+  urlApproveProduct:(id) => `/product/approve/${id}`,
+  urlRejectProduct:(id) => `/product/reject/${id}`,
+  urlPersonalProduct: `/user/personal-product`
 };
 
 export const MESSAGES = {

@@ -1,55 +1,70 @@
-import Cookies from 'js-cookie'
+
 import React, { useState,useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import {
+  Box,
   Table,
   Paper,
-  Dialog,
   Button,
   TableRow,
   TableBody,
-  TextField,
   TableCell,
   TableHead,
-  DialogTitle,
-  DialogActions,
-  DialogContent,
+  Pagination,
   TableContainer,
-  DialogContentText,
 } from '@mui/material';
 
 import { rejectProduct,approveProduct, getApprovedProducts,  } from 'src/api/product';
 
+import RejectDialog from './rejectDialog';
+import ConfirmDialog from './confirmDialog';
+
+
+
 const OrderManagement = () => {
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // State cho dialog xác nhận
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [orders, setOrders] = useState([]);
-  const [productIdToApprove, setProductIdToApprove] = useState(null); // State để lưu productId cần phê duyệt
-  const [rejectProductId, setRejectProductId] = useState(null); // State để lưu productId cần từ chối
+  const [productIdToApprove, setProductIdToApprove] = useState(null);
+  const [rejectProductId, setRejectProductId] = useState(null);
   const categoryId = 1;
+  const itemsPerPage = 8;
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const username = Cookies.get('username');
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        const approvedProducts = await getApprovedProducts(categoryId);
+        const response = await getApprovedProducts(categoryId,page,itemsPerPage);
+       
+        const products = Array.isArray(response.data) ? response.data : [];
+        const approvedProducts = products.filter(product => product.status === 'PENDING');
+    
         setOrders(approvedProducts);
+        setTotalPages(response.meta.total);
       } catch (error) {
         alert('Lỗi');
       }
     };
 
     fetchInitialData();
-  }, []);
-
+  }, [page,itemsPerPage]);
+  const handlePageChange = (event, newPage) => {
+    setSearchParams({ page: newPage });
+  };
   const approve = async () => {
     try {
       await approveProduct(productIdToApprove);
-      handleCloseConfirmDialog(); 
-      setOrders(await getApprovedProducts(categoryId)); 
+      handleCloseConfirmDialog();
+      const response = await getApprovedProducts(categoryId,page,itemsPerPage);
+      const products = Array.isArray(response.data) ? response.data : [];
+      const approvedProducts = products.filter(product => product.status === 'PENDING');
+      setOrders(approvedProducts)
     } catch (error) {
       alert('Lỗi');
     }
@@ -62,9 +77,13 @@ const OrderManagement = () => {
     }
 
     try {
-      await rejectProduct(rejectProductId, rejectReason); // Gọi API từ chối với lý do
-      handleCloseRejectDialog(); 
-      setOrders(await getApprovedProducts(categoryId)); 
+      await rejectProduct(rejectProductId, rejectReason);
+      handleCloseRejectDialog();
+      const response = await getApprovedProducts(categoryId,page,itemsPerPage);
+     
+      const products = Array.isArray(response.data) ? response.data : [];
+      const approvedProducts = products.filter(product => product.status === 'PENDING');
+      setOrders(approvedProducts)
     } catch (error) {
       alert('Lỗi');
     }
@@ -72,27 +91,28 @@ const OrderManagement = () => {
 
   const handleOpenRejectDialog = (order) => {
     setSelectedOrder(order);
-    setRejectProductId(order.productId); // Lưu productId để từ chối
+    setRejectProductId(order.productId);
     setOpenRejectDialog(true);
   };
 
   const handleCloseRejectDialog = () => {
     setOpenRejectDialog(false);
     setRejectReason('');
-    setRejectProductId(null); // Reset productId khi đóng dialog
+    setRejectProductId(null);
   };
 
   const handleOpenConfirmDialog = (productId) => {
-    setProductIdToApprove(productId); 
-    setOpenConfirmDialog(true); 
+    setProductIdToApprove(productId);
+    setOpenConfirmDialog(true);
   };
 
   const handleCloseConfirmDialog = () => {
-    setOpenConfirmDialog(false); 
-    setProductIdToApprove(null); 
+    setOpenConfirmDialog(false);
+    setProductIdToApprove(null);
   };
 
   return (
+    <>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -106,14 +126,14 @@ const OrderManagement = () => {
         <TableBody>
           {orders.map((order, index) => (
             <TableRow key={order.productId}>
-              <TableCell>{index + 1}</TableCell>
+              <TableCell>{(page - 1) * itemsPerPage + index + 1}</TableCell>
               <TableCell>{order.name}</TableCell>
-              <TableCell>{username}</TableCell>
+              <TableCell>{order.author.username}</TableCell>
               <TableCell>
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={() => handleOpenConfirmDialog(order.productId)} 
+                  onClick={() => handleOpenConfirmDialog(order.productId)}
                 >
                   Đồng ý
                 </Button>
@@ -131,52 +151,30 @@ const OrderManagement = () => {
         </TableBody>
       </Table>
 
-      {/* Dialog xác nhận */}
-      <Dialog open={openConfirmDialog} onClose={handleCloseConfirmDialog}>
-        <DialogTitle>Xác nhận</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Bạn có chắc chắn muốn cho phép đăng bán sản phẩm này không?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseConfirmDialog} color="primary">
-            Hủy
-          </Button>
-          <Button onClick={approve} color="secondary">
-            Xác nhận
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onConfirm={approve}
+      />
 
-      {/* Dialog từ chối */}
-      <Dialog open={openRejectDialog} onClose={handleCloseRejectDialog}>
-        <DialogTitle>Lý do từ chối</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Vui lòng nhập lý do từ chối đơn hàng của {selectedOrder?.username}:
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Lý do"
-            type="text"
-            fullWidth
-            variant="outlined"
-            value={rejectReason}
-            onChange={(e) => setRejectReason(e.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRejectDialog} color="primary">
-            Hủy
-          </Button>
-          <Button onClick={reject} color="secondary">
-            Gửi
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <RejectDialog
+        open={openRejectDialog}
+        onClose={handleCloseRejectDialog}
+        onReject={reject}
+        rejectReason={rejectReason}
+        setRejectReason={setRejectReason}
+        selectedOrder={selectedOrder}
+      />
     </TableContainer>
+       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+       <Pagination
+         count={Math.max(totalPages, 1)}
+         page={page}
+         onChange={handlePageChange}
+         color="primary"
+       />
+     </Box>
+     </>
   );
 };
 

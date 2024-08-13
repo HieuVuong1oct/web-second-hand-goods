@@ -125,11 +125,7 @@ const ProductDetail = () => {
           <Typography variant="h6" gutterBottom>
             Giá: ${product.price}
           </Typography>
-          {product.priceSale && (
-            <Typography variant="body1" color="textSecondary">
-              Giá khuyến mãi: ${product.priceSale}
-            </Typography>
-          )}
+         
           <Typography variant="body1" paragraph>
             {product.description}
           </Typography>
