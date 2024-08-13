@@ -52,3 +52,7 @@ export const MESSAGES = {
   PASSWORD_RESET_SUCCESS: 'Tạo mật khẩu mới thành công',
   ERROR_RESET_PASSWORD: 'Lỗi khi tạo mật khẩu mới',
 };
+
+export const listStatus = {
+  REJECT:'REJECT'
+}

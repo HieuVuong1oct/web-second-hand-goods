@@ -35,7 +35,7 @@ export const getProductById = async (id) => {
   return response;
 };
 
-export const getProductByCategoryId = async (categoryId, page, itemsPerPage) =>
+export const getProductByCategoryId = async (categoryId, page, itemsPerPage,status) =>
    {
   try {
     
@@ -44,6 +44,7 @@ export const getProductByCategoryId = async (categoryId, page, itemsPerPage) =>
         categoryId,
         page,
         limit: itemsPerPage,
+        status
       },
     });
    
