@@ -14,10 +14,12 @@ import {
   DialogContentText,
 } from '@mui/material';
 
-import { listPath } from 'src/constant/constant';
-import { getProducts, getProductByCategoryId } from 'src/api/product';
+import { getProducts } from 'src/api/product';
+import { listPath, listStatus, listRequestStatus } from 'src/constant/constant';
 
+import ProductsSave from './productSave';
 import ProductsSold from './productsSold';
+import ProductsRequest from './productRequest';
 import ProductsSelling from './productsSelling';
 import ProductsRejected from './productsRejected';
 import ProductsPendingApproval from './productsPendingApproval';
@@ -44,39 +46,62 @@ const HistoryScreen = () => {
   const [rejectReason, setRejectReason] = useState('');
   const [products, setProducts] = useState([]);
   const [productsSold, setProductsSold] = useState([]);
-
+  const [productRequest, setProductRequest] = useState([]);
   const [tabValue, setTabValue] = useState(0);
+  const [total, setTotal] = useState();
+  const [totalRequest, setTotalRequest] = useState();
+  const [totalSave, setTotalSave] = useState();
+  const [totalSold, setTotalSold] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [status, setStatus] = useState('approved');
   const navigate = useNavigate();
-  const categoryId = 1;
+  const status = searchParams.get('status') || 'APPROVED';
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const itemsPerPage = 8;
 
+  const requestStatus = searchParams.get('requestStatus') || 'APPROVED';
   useEffect(() => {
     const fetchDataSelling = async () => {
       try {
-        const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status);
+        const response = await getProducts(1, page, itemsPerPage, status, requestStatus);
 
-        setProducts(response.data);
+        if (response) {
+          const totalPage = response.userProduct.meta.total;
+          setTotal(totalPage);
+          const resProducts =
+            response.userProduct?.data?.filter((product) => product.status === status) || [];
+          const resProductRequest = response.requestedProduct?.data || [];
+
+          const totalPageRequest = response.requestedProduct?.meta?.total;
+
+          const totalPageSave = response.savedProduct?.meta.total;
+          setTotalRequest(totalPageRequest);
+          setTotalSave(totalPageSave);
+          setProducts(resProducts);
+
+          setProductRequest(resProductRequest);
+        }
       } catch (error) {
-        alert('Lỗi');
+        alert('Lỗi', error);
       }
     };
 
     const fetchDataSold = async () => {
       try {
-        const Products = await getProducts();
-        const productSold = Products.filter((product) => product.categoryId === 2);
+        const Products = await getProducts(2, page, itemsPerPage);
+
+        const productSold = Products.userProduct?.data.filter(
+          (product) => product.categoryId === 2
+        );
+        setTotalSold(Products.userProduct?.meta?.total);
         setProductsSold(productSold);
       } catch (error) {
-        alert('Lỗi');
+        alert('Lỗi', error);
       }
     };
 
     fetchDataSelling();
     fetchDataSold();
-  }, [page, status]);
+  }, [page, status, requestStatus]);
 
   const handleOpenRejectDialog = (rejectMess) => {
     setRejectReason(rejectMess);
@@ -96,10 +121,9 @@ const HistoryScreen = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  const handleTabClick = (index, statusValue) => {
+  const handleTabClick = (index, statusValue, requestStatusValue = '') => {
     setTabValue(index);
-    setStatus(statusValue);
-    setSearchParams({ status: statusValue });
+    setSearchParams({ status: statusValue, requestStatus: requestStatusValue });
   };
 
   return (
@@ -116,10 +140,22 @@ const HistoryScreen = () => {
         height="100vh"
       >
         <Tabs value={tabValue} onChange={handleTabChange} aria-label="basic tabs example">
-          <Tab label="Đang bán" onClick={() => handleTabClick(0, 'approved')} />
-          <Tab label="Chờ duyệt" onClick={() => handleTabClick(1, 'pending')} />
-          <Tab label="Admin từ chối" onClick={() => handleTabClick(2, 'rejected')} />
-          <Tab label="Đã bán" onClick={() => handleTabClick(3, 'sold')} />
+          <Tab label="Đang bán" onClick={() => handleTabClick(0, listStatus.APPROVED, '')} />
+          <Tab label="Chờ duyệt" onClick={() => handleTabClick(1, listStatus.PENDING, '')} />
+          <Tab label="Admin từ chối" onClick={() => handleTabClick(2, listStatus.REJECTED, '')} />
+          <Tab label="Đã bán" onClick={() => handleTabClick(3, listStatus.SOLD, '')} />
+          <Tab
+            label="Đã đăng ký"
+            onClick={() => handleTabClick(4, listStatus.APPROVED, listRequestStatus.PENDING)}
+          />
+          <Tab
+            label="Đã mua"
+            onClick={() => handleTabClick(5, listStatus.APPROVED, listRequestStatus.APPROVED)}
+          />
+          <Tab
+            label="Người bán từ chối"
+            onClick={() => handleTabClick(6, listStatus.APPROVED, listRequestStatus.REJECTED)}
+          />
         </Tabs>
 
         <TabPanel value={tabValue} index={0}>
@@ -127,6 +163,7 @@ const HistoryScreen = () => {
             products={products}
             page={page}
             itemsPerPage={itemsPerPage}
+            total={total}
             handleViewDetail={handleViewDetail}
             handlePageChange={handlePageChange}
           />
@@ -136,6 +173,7 @@ const HistoryScreen = () => {
           <ProductsPendingApproval
             products={products}
             page={page}
+            total={total}
             itemsPerPage={itemsPerPage}
             handleOpenRejectDialog={handleOpenRejectDialog}
             handlePageChange={handlePageChange}
@@ -147,6 +185,7 @@ const HistoryScreen = () => {
             products={products}
             page={page}
             itemsPerPage={itemsPerPage}
+            total={total}
             handleOpenRejectDialog={handleOpenRejectDialog}
             handlePageChange={handlePageChange}
           />
@@ -157,10 +196,39 @@ const HistoryScreen = () => {
             productsSold={productsSold}
             page={page}
             itemsPerPage={itemsPerPage}
+            total={totalSold}
             handlePageChange={handlePageChange}
           />
         </TabPanel>
 
+        <TabPanel value={tabValue} index={4}>
+          <ProductsRequest
+            products={productRequest || []}
+            page={page}
+            itemsPerPage={itemsPerPage}
+            total={totalRequest}
+            handlePageChange={handlePageChange}
+          />
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={5}>
+          <ProductsSave
+            products={productRequest || []}
+            page={page}
+            itemsPerPage={itemsPerPage}
+            total={totalSave}
+            handlePageChange={handlePageChange}
+          />
+        </TabPanel>
+        <TabPanel value={tabValue} index={6}>
+          <ProductsRequest
+            products={productRequest || []}
+            page={page}
+            itemsPerPage={itemsPerPage}
+            total={totalRequest}
+            handlePageChange={handlePageChange}
+          />
+        </TabPanel>
         <Dialog open={openRejectDialog} onClose={handleCloseRejectDialog}>
           <DialogTitle>Lý do từ chối</DialogTitle>
           <DialogContent>

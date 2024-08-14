@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
   Box,
@@ -26,7 +26,7 @@ const AllProductsPage = () => {
   const itemsPerPage = 8;
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleProductClick = (productId) => {
     navigate(listPath.listProductById(productId));
@@ -41,7 +41,7 @@ const navigate = useNavigate();
       setLoading(true);
       try {
         const response = await getProductByCategoryId(categoryId, page, itemsPerPage);
-        
+
         setProducts(response.data);
         setTotalPages(response.meta.total);
       } catch (err) {
@@ -55,9 +55,8 @@ const navigate = useNavigate();
       try {
         const categoriesResponse = await getCategoryById(categoryId);
         setCategories(categoriesResponse);
-      
       } catch (err) {
-        alert('Lỗi');
+        alert('Lỗi', err);
       }
     };
 
@@ -74,7 +73,15 @@ const navigate = useNavigate();
   }
 
   return (
-    <Box sx={{ width: '80%', margin: '0 auto', padding: '10px',backgroundColor:'white',borderRadius:'10px' }}>
+    <Box
+      sx={{
+        width: '80%',
+        margin: '0 auto',
+        padding: '10px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+      }}
+    >
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Tất cả sản phẩm: {categories.categoryName}
       </Typography>

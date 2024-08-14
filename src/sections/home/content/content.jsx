@@ -30,14 +30,16 @@ const ProductPage = () => {
           getAllCategory(),
           getAllProduct(),
         ]);
-       
-        const productApprove = (productsResponse.data).filter(product => product.status === 'APPROVED');
-    
+
+        const productApprove = productsResponse.data.filter(
+          (product) => product.status === 'APPROVED'
+        );
+
         setCategories(categoriesResponse);
 
         setProducts(Array.isArray(productApprove) ? productApprove : []);
       } catch (error) {
-        alert('Lỗi');
+        alert('Lỗi', error);
       }
     };
 
@@ -55,23 +57,25 @@ const ProductPage = () => {
   }));
 
   return (
-    <Box sx={{ width: '80%', margin: '0 auto', paddingTop: '20px' , 
-    backgroundColor:'#ADD8E6',
-    borderRadius:'10px'
-    }}>
-       
+    <Box
+      sx={{
+        width: '80%',
+        margin: '0 auto',
+        paddingTop: '20px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+      }}
+    >
       <Grid container spacing={2}>
         <Grid item xs={12} md={12}>
           <div style={{ width: '80%', margin: '0 auto' }}>
-          <Typography  sx={{ marginBottom: 2, fontSize:'15px' }}>
-             MOR MARKET 
-            </Typography>
+            <Typography sx={{ marginBottom: 2, fontSize: '15px' }}>MOR MARKET</Typography>
             <Typography variant="h4" sx={{ marginBottom: 2 }}>
               Sản Phẩm Nổi Bật
             </Typography>
             <Card
               className={classes.featuredProductCard}
-              sx={{  marginBottom: '16px', borderRadius: '10px' }}
+              sx={{ marginBottom: '16px', borderRadius: '10px', backgroundColor: '#f0f0f0' }}
             >
               <CardContent className={classes.featuredCardContent}>
                 <CardMedia

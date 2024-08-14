@@ -14,18 +14,9 @@ import {
   TableContainer,
 } from '@mui/material';
 
-import { listStatus } from 'src/constant/constant';
-
-const ProductsRejected = ({
-  products,
-  page,
-  itemsPerPage,
-  total,
-  handleOpenRejectDialog,
-  handlePageChange,
-}) => (
+const ProductsSave = ({ products, page, itemsPerPage, total, handlePageChange }) => (
   <>
-    <h2>Sản phẩm bị từ chối</h2>
+    <h2>Sản phẩm đã mua</h2>
     {products.length > 0 ? (
       <TableContainer component={Paper}>
         <Table>
@@ -34,27 +25,14 @@ const ProductsRejected = ({
               <TableCell>STT</TableCell>
               <TableCell>Tên sản phẩm</TableCell>
               <TableCell>Giá</TableCell>
-              <TableCell>Lý do từ chối</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {products.map((product, index) => (
               <TableRow key={product.productId}>
                 <TableCell>{(page - 1) * itemsPerPage + index + 1}</TableCell>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>${product.price}</TableCell>
-                <TableCell>
-                  {product.status === listStatus.REJECTED ? (
-                    <Typography
-                      style={{ color: 'red', cursor: 'pointer' }}
-                      onClick={() => handleOpenRejectDialog(product.statusMessage)}
-                    >
-                      Xem lý do
-                    </Typography>
-                  ) : (
-                    product.status
-                  )}
-                </TableCell>
+                <TableCell>{product.product.name}</TableCell>
+                <TableCell>${product.product.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -73,13 +51,12 @@ const ProductsRejected = ({
   </>
 );
 
-ProductsRejected.propTypes = {
+ProductsSave.propTypes = {
   products: PropTypes.array.isRequired,
   page: PropTypes.number.isRequired,
   itemsPerPage: PropTypes.number.isRequired,
-  handleOpenRejectDialog: PropTypes.func.isRequired,
   handlePageChange: PropTypes.func.isRequired,
   total: PropTypes.number,
 };
 
-export default ProductsRejected;
+export default ProductsSave;
