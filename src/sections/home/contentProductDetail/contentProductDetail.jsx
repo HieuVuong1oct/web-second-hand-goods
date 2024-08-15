@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { Alert, Snackbar, Container, Typography } from '@mui/material';
 
+import { listStatus } from 'src/constant/constant'
 import { rejectRequest, approveRequest, getProductById, userBuyProduct } from 'src/api/product';
 
 import ActionButtons from './actionButton';
@@ -11,6 +12,7 @@ import CommentSection from './commentSection';
 import RegisterDialog from './registerDialog';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
+
 
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
@@ -41,7 +43,7 @@ const ProductDetail = () => {
       setProduct(fetchedProduct);
       const resUserBuy = Array.isArray(fetchedProduct.requests) ? fetchedProduct.requests : [];
 
-      const filterUserBuy = resUserBuy.filter((resUser) => resUser.requestStatus === 'PENDING');
+      const filterUserBuy = resUserBuy.filter((resUser) => resUser.requestStatus === listStatus.PENDING);
       setUserBuy(filterUserBuy);
     } catch (error) {
       setSnackbarMessage('Lỗi: ');
@@ -76,7 +78,7 @@ const ProductDetail = () => {
       setSnackbarOpen(true);
 
       setMessage('');
-      setOffer('');
+      setOffer();
       handleClose();
     } catch (error) {
       setSnackbarMessage('Có lỗi xảy ra khi đăng ký mua. Vui lòng thử lại.');

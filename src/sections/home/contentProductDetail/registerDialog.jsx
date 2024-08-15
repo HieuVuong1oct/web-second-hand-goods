@@ -42,8 +42,8 @@ const RegisterDialog = ({
         type="number"
         fullWidth
         variant="outlined"
-        value={offer}
-        onChange={(e) => setOffer(Number(e.target.value))}
+        value={offer !== null ? offer : ''}
+        onChange={(e) => setOffer(e.target.value === '' ? null : Number(e.target.value))}
       />
     </DialogContent>
     <DialogActions>

@@ -63,9 +63,4 @@ export const listStatus = {
   SOLD:'SOLD'
 };
 
-export const listRequestStatus = {
-  APPROVED: 'APPROVED',
-  PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
- 
-};
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ExpandMore from '@mui/icons-material';
+import {ExpandMore} from '@mui/icons-material';
 import {
   Paper,
   Table,

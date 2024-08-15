@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 
 import { getProducts } from 'src/api/product';
-import { listPath, listStatus, listRequestStatus } from 'src/constant/constant';
+import { listPath, listStatus } from 'src/constant/constant';
 
 import ProductsSave from './productSave';
 import ProductsSold from './productsSold';
@@ -146,15 +146,15 @@ const HistoryScreen = () => {
           <Tab label="Đã bán" onClick={() => handleTabClick(3, listStatus.SOLD, '')} />
           <Tab
             label="Đã đăng ký"
-            onClick={() => handleTabClick(4, listStatus.APPROVED, listRequestStatus.PENDING)}
+            onClick={() => handleTabClick(4, listStatus.APPROVED, listStatus.PENDING)}
           />
           <Tab
             label="Đã mua"
-            onClick={() => handleTabClick(5, listStatus.APPROVED, listRequestStatus.APPROVED)}
+            onClick={() => handleTabClick(5, listStatus.APPROVED, listStatus.APPROVED)}
           />
           <Tab
             label="Người bán từ chối"
-            onClick={() => handleTabClick(6, listStatus.APPROVED, listRequestStatus.REJECTED)}
+            onClick={() => handleTabClick(6, listStatus.APPROVED,listStatus.REJECTED)}
           />
         </Tabs>
 

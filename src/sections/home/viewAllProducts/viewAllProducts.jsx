@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-import { listPath } from 'src/constant/constant';
+import { listPath, listStatus } from 'src/constant/constant';
 import { getCategoryById, getProductByCategoryId } from 'src/api/product';
 
 const AllProductsPage = () => {
@@ -27,6 +27,7 @@ const AllProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const navigate = useNavigate();
+  const [status, setStatus] = useState();
 
   const handleProductClick = (productId) => {
     navigate(listPath.listProductById(productId));
@@ -37,12 +38,20 @@ const AllProductsPage = () => {
   };
 
   useEffect(() => {
+    if (categoryId === '1') {
+      setStatus(listStatus.APPROVED);
+    }
     const fetchProducts = async () => {
       setLoading(true);
-      try {
-        const response = await getProductByCategoryId(categoryId, page, itemsPerPage);
 
-        setProducts(response.data);
+      try {
+        const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status);
+
+        const allProductApprove = response.data.filter(
+          (product) => product.status === listStatus.APPROVED
+        );
+
+        setProducts(allProductApprove);
         setTotalPages(response.meta.total);
       } catch (err) {
         setError(err.message);
@@ -62,7 +71,7 @@ const AllProductsPage = () => {
 
     fetchProducts();
     fetchCategories();
-  }, [categoryId, page]);
+  }, [categoryId, page, status]);
 
   if (loading) {
     return <CircularProgress />;

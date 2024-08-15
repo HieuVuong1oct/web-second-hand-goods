@@ -33,6 +33,7 @@ export const getProductById = async (id) => {
 };
 
 export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status) => {
+  
   try {
     const response = await axiosClient.get(listPathApi.urlGetProductByCategoryId, {
       params: {
@@ -42,10 +43,11 @@ export const getProductByCategoryId = async (categoryId, page, itemsPerPage, sta
         status,
       },
     });
-
+   
+  
     return response;
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
     throw error;
   }
 };
@@ -68,17 +70,25 @@ export const submitProductForApproval = async (productData) => {
     );
     return response.data;
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
     throw error;
   }
 };
-export const getProducts = async () => {
+export const getProducts = async (categoryId, page, itemsPerPage, status,requestStatus) => {
   try {
-    const response = await axiosClient.get(listPathApi.urlPersonalProduct);
+    const response = await axiosClient.get(listPathApi.urlPersonalProduct, {
+      params: {
+        categoryId,
+        page,
+        limit: itemsPerPage,
+        status,
+        requestStatus
+      },
+    });
 
-    return response.data[0].userProduct;
+    return response.data[0];
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
     throw error;
   }
 };
@@ -89,7 +99,7 @@ export const getApprovedProducts = async (categoryId, page, itemsPerPage) => {
 
     return response;
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
     throw error;
   }
 };
@@ -99,7 +109,7 @@ export const approveProduct = async (productId) => {
     const response = await axiosClient.put(listPathApi.urlApproveProduct(productId));
     return response.data;
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
     throw error;
   }
 };
@@ -112,7 +122,45 @@ export const rejectProduct = async (productId, mess) => {
 
     return response.data;
   } catch (error) {
-    alert('Lỗi');
+    alert('Lỗi', error);
+    throw error;
+  }
+};
+
+export const userBuyProduct = (data) => {
+  const response = axiosClient.post(
+    listPathApi.urlUserBuy(data.productId),
+    {
+      message: data.message,
+      offer: data.offer,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  return response;
+};
+
+
+export const approveRequest = async (productId,userId) => {
+  try {
+    const response = await axiosClient.put(listPathApi.urlApproveRequest(productId,userId));
+   return response
+  } catch (error) {
+    alert('Lỗi', error);
+    throw error;
+  }
+};
+
+export const rejectRequest = async (productId,userId) => {
+  try {
+    const response = await axiosClient.put(listPathApi.urlRejectRequest(productId,userId));
+    return response
+  } catch (error) {
+    alert('Lỗi', error);
     throw error;
   }
 };
