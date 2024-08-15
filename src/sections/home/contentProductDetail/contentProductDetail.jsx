@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Alert, Snackbar, Container, Typography } from '@mui/material';
 
 import { listStatus } from 'src/constant/constant'
-import { rejectRequest, approveRequest, getProductById, userBuyProduct } from 'src/api/product';
+import {addComment, rejectRequest, approveRequest, getProductById, userBuyProduct,  } from 'src/api/product';
 
 import ActionButtons from './actionButton';
 import MessageDialog from './messageDialog';
@@ -20,7 +20,7 @@ const ProductDetail = () => {
   const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState('');
-  const [comments, setComments] = useState([]);
+  
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
@@ -89,10 +89,20 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddComment = () => {
-    if (newComment.trim() !== '') {
-      setComments([...comments, newComment]);
-      setNewComment('');
+  const handleAddComment = async () => {
+  
+    try {
+      await addComment({content:newComment, productId: product.productId}, );
+      setNewComment('')
+      setSnackbarMessage('Thêm bình luận thành công');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+
+     
+    } catch (error) {
+      setSnackbarMessage('Có lỗi xảy ra . Vui lòng thử lại.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -213,10 +223,11 @@ const ProductDetail = () => {
       )}
 
       <CommentSection
+        productId={productId}
         newComment={newComment}
         setNewComment={setNewComment}
         handleAddComment={handleAddComment}
-        comments={comments}
+        
       />
 
       <Snackbar
