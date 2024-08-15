@@ -4,19 +4,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import {
-  Box,
-  Grid,
-  Alert,
-  Snackbar,
-  Container,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Grid, Alert, Snackbar, Container, TextField, Typography } from '@mui/material';
 
 import { addProduct } from 'src/api/product';
 import { MESSAGES } from 'src/constant/constant';
-
 
 const schema = Yup.object().shape({
   name: Yup.string()
@@ -35,7 +26,6 @@ const schema = Yup.object().shape({
     .typeError('Bạn chưa tải ảnh')
     .required('Hình ảnh là bắt buộc')
     .test('fileExists', 'Bạn chưa tải lên hình ảnh', (value) => value && value.length > 0),
-
 });
 
 const AddProductView = () => {
@@ -67,7 +57,6 @@ const AddProductView = () => {
       formData.append('name', data.name);
       formData.append('description', data.description);
       formData.append('price', data.price);
-   
 
       if (data.images && data.images.length > 0) {
         Array.from(data.images).forEach((file) => {
@@ -75,9 +64,7 @@ const AddProductView = () => {
         });
       }
       const response = await addProduct(formData);
-    
- 
-    
+
       if (response) {
         setNotification({
           open: true,
@@ -103,7 +90,7 @@ const AddProductView = () => {
 
   return (
     <div>
-      <Container width="80%" sx={{ paddingTop: '10px', paddingBottom:'50px' }}>
+      <Container width="80%" sx={{ paddingTop: '10px', paddingBottom: '50px' }}>
         <Box
           component="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -188,8 +175,6 @@ const AddProductView = () => {
                   />
                 )}
               />
-
-            
             </Grid>
           </Grid>
 

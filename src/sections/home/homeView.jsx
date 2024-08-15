@@ -14,10 +14,11 @@ export default function HomeMainView() {
         style={{
           paddingTop: '140px',
           backgroundColor: '#f0f0f0',
-          backgroundImage: 'url(/favicon/bg1.jpg)',
+          backgroundImage: 'url(/favicon/bg3.jpg)',
           backgroundRepeat: 'no-repeat',
-          backgroundPosition: 'center',
+          backgroundPosition: 'top',
           backgroundSize: 'cover',
+         
           paddingBottom: '100px',
         }}
       >

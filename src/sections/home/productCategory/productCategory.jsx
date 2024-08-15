@@ -13,7 +13,7 @@ import {
   CardContent,
 } from '@mui/material';
 
-import { listPath } from 'src/constant/constant'
+import { listPath } from 'src/constant/constant';
 
 const ProductList = ({ category, products }) => {
   const navigate = useNavigate();
@@ -24,7 +24,6 @@ const ProductList = ({ category, products }) => {
 
   const handleViewAllClick = (categoryId) => {
     navigate(listPath.productByCategoryId(categoryId));
-   
   };
 
   const displayedProducts = products.slice(0, 8);
@@ -43,7 +42,7 @@ const ProductList = ({ category, products }) => {
           <Grid item xs={12} sm={6} md={3} lg={3} key={product.productId}>
             <Card
               onClick={() => handleProductClick(Number(product.productId))}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer', backgroundColor: '#f0f0f0' }}
             >
               <CardContent>
                 <CardMedia
@@ -58,11 +57,6 @@ const ProductList = ({ category, products }) => {
                 />
                 <Typography variant="h6">{product.name}</Typography>
                 <Typography variant="body2">${product.price}</Typography>
-                {product.priceSale && (
-                  <Typography variant="body2" color="textSecondary">
-                    ${product.priceSale}
-                  </Typography>
-                )}
 
                 {category.categoryName !== 'Đã bán' && (
                   <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
@@ -78,9 +72,9 @@ const ProductList = ({ category, products }) => {
       </Grid>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginY: 2 }}>
         <Button
-         variant="contained" color="primary"
+          variant="contained"
+          color="primary"
           onClick={() => handleViewAllClick(category.categoryId)}
-        
         >
           Xem thêm
         </Button>

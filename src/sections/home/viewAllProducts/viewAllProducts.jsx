@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, useSearchParams, } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
   Box,
@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-import { listPath } from 'src/constant/constant';
+import { listPath, listStatus } from 'src/constant/constant';
 import { getCategoryById, getProductByCategoryId } from 'src/api/product';
 
 const AllProductsPage = () => {
@@ -26,7 +26,8 @@ const AllProductsPage = () => {
   const itemsPerPage = 8;
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [status, setStatus] = useState();
 
   const handleProductClick = (productId) => {
     navigate(listPath.listProductById(productId));
@@ -37,12 +38,20 @@ const navigate = useNavigate();
   };
 
   useEffect(() => {
+    if (categoryId === '1') {
+      setStatus(listStatus.APPROVED);
+    }
     const fetchProducts = async () => {
       setLoading(true);
+
       try {
-        const response = await getProductByCategoryId(categoryId, page, itemsPerPage);
-        
-        setProducts(response.data);
+        const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status);
+
+        const allProductApprove = response.data.filter(
+          (product) => product.status === listStatus.APPROVED
+        );
+
+        setProducts(allProductApprove);
         setTotalPages(response.meta.total);
       } catch (err) {
         setError(err.message);
@@ -55,15 +64,14 @@ const navigate = useNavigate();
       try {
         const categoriesResponse = await getCategoryById(categoryId);
         setCategories(categoriesResponse);
-      
       } catch (err) {
-        alert('Lỗi');
+        alert('Lỗi', err);
       }
     };
 
     fetchProducts();
     fetchCategories();
-  }, [categoryId, page]);
+  }, [categoryId, page, status]);
 
   if (loading) {
     return <CircularProgress />;
@@ -74,7 +82,15 @@ const navigate = useNavigate();
   }
 
   return (
-    <Box sx={{ width: '80%', margin: '0 auto', padding: '10px',backgroundColor:'white',borderRadius:'10px' }}>
+    <Box
+      sx={{
+        width: '80%',
+        margin: '0 auto',
+        padding: '10px',
+        backgroundColor: 'white',
+        borderRadius: '10px',
+      }}
+    >
       <Typography variant="h4" sx={{ marginBottom: 2 }}>
         Tất cả sản phẩm: {categories.categoryName}
       </Typography>

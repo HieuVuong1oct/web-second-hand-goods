@@ -32,6 +32,9 @@ export const listPathApi = {
   urlApproveProduct: (id) => `/product/approve/${id}`,
   urlRejectProduct: (id) => `/product/reject/${id}`,
   urlPersonalProduct: `/user/personal-product`,
+  urlUserBuy: (productId) => `user/request-to-buy/${productId}`,
+  urlApproveRequest: (productId, userId) => `user/approve-request/${productId}/${userId}`,
+  urlRejectRequest: (productId, userId) => `user/reject-request/${productId}/${userId}`,
 };
 
 export const MESSAGES = {
@@ -54,5 +57,10 @@ export const MESSAGES = {
 };
 
 export const listStatus = {
-  REJECT: 'REJECT',
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  SOLD:'SOLD'
 };
+
+
