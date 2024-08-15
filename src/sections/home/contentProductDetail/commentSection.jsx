@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import {ExpandMore} from '@mui/icons-material'
+import { ExpandMore } from '@mui/icons-material';
 import {
   Grid,
   Button,
@@ -12,7 +12,6 @@ import {
   Typography,
   AccordionSummary,
   AccordionDetails,
-
 } from '@mui/material';
 
 import { getProductById } from 'src/api/product';
@@ -20,7 +19,6 @@ import { getProductById } from 'src/api/product';
 const CommentSection = ({ productId, newComment, setNewComment, handleAddComment }) => {
   const [comments, setComments] = useState([]);
 
-  
   const listComment = useCallback(async () => {
     try {
       const response = await getProductById(productId);
@@ -36,7 +34,6 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
   }, [listComment]);
 
   const handleAddCommentAndReload = async () => {
-   
     await handleAddComment();
 
     await listComment();
@@ -57,13 +54,18 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
       />
-      <Button variant="contained" color="primary" onClick={handleAddCommentAndReload} sx={{ mt: 2 }}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleAddCommentAndReload}
+        sx={{ mt: 2 }}
+      >
         Thêm bình luận
       </Button>
-    
+
       <Accordion sx={{ mt: 2 }}>
         <AccordionSummary
-          expandIcon={<ExpandMore/>}
+          expandIcon={<ExpandMore />}
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
@@ -74,7 +76,9 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
             {comments.map((comment, index) => (
               <React.Fragment key={index}>
                 <Grid item xs={12}>
-                <Typography sx={{color:'blue'}} variant="body1">{comment.user.username}</Typography>
+                  <Typography sx={{ color: 'blue' }} variant="body1">
+                    {comment.user.username}
+                  </Typography>
                   <Typography variant="body1">{comment.content || 'Không có bình luận'}</Typography>
                 </Grid>
                 {index < comments.length - 1 && (

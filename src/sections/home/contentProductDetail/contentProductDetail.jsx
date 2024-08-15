@@ -3,8 +3,14 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { Alert, Snackbar, Container, Typography } from '@mui/material';
 
-import { listStatus } from 'src/constant/constant'
-import {addComment, rejectRequest, approveRequest, getProductById, userBuyProduct,  } from 'src/api/product';
+import { listStatus } from 'src/constant/constant';
+import {
+  addComment,
+  rejectRequest,
+  approveRequest,
+  getProductById,
+  userBuyProduct,
+} from 'src/api/product';
 
 import ActionButtons from './actionButton';
 import MessageDialog from './messageDialog';
@@ -13,14 +19,13 @@ import RegisterDialog from './registerDialog';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
 
-
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState('');
-  
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
@@ -43,7 +48,9 @@ const ProductDetail = () => {
       setProduct(fetchedProduct);
       const resUserBuy = Array.isArray(fetchedProduct.requests) ? fetchedProduct.requests : [];
 
-      const filterUserBuy = resUserBuy.filter((resUser) => resUser.requestStatus === listStatus.PENDING);
+      const filterUserBuy = resUserBuy.filter(
+        (resUser) => resUser.requestStatus === listStatus.PENDING
+      );
       setUserBuy(filterUserBuy);
     } catch (error) {
       setSnackbarMessage('Lỗi: ');
@@ -90,15 +97,12 @@ const ProductDetail = () => {
   };
 
   const handleAddComment = async () => {
-  
     try {
-      await addComment({content:newComment, productId: product.productId}, );
-      setNewComment('')
+      await addComment({ content: newComment, productId: product.productId });
+      setNewComment('');
       setSnackbarMessage('Thêm bình luận thành công');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
-
-     
     } catch (error) {
       setSnackbarMessage('Có lỗi xảy ra . Vui lòng thử lại.');
       setSnackbarSeverity('error');
@@ -227,7 +231,6 @@ const ProductDetail = () => {
         newComment={newComment}
         setNewComment={setNewComment}
         handleAddComment={handleAddComment}
-        
       />
 
       <Snackbar
