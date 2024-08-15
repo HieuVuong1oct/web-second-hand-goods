@@ -164,3 +164,15 @@ export const rejectRequest = async (productId,userId) => {
     throw error;
   }
 };
+
+export const addComment = (data) => {
+ 
+  const response = axiosClient.post(listPathApi.urlAddComment(data.productId),
+    {
+     content:data.content
+    },
+
+  );
+  
+  return response;
+};
