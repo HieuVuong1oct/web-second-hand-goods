@@ -25,7 +25,7 @@ const ProductDetail = () => {
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
-  const [newComment, setNewComment] = useState('');
+
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [likes, setLikes] = useState(0);
@@ -122,10 +122,10 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddComment = async () => {
+  const handleAddComment = async (data) => {
     try {
-      await addComment({ content: newComment, productId: product.productId });
-      setNewComment('');
+      await addComment({ content: data, productId: product.productId });
+   
       setSnackbarMessage('Thêm bình luận thành công');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
@@ -271,8 +271,7 @@ const ProductDetail = () => {
       />
       <CommentSection
         productId={productId}
-        newComment={newComment}
-        setNewComment={setNewComment}
+ 
         handleAddComment={handleAddComment}
       />
 

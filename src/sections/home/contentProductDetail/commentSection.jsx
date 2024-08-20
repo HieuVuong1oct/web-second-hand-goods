@@ -1,4 +1,7 @@
+import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { ExpandMore } from '@mui/icons-material';
@@ -17,11 +20,28 @@ import {
 
 import { getProductById } from 'src/api/product';
 
-const CommentSection = ({ productId, newComment, setNewComment, handleAddComment }) => {
+
+const validationSchema = Yup.object().shape({
+  comment: Yup.string()
+  .trim('Bình luận không được bỏ trống')
+    .required('Bạn chưa nhập bình luận')
+    .min(1, 'Bình luận phải có ít nhất 1 ký tự'),
+});
+const CommentSection = ({ productId,  handleAddComment }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visibleComments, setVisibleComments] = useState(4);
   const [expanded, setExpanded] = useState(true);
+  const [commentValue, setCommentValue] = useState('');
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
   const listComment = useCallback(async () => {
     try {
       const response = await getProductById(productId);
@@ -34,14 +54,19 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
 
   useEffect(() => {
     listComment();
+    
   }, [listComment]);
 
-  const handleAddCommentAndReload = async () => {
+  const handleAddCommentAndReload = async (data) => {
     setLoading(true)
-    await handleAddComment();
-
+    const trimmedComment = data.comment.trim();
+ 
+    await handleAddComment(trimmedComment);
+    reset();
+    setCommentValue('');
     await listComment();
     setLoading(false);
+   
   };
 
   const handleShowMoreComments = () => {
@@ -55,27 +80,41 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
       <Typography variant="h5" gutterBottom>
         Phản hồi
       </Typography>
-      <TextField
-        label="Nhập bình luận"
-        type="text"
-        fullWidth
-        multiline
-        rows={3}
-        variant="outlined"
-        value={newComment}
-        onChange={(e) => setNewComment(e.target.value)}
-      />
-      <LoadingButton
-        variant="contained"
-        color="primary"
-        onClick={handleAddCommentAndReload}
-        sx={{ mt: 2 }}
-        loading={loading}
-    
-      >
-        Thêm bình luận
-      </LoadingButton>
-
+      
+      <form onSubmit={handleSubmit(handleAddCommentAndReload)}>
+        <Controller
+          name="comment"
+          control={control}
+         
+          render={({ field }) => (
+            <TextField
+              {...field}
+              label="Nhập bình luận"
+              type="text"
+              fullWidth
+              multiline
+              rows={3}
+              variant="outlined"
+              value={commentValue}
+              error={!!errors.comment}
+              helperText={errors.comment?.message}
+              onChange={(e) => {
+                field.onChange(e);
+                setCommentValue(e.target.value);
+              }}
+            />
+          )}
+        />
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2 }}
+          loading={loading}
+        >
+          Thêm bình luận
+        </LoadingButton>
+      </form>
       <Accordion sx={{ mt: 2 }} expanded={expanded} onChange={handleAccordionChange}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
@@ -118,8 +157,6 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
 
 CommentSection.propTypes = {
   productId: PropTypes.string.isRequired,
-  newComment: PropTypes.string.isRequired,
-  setNewComment: PropTypes.func.isRequired,
   handleAddComment: PropTypes.func.isRequired,
 };
 

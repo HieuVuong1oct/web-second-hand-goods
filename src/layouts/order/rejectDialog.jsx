@@ -13,7 +13,9 @@ import {
 } from '@mui/material';
 
 const validationSchema = Yup.object({
-  rejectReason: Yup.string().required('Lý do từ chối không được bỏ trống'),
+  rejectReason: Yup.string()
+   .trim('Lý do từ chối không được bỏ trống')
+  .required('Lý do từ chối không được bỏ trống'),
 });
 
 const RejectDialog = ({

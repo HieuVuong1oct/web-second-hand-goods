@@ -14,7 +14,9 @@ import {
 } from '@mui/material';
 
 const validationSchema = Yup.object({
-  message: Yup.string().required('Lời nhắn không được bỏ trống'),
+  message: Yup.string()
+  .trim('Lời nhắn không được bỏ trống')
+  .required('Lời nhắn không được bỏ trống'),
   offer: Yup.number()
     .nullable()
     .positive('Giá mong muốn phải lớn hơn 0')
