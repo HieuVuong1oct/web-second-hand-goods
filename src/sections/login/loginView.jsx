@@ -53,7 +53,11 @@ export default function LoginView() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await login(data);
+      const trimmedData = {
+        email: data.email.trim(),
+        password: data.password.trim(),
+      };
+      const response = await login(trimmedData);
       setLoading(false);
       const userData = response;
       

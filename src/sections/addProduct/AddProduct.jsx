@@ -53,15 +53,20 @@ const AddProductView = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-
+    const trimmedData = {
+      name: data.name.trim(),
+      description: data.description.trim(),
+      price: data.price.trim(),
+      images: data.images,
+    };
     try {
       const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('description', data.description);
-      formData.append('price', data.price);
+      formData.append('name', trimmedData.name);
+      formData.append('description', trimmedData.description);
+      formData.append('price', trimmedData.price);
 
-      if (data.images && data.images.length > 0) {
-        Array.from(data.images).forEach((file) => {
+      if (trimmedData.images && trimmedData.images.length > 0) {
+        Array.from(trimmedData.images).forEach((file) => {
           formData.append('images', file);
         });
       }

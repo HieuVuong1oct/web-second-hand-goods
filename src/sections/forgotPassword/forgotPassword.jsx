@@ -61,9 +61,10 @@ export default function ForgotPasswordView() {
   });
 
   const onSubmitOtp = async (data) => {
+    const trimmedEmail = data.email.trim();
     setLoading(true);
     try {
-      await sendOtp({ email: data.email });
+      await sendOtp({ email: trimmedEmail.email });
       setOtpSent(true);
       setEmail(data.email);
       setLoading(false);
@@ -78,9 +79,11 @@ export default function ForgotPasswordView() {
   };
 
   const onSubmitNewPassword = async (data) => {
+    const trimmedOtp = data.otp.trim(); 
+    const trimmedNewPassword = data.newPassword.trim(); 
     setLoading(true);
     try {
-      await setPassword(email, data.otp, data.password);
+      await setPassword(email, trimmedOtp.otp, trimmedNewPassword.password);
       setTimeout(() => {
         navigateToLogin();
       }, 3000);
