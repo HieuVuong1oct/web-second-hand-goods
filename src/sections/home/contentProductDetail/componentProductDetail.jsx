@@ -73,7 +73,9 @@ ComponentProductDetail.propTypes = {
     description: PropTypes.string.isRequired,
     categoryId: PropTypes.number.isRequired,
     isRequested: PropTypes.bool.isRequired,
-    author:PropTypes.string.isRequired
+    author: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+    }).isRequired,
   }),
   getStatus: PropTypes.func.isRequired,
   handleOpen: PropTypes.func.isRequired,

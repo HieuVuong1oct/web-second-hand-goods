@@ -82,7 +82,7 @@ export default function ForgotPasswordView() {
 
   const onSubmitNewPassword = async (data) => {
     const trimmedOtp = data.otp.trim(); 
-    const trimmedNewPassword = data.newPassword.trim(); // Trim new password
+    const trimmedNewPassword = data.newPassword.trim(); 
     setLoading(true);
     try {
       await setPassword(email, trimmedOtp.otp, trimmedNewPassword.password);

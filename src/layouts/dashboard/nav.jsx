@@ -48,35 +48,36 @@ export default function Nav({ openNav, onCloseNav }) {
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL[0]} alt="photoURL" />
+      <Avatar src={account.photoURL[0]} alt="photoURL" sx={{ml:1}}/>
+      
+    <CardContent sx={{ maxWidth: 'calc(100% - 48px)', padding: '0 16px' }}> 
+      <Typography
+        variant="subtitle2"
+        noWrap
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          mt:2
+        }}
+      >
+        {account.displayName}
+      </Typography>
 
-      <CardContent sx={{  maxWidth: '100%' }}>
-        <Typography
-          variant="subtitle2"
-          noWrap
-          sx={{
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {account.displayName}
-        </Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          color: 'text.secondary',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+        noWrap
+      >
+        {account.email}
+      </Typography>
+    </CardContent>
 
-        <Typography
-          variant="body2"
-          sx={{
-            color: 'text.secondary',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            maxWidth: '100%',
-          }}
-          noWrap
-        >
-          {account.email}
-        </Typography>
-      </CardContent>
     </Box>
   );
 

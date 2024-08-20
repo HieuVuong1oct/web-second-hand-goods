@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
     .max(300, 'Mô tả tối đa 300 ký tự')
     .required('Mô tả là bắt buộc'),
   price: Yup.number()
-  .trim('Giá không được bỏ trống')
+ 
     .typeError('Bạn chưa nhập giá')
     .required('Giá là bắt buộc')
     .positive('Giá phải là số lớn hơn 0'),
