@@ -44,7 +44,9 @@ const ComponentProductDetail = ({
       <Typography variant="body1" gutterBottom>
         Trạng thái: {getStatus(product.categoryId)}
       </Typography>
-      
+      <Typography variant="body1" paragraph>
+        Người bán: {product.author.username}
+      </Typography>
       {product.categoryId !== 2 && (
         <>
           {product.isRequested === true ? (
@@ -71,6 +73,7 @@ ComponentProductDetail.propTypes = {
     description: PropTypes.string.isRequired,
     categoryId: PropTypes.number.isRequired,
     isRequested: PropTypes.bool.isRequired,
+    author:PropTypes.string.isRequired
   }),
   getStatus: PropTypes.func.isRequired,
   handleOpen: PropTypes.func.isRequired,
