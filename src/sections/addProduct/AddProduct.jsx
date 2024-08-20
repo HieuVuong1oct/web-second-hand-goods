@@ -11,14 +11,17 @@ import { MESSAGES } from 'src/constant/constant';
 
 const schema = Yup.object().shape({
   name: Yup.string()
+  .trim('Tên sản phẩm không được bỏ trống')
     .min(1, 'Tên sản phẩm phải có ít nhất 1 ký tự')
     .max(30, 'Tên sản phẩm tối đa 30 ký tự')
     .required('Tên sản phẩm là bắt buộc'),
   description: Yup.string()
+  .trim('Mô tả không được bỏ trống')
     .min(1, 'Mô tả phải có ít nhất 1 ký tự')
     .max(300, 'Mô tả tối đa 300 ký tự')
     .required('Mô tả là bắt buộc'),
   price: Yup.number()
+  .trim('Giá không được bỏ trống')
     .typeError('Bạn chưa nhập giá')
     .required('Giá là bắt buộc')
     .positive('Giá phải là số lớn hơn 0'),

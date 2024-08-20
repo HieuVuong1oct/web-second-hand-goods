@@ -35,23 +35,28 @@ export default function SignUpView() {
 
   const validationSchema = Yup.object({
     email: Yup.string()
+    .trim('Email không được bỏ trống')
       .email('Địa chỉ email không hợp lệ')
       .min(11, 'Email phải có ít nhất 11 ký tự')
       .max(64, 'Email tối đa 64 ký tự')
       .required('Vui lòng nhập email'),
     password: Yup.string()
+    .trim('Mật khẩu không được bỏ trống')
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
       .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
       .required('Vui lòng nhập mật khẩu'),
     checkPassword: Yup.string()
+    .trim('Kiểm tra mật khẩu không được bỏ trống')
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
     username: Yup.string()
+    .trim('Tên tài khoản không được bỏ trống')
       .min(1, 'Tên tài khoản phải có ít nhất 1 ký tự')
       .max(30, 'Tên tài khoản tối đa 30 ký tự')
       .required('Vui lòng nhập tên tài khoản'),
     name: Yup.string()
+    .trim('Tên không được bỏ trống')
       .min(1, 'Tên phải có ít nhất 1 ký tự')
       .max(30, 'Tên tối đa 30 ký tự')
       .required('Vui lòng nhập tên người dùng'),
