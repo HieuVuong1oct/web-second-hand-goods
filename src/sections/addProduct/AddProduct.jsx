@@ -56,7 +56,7 @@ const AddProductView = () => {
     const trimmedData = {
       name: data.name.trim(),
       description: data.description.trim(),
-      price: data.price.trim(),
+      price: data.price,
       images: data.images,
     };
     try {
