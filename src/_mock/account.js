@@ -12,11 +12,11 @@ export default function Account() {
   useEffect(() => {
     const username = Cookies.get('username')
     const email = Cookies.get('email')
-
+    const avatar = Cookies.get('avatar')
     setAccount({
       displayName: username || '',
       email: email || '',
-      photoURL: '/assets/images/avatars/avatar_25.jpg',
+      photoURL: JSON.parse(avatar),
     })
   }, [])
 

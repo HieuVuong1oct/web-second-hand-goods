@@ -16,7 +16,7 @@ import {
 
 const ProductsUserReject = ({ products, page, itemsPerPage, total, handlePageChange }) => (
   <>
-    <h2>Sản phẩm đã đăng ký mua</h2>
+    <h2>Sản phẩm đã bị người bán từ chối</h2>
     {products.length > 0 ? (
       <TableContainer component={Paper}>
         <Table>

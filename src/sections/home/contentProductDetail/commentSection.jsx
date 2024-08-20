@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { ExpandMore } from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Grid,
   Button,
@@ -18,7 +19,9 @@ import { getProductById } from 'src/api/product';
 
 const CommentSection = ({ productId, newComment, setNewComment, handleAddComment }) => {
   const [comments, setComments] = useState([]);
-
+  const [loading, setLoading] = useState(false);
+  const [visibleComments, setVisibleComments] = useState(4);
+  const [expanded, setExpanded] = useState(true);
   const listComment = useCallback(async () => {
     try {
       const response = await getProductById(productId);
@@ -34,11 +37,19 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
   }, [listComment]);
 
   const handleAddCommentAndReload = async () => {
+    setLoading(true)
     await handleAddComment();
 
     await listComment();
+    setLoading(false);
   };
 
+  const handleShowMoreComments = () => {
+    setVisibleComments((prev) => prev + 4); 
+  };
+  const handleAccordionChange = () => {
+    setExpanded((prev) => !prev); 
+  };
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -54,16 +65,18 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
         value={newComment}
         onChange={(e) => setNewComment(e.target.value)}
       />
-      <Button
+      <LoadingButton
         variant="contained"
         color="primary"
         onClick={handleAddCommentAndReload}
         sx={{ mt: 2 }}
+        loading={loading}
+    
       >
         Thêm bình luận
-      </Button>
+      </LoadingButton>
 
-      <Accordion sx={{ mt: 2 }}>
+      <Accordion sx={{ mt: 2 }} expanded={expanded} onChange={handleAccordionChange}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
           aria-controls="panel1a-content"
@@ -73,7 +86,7 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={2}>
-            {comments.map((comment, index) => (
+            {comments.slice(0, visibleComments).map((comment, index) => (
               <React.Fragment key={index}>
                 <Grid item xs={12}>
                   <Typography sx={{ color: 'blue' }} variant="body1">
@@ -81,19 +94,27 @@ const CommentSection = ({ productId, newComment, setNewComment, handleAddComment
                   </Typography>
                   <Typography variant="body1">{comment.content || 'Không có bình luận'}</Typography>
                 </Grid>
-                {index < comments.length - 1 && (
+                {index < visibleComments - 1 && index < comments.length - 1 && (
                   <Grid item xs={12}>
                     <Divider />
                   </Grid>
                 )}
               </React.Fragment>
             ))}
+            {visibleComments < comments.length && (
+              <Grid item xs={12} sx={{ textAlign: 'center' }}>
+                <Button onClick={handleShowMoreComments} variant="text">
+                  Xem thêm
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </AccordionDetails>
       </Accordion>
     </Container>
   );
 };
+
 
 CommentSection.propTypes = {
   productId: PropTypes.string.isRequired,

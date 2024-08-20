@@ -112,13 +112,39 @@ const AllProductsPage = () => {
                 }}
               />
               <CardContent>
-                <Typography variant="h6">{product.name}</Typography>
-                <Typography variant="body2">${product.price}</Typography>
-                {product.priceSale && (
-                  <Typography variant="body2" color="textSecondary">
-                    ${product.priceSale}
-                  </Typography>
-                )}
+                <Typography
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                  }}
+                  variant="h6"
+                >
+                  {product.name}
+                </Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                  }}
+                  variant="body2"
+                >
+                  ${product.price}
+                </Typography>
+                <Typography
+                  sx={{
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    maxWidth: '100%',
+                  }}
+                  variant="body2"
+                >
+                  Người bán: {product.author.username}
+                </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
                   <Button variant="contained" color="primary">
                     Mua ngay

@@ -56,7 +56,7 @@ export default function LoginView() {
       const response = await login(data);
       setLoading(false);
       const userData = response;
-
+      
       if (userData.data.user.userId) {
         setCookies(userData.data);
 

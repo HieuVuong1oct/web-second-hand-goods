@@ -77,7 +77,7 @@ axiosClient.interceptors.response.use(
 const startTokenRefreshInterval = () => {
   setInterval(async () => {
     await refreshAccessToken();
-  }, 5*60*1000);
+  }, 10*60*1000);
 };
 
 startTokenRefreshInterval();

@@ -11,6 +11,8 @@ export const listPath = {
   listProductById: (productId) => `/homeMain/product/get-by-id/${productId}`,
   productByCategoryId: (categoryId) => `/homeMain/categories/${categoryId}/products`,
   history: '/homeMain/history',
+  order:'/order',
+  productDetailOrders:(productId) => `/order/product/get-by-id/${productId}`,
 };
 
 export const listPathApi = {

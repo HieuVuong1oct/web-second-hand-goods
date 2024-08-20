@@ -1,3 +1,4 @@
+
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
@@ -128,7 +129,7 @@ const Header = () => {
       }}
     >
       <div className={classes.container}>
-        <div className={classes.item2}>
+      
           <div
             className={classes.logo}
             role="button"
@@ -156,7 +157,7 @@ const Header = () => {
                   }}
                 >
                   <Avatar
-                    src={account.photoURL}
+                    src={account.photoURL[0]}
                     alt={account.displayName}
                     sx={{
                       width: 36,
@@ -249,7 +250,7 @@ const Header = () => {
               </div>
             )}
           </Box>
-        </div>
+       
       </div>
 
       <Snackbar

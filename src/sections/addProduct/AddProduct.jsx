@@ -21,11 +21,13 @@ const schema = Yup.object().shape({
   price: Yup.number()
     .typeError('Bạn chưa nhập giá')
     .required('Giá là bắt buộc')
-    .positive('Giá phải là số dương'),
-  images: Yup.mixed()
+    .positive('Giá phải là số lớn hơn 0'),
+    images: Yup.mixed()
     .typeError('Bạn chưa tải ảnh')
     .required('Hình ảnh là bắt buộc')
-    .test('fileExists', 'Bạn chưa tải lên hình ảnh', (value) => value && value.length > 0),
+    .test('fileCount', 'Bạn phải tải lên đúng 4 hình ảnh', (value) => 
+         value && value.length === 4
+    ),
 });
 
 const AddProductView = () => {

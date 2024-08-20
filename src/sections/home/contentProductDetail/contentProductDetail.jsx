@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Alert, Snackbar, Container, Typography } from '@mui/material';
+import { Box, Alert, Snackbar, Container, CircularProgress } from '@mui/material';
 
 import { listStatus } from 'src/constant/constant';
 import {
@@ -16,6 +16,7 @@ import ActionButtons from './actionButton';
 import MessageDialog from './messageDialog';
 import CommentSection from './commentSection';
 import RegisterDialog from './registerDialog';
+import ConfirmOrderDialog from './cancelOrder';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
 
@@ -38,7 +39,7 @@ const ProductDetail = () => {
 
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState('');
-
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const { productId } = useParams();
 
   const fetchProduct = useCallback(async () => {
@@ -46,6 +47,7 @@ const ProductDetail = () => {
       const response = await getProductById(productId);
       const fetchedProduct = response.data[0];
       setProduct(fetchedProduct);
+
       const resUserBuy = Array.isArray(fetchedProduct.requests) ? fetchedProduct.requests : [];
 
       const filterUserBuy = resUserBuy.filter(
@@ -71,13 +73,13 @@ const ProductDetail = () => {
     setOpen(false);
   };
 
-  const handleRegisterBuy = async () => {
+  const handleRegisterBuy = async (values) => {
     setLoading(true);
     try {
       await userBuyProduct({
         productId: product.productId,
-        message,
-        offer,
+        message: values.message,
+        offer: values.offer,
       });
 
       setSnackbarMessage('Đăng ký mua thành công!');
@@ -86,13 +88,37 @@ const ProductDetail = () => {
 
       setMessage('');
       setOffer();
+
       handleClose();
+      fetchProduct();
     } catch (error) {
       setSnackbarMessage('Có lỗi xảy ra khi đăng ký mua. Vui lòng thử lại.');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancelRegister = async () => {
+    setLoading(true);
+    try {
+      await userBuyProduct({
+        productId: product.productId,
+      });
+
+      setSnackbarMessage('Hủy đăng ký thành công!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+
+      fetchProduct();
+    } catch (error) {
+      setSnackbarMessage('Có lỗi xảy ra khi hủy đăng ký. Vui lòng thử lại.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+      setOpenConfirmDialog(false);
     }
   };
 
@@ -121,7 +147,13 @@ const ProductDetail = () => {
   const handleDislike = () => {
     setDislikes(dislikes + 1);
   };
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
 
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
   const handleViewMessage = (mess) => {
     setSelectedMessage(mess);
     setMessageDialogOpen(true);
@@ -160,7 +192,13 @@ const ProductDetail = () => {
   };
 
   if (!product) {
-    return <Typography variant="h6">Loading...</Typography>;
+    return (
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const getStatus = (categoryId) => {
@@ -189,6 +227,7 @@ const ProductDetail = () => {
         product={product}
         getStatus={getStatus}
         handleOpen={handleOpen}
+        handleOpenConfirmDialog={handleOpenConfirmDialog}
       />
 
       <RegisterDialog
@@ -225,7 +264,11 @@ const ProductDetail = () => {
           handleRejectRequest={handleRejectRequest}
         />
       )}
-
+      <ConfirmOrderDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onConfirm={handleCancelRegister}
+      />
       <CommentSection
         productId={productId}
         newComment={newComment}
