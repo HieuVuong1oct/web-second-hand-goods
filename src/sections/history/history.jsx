@@ -11,7 +11,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  CircularProgress,
   DialogContentText,
+  
 } from '@mui/material';
 
 import { getProducts } from 'src/api/product';
@@ -57,10 +59,14 @@ const HistoryScreen = () => {
   const status = searchParams.get('status') || 'APPROVED';
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const itemsPerPage = 8;
+  const [loading, setLoading] = useState(false);
 
   const requestStatus = searchParams.get('requestStatus') || 'APPROVED';
+ 
+  
   useEffect(() => {
     const fetchDataSelling = async () => {
+      setLoading(true);
       try {
         const response = await getProducts(1, page, itemsPerPage, status, requestStatus);
 
@@ -82,27 +88,39 @@ const HistoryScreen = () => {
         }
       } catch (error) {
         alert('Lỗi', error);
+      }finally {
+        setLoading(false); 
       }
     };
 
+    
+    fetchDataSelling();
+   
+  }, [page, status, requestStatus]);
+
+  useEffect(() => {
+    
     const fetchDataSold = async () => {
+      setLoading(true);
       try {
         const Products = await getProducts(2, page, itemsPerPage);
 
         const productSold = Products.userProduct?.data.filter(
           (product) => product.categoryId === 2
         );
+       
         setTotalSold(Products.userProduct?.meta?.total);
         setProductsSold(productSold);
       } catch (error) {
         alert('Lỗi', error);
+      }finally {
+        setLoading(false); 
       }
     };
 
-    fetchDataSelling();
+   
     fetchDataSold();
-  }, [page, status, requestStatus]);
-
+  }, [page]);
   const handleOpenRejectDialog = (rejectMess) => {
     setRejectReason(rejectMess);
     setOpenRejectDialog(true);
@@ -123,9 +141,12 @@ const HistoryScreen = () => {
   };
   const handleTabClick = (index, statusValue, requestStatusValue = '') => {
     setTabValue(index);
-    setSearchParams({ status: statusValue, requestStatus: requestStatusValue });
+    setSearchParams({ status: statusValue, requestStatus: requestStatusValue,tab:index });
   };
-
+  useEffect(() => {
+    const tabParam = parseInt(searchParams.get('tab'), 10);
+    setTabValue(Number.isNaN(tabParam) ? 0 : tabParam); 
+  }, [searchParams]);
   return (
     <div
       style={{
@@ -154,10 +175,20 @@ const HistoryScreen = () => {
           />
           <Tab
             label="Người bán từ chối"
-            onClick={() => handleTabClick(6, listStatus.APPROVED,listStatus.REJECTED)}
+            onClick={() => handleTabClick(6, listStatus.APPROVED, listStatus.REJECTED)}
           />
         </Tabs>
-
+        {loading ? ( // Hiển thị CircularProgress khi đang tải
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="60vh"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <>
         <TabPanel value={tabValue} index={0}>
           <ProductsSelling
             products={products}
@@ -229,7 +260,34 @@ const HistoryScreen = () => {
             handlePageChange={handlePageChange}
           />
         </TabPanel>
-        <Dialog open={openRejectDialog} onClose={handleCloseRejectDialog}>
+          </>
+        )}
+        <Dialog
+          open={openRejectDialog}
+          onClose={handleCloseRejectDialog}
+          maxWidth="sm"
+          fullWidth
+          sx={{
+            '& .MuiDialogTitle-root': {
+              backgroundColor: '#1976d2',
+              color: '#fff',
+              padding: '16px',
+            },
+            '& .MuiDialogContent-root': {
+              padding: '24px',
+              backgroundColor: '#f5f5f5',
+            },
+            '& .MuiDialogActions-root': {
+              padding: '16px',
+              backgroundColor: '#f5f5f5',
+              justifyContent: 'center',
+            },
+            '& .MuiButton-root': {
+              padding: '8px 24px',
+              fontSize: '16px',
+            },
+          }}
+        >
           <DialogTitle>Lý do từ chối</DialogTitle>
           <DialogContent>
             <DialogContentText>{rejectReason}</DialogContentText>

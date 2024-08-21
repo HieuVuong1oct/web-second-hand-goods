@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { Box, Card, Grid, Divider, CardMedia, Typography, CardContent } from '@mui/material';
+import { Box, Card, Grid, Divider, CardMedia, Typography, CardContent ,CircularProgress} from '@mui/material';
 
 import { getAllProduct } from 'src/api/product';
 import { getAllCategory } from 'src/api/category';
@@ -12,9 +12,9 @@ const featuredProduct = {
   cover: '/assets/images/products/product_1.jpg',
   name: 'Giày xanh',
   describe:
-    'Apple đã cho ra mắt iPhone 15 Pro Max thuộc dòng iPhone 15 Series trong sự kiện "Wonderlust" cùng Apple Watch Series 9 và Apple Watch Ultra 2. Đây là phiên bản iPhone cao cấp nhất của iPhone 15 Series với nhiều những cải tiến vượt bật cả về thiết kế và hiệu năng.',
+    'Giày nhiều người đăng kí nhất',
   price: 1000,
-  seller: 'Người bán ABC',
+  seller: 'Nguyễn văn A',
   purchases: 150,
 };
 
@@ -22,9 +22,11 @@ const ProductPage = () => {
   const classes = useStyles();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     const fetchInitialData = async () => {
+      setLoading(true);
       try {
         const [categoriesResponse, productsResponse] = await Promise.all([
           getAllCategory(),
@@ -34,12 +36,14 @@ const ProductPage = () => {
         const productApprove = productsResponse.data.filter(
           (product) => product.status === 'APPROVED'
         );
-
+       
         setCategories(categoriesResponse);
 
         setProducts(Array.isArray(productApprove) ? productApprove : []);
       } catch (error) {
         alert('Lỗi', error);
+      } finally {
+        setLoading(false); 
       }
     };
 
@@ -96,14 +100,19 @@ const ProductPage = () => {
             </Card>
             <Divider sx={{ marginY: 2 }} />
           </div>
-
-          {groupedProducts.map((category) => (
+          {loading ? ( 
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+          groupedProducts.map((category) => (
             <ProductList
               key={category.categoryId}
               category={category}
               products={category.products}
             />
-          ))}
+          ))
+        )}
         </Grid>
       </Grid>
     </Box>

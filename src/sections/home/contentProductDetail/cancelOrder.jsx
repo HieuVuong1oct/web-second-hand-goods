@@ -10,7 +10,7 @@ import {
   DialogContentText,
 } from '@mui/material';
 
-const ConfirmDialog = ({ open, onClose, onConfirm }) => {
+const ConfirmOrderDialog = ({ open, onClose, onConfirm }) => {
   const [loading, setLoading] = useState(false);
 
   const handleConfirm = async () => {
@@ -27,9 +27,7 @@ const ConfirmDialog = ({ open, onClose, onConfirm }) => {
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Xác nhận</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          Bạn có chắc chắn muốn cho phép đăng bán sản phẩm này không?
-        </DialogContentText>
+        <DialogContentText>Bạn có chắc chắn muốn hủy đăng kí mua sản phẩm này?</DialogContentText>
       </DialogContent>
       <DialogActions>
         <LoadingButton onClick={onClose} color="primary" loading={loading}>
@@ -42,9 +40,9 @@ const ConfirmDialog = ({ open, onClose, onConfirm }) => {
     </Dialog>
   );
 };
-ConfirmDialog.propTypes = {
+ConfirmOrderDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onConfirm: PropTypes.func.isRequired,
 };
-export default ConfirmDialog;
+export default ConfirmOrderDialog;

@@ -9,7 +9,6 @@ import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
@@ -30,32 +29,43 @@ export default function SignUpView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
-  const [avatarFile, setAvatarFile] = useState(null);
+ 
   const { navigateToLogin } = useNavigationHelpers();
   const [successMessage, setSuccessMessage] = useState('');
 
   const validationSchema = Yup.object({
     email: Yup.string()
+    .trim('Email không được bỏ trống')
       .email('Địa chỉ email không hợp lệ')
       .min(11, 'Email phải có ít nhất 11 ký tự')
       .max(64, 'Email tối đa 64 ký tự')
       .required('Vui lòng nhập email'),
     password: Yup.string()
+    .trim('Mật khẩu không được bỏ trống')
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
       .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
       .required('Vui lòng nhập mật khẩu'),
     checkPassword: Yup.string()
+    .trim('Kiểm tra mật khẩu không được bỏ trống')
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
     username: Yup.string()
+    .trim('Tên tài khoản không được bỏ trống')
       .min(1, 'Tên tài khoản phải có ít nhất 1 ký tự')
       .max(30, 'Tên tài khoản tối đa 30 ký tự')
       .required('Vui lòng nhập tên tài khoản'),
     name: Yup.string()
+    .trim('Tên không được bỏ trống')
       .min(1, 'Tên phải có ít nhất 1 ký tự')
       .max(30, 'Tên tối đa 30 ký tự')
       .required('Vui lòng nhập tên người dùng'),
+      avatar: Yup.mixed()
+      .typeError('Bạn chưa tải ảnh')
+      .required('Hình ảnh là bắt buộc')
+      .test('fileCount', 'Bạn phải tải lên đúng 1 hình ảnh', (value) => 
+           value && value.length === 1
+      ),
   });
 
   const {
@@ -67,9 +77,17 @@ export default function SignUpView() {
   });
 
   const onSubmit = async (data) => {
-    const { email, password, checkPassword, username, name } = data;
+    const { email, password, checkPassword, username, name, avatar } = data;
+    const trimmedData = {
+      email: email.trim(),
+      password: password.trim(),
+      checkPassword: checkPassword.trim(),
+      username: username.trim(),
+      name: name.trim(),
+      avatar
+    };
     setLoading(true);
-    if (password !== checkPassword) {
+    if (trimmedData.password !== trimmedData.checkPassword) {
       setError(MESSAGES.ERROR_CHECKPASSWORD);
       setLoading(false);
       return;
@@ -77,14 +95,16 @@ export default function SignUpView() {
 
     try {
       const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('username', username);
-      formData.append('name', name);
-      if (avatarFile) {
-        formData.append('avatar', avatarFile);
+      formData.append('email', trimmedData.email);
+      formData.append('password', trimmedData.password);
+      formData.append('username', trimmedData.username);
+      formData.append('name', trimmedData.name);
+    
+      if (trimmedData.avatar && trimmedData.avatar.length > 0) {
+        Array.from(trimmedData.avatar).forEach((file) => {
+          formData.append('avatar', file);
+        });
       }
-
       const response = await signUp(formData);
 
       setLoading(false);
@@ -113,11 +133,7 @@ export default function SignUpView() {
   const handleClickLogin = () => {
     navigateToLogin();
   };
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
 
-    setAvatarFile(file);
-  };
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -239,15 +255,25 @@ export default function SignUpView() {
                     />
                   )}
                 />
-                <Button variant="contained" component="label" sx={{ mt: 2 }}>
-                  Tải lên avatar
-                  <input type="file" hidden accept="image/*" onChange={handleAvatarChange} />
-                </Button>
-                {avatarFile && (
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    Đã chọn file: {avatarFile.name}
-                  </Typography>
+              <Controller
+                name="avatar"
+                control={control}
+                render={({ field }) => (
+                  <div>
+                    <input
+                      type="file"
+                      multiple
+                      onChange={(e) => field.onChange(e.target.files)}
+                      style={{ marginTop: '16px' }}
+                    />
+                    {errors.avatar && (
+                      <Typography color="error" variant="caption">
+                        {errors.avatar?.message}
+                      </Typography>
+                    )}
+                  </div>
                 )}
+              />
               </Grid>
             </Grid>
 

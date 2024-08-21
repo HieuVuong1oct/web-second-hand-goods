@@ -1,63 +1,85 @@
-import { useEffect } from 'react'
-import PropTypes from 'prop-types'
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-import Box from '@mui/material/Box'
-import Stack from '@mui/material/Stack'
-import Drawer from '@mui/material/Drawer'
-import Avatar from '@mui/material/Avatar'
-import { alpha } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import ListItemButton from '@mui/material/ListItemButton'
+import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
+import Drawer from '@mui/material/Drawer';
+import Avatar from '@mui/material/Avatar';
+import { CardContent } from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+import ListItemButton from '@mui/material/ListItemButton';
 
-import { usePathname } from 'src/routes/hooks'
-import { RouterLink } from 'src/routes/components'
+import { usePathname } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
 
-import { useResponsive } from 'src/hooks/useResponsive'
+import { useResponsive } from 'src/hooks/useResponsive';
 
-import Logo from 'src/components/logo'
-import Scrollbar from 'src/components/scrollbar'
+import Logo from 'src/components/logo';
+import Scrollbar from 'src/components/scrollbar';
 
-import { NAV } from './configLayout'
-import Account from '../../_mock/account'
-import navConfig from './configNavigation'
+import { NAV } from './configLayout';
+import Account from '../../_mock/account';
+import navConfig from './configNavigation';
 
 export default function Nav({ openNav, onCloseNav }) {
-  const account = Account()
-  const pathname = usePathname()
+  const account = Account();
+  const pathname = usePathname();
 
-  const upLg = useResponsive('up', 'lg')
+  const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
     if (openNav) {
-      onCloseNav()
+      onCloseNav();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname])
+  }, [pathname]);
 
   const renderAccount = (
     <Box
       sx={{
-        my: 3,
-        mx: 2.5,
-        py: 2,
-        px: 2.5,
+        mt:3,
+        ml:1,
+        mb:2,
+        mr:1,
         display: 'flex',
         borderRadius: 1.5,
         alignItems: 'center',
         bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
-      <Avatar src={account.photoURL} alt="photoURL" />
+      <Avatar src={account.photoURL[0]} alt="photoURL" sx={{ml:1}}/>
+      
+    <CardContent sx={{ maxWidth: 'calc(100% - 48px)', padding: '0 16px' }}> 
+      <Typography
+        variant="subtitle2"
+        noWrap
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          mt:2
+        }}
+      >
+        {account.displayName}
+      </Typography>
 
-      <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.displayName}</Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          color: 'text.secondary',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+        noWrap
+      >
+        {account.email}
+      </Typography>
+    </CardContent>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          {account.email}
-        </Typography>
-      </Box>
     </Box>
-  )
+  );
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
@@ -65,7 +87,7 @@ export default function Nav({ openNav, onCloseNav }) {
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
-  )
+  );
 
   const renderContent = (
     <Scrollbar
@@ -86,7 +108,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>
-  )
+  );
 
   return (
     <Box
@@ -120,18 +142,18 @@ export default function Nav({ openNav, onCloseNav }) {
         </Drawer>
       )}
     </Box>
-  )
+  );
 }
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
   onCloseNav: PropTypes.func,
-}
+};
 
 function NavItem({ item }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
-  const active = item.path === pathname
+  const active = item.path === pathname;
 
   return (
     <ListItemButton
@@ -160,9 +182,9 @@ function NavItem({ item }) {
 
       <Box component="span">{item.title} </Box>
     </ListItemButton>
-  )
+  );
 }
 
 NavItem.propTypes = {
   item: PropTypes.object,
-}
+};

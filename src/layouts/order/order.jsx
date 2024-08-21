@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect,useCallback } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import {
   Box,
@@ -11,9 +11,12 @@ import {
   TableCell,
   TableHead,
   Pagination,
+  Typography,
   TableContainer,
+  CircularProgress,
 } from '@mui/material';
 
+import { listPath } from 'src/constant/constant';
 import { rejectProduct, approveProduct, getApprovedProducts } from 'src/api/product';
 
 import RejectDialog from './rejectDialog';
@@ -28,61 +31,57 @@ const OrderManagement = () => {
   const [productIdToApprove, setProductIdToApprove] = useState(null);
   const [rejectProductId, setRejectProductId] = useState(null);
   const categoryId = 1;
-  const itemsPerPage = 8;
+  const itemsPerPage = 4;
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const [loading, setLoading] = useState(false);
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const [totalPages, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+
+  const fetchInitialData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await getApprovedProducts(categoryId, page, itemsPerPage, 'PENDING');
+      const products = Array.isArray(response.data) ? response.data : [];
+      setOrders(products);
+      setTotalPages(response.meta.total);
+    } catch (error) {
+      alert('Lỗi', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [categoryId, page, itemsPerPage]);
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const response = await getApprovedProducts(categoryId, page, itemsPerPage);
-
-        const products = Array.isArray(response.data) ? response.data : [];
-        const approvedProducts = products.filter((product) => product.status === 'PENDING');
-
-        setOrders(approvedProducts);
-        setTotalPages(response.meta.total);
-      } catch (error) {
-        alert('Lỗi', error);
-      }
-    };
-
     fetchInitialData();
-  }, [page, itemsPerPage]);
+  }, [fetchInitialData]);
+
   const handlePageChange = (event, newPage) => {
     setSearchParams({ page: newPage });
   };
   const approve = async () => {
+    setLoading(true);
     try {
       await approveProduct(productIdToApprove);
       handleCloseConfirmDialog();
-      const response = await getApprovedProducts(categoryId, page, itemsPerPage);
-      const products = Array.isArray(response.data) ? response.data : [];
-      const approvedProducts = products.filter((product) => product.status === 'PENDING');
-      setOrders(approvedProducts);
+      await fetchInitialData();
     } catch (error) {
       alert('Lỗi', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const reject = async () => {
-    if (!rejectProductId || !rejectReason) {
-      alert('Vui lòng nhập lý do từ chối.');
-      return;
-    }
-
+    setLoading(true);
     try {
       await rejectProduct(rejectProductId, rejectReason);
       handleCloseRejectDialog();
-      const response = await getApprovedProducts(categoryId, page, itemsPerPage);
-
-      const products = Array.isArray(response.data) ? response.data : [];
-      const approvedProducts = products.filter((product) => product.status === 'PENDING');
-      setOrders(approvedProducts);
+      await fetchInitialData();
     } catch (error) {
       alert('Lỗi', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -107,9 +106,30 @@ const OrderManagement = () => {
     setOpenConfirmDialog(false);
     setProductIdToApprove(null);
   };
+  if (loading) {
+    return (
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
+  if (orders.length === 0) {
+    return (
+      <Typography variant="h6" align="center">
+        Không có sản phẩm cần duyệt
+      </Typography>
+    );
+  }
+
+  const handleViewDetail = (productId) => {
+    navigate(listPath.productDetailOrders(productId));
+  };
   return (
     <>
+      <h2>Sản phẩm đang chờ duyệt</h2>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -118,6 +138,7 @@ const OrderManagement = () => {
               <TableCell>Tên sản phẩm</TableCell>
               <TableCell>Tên tài khoản</TableCell>
               <TableCell>Hành động</TableCell>
+              <TableCell>Chi tiết</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -143,6 +164,15 @@ const OrderManagement = () => {
                     Từ chối
                   </Button>
                 </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleViewDetail(order.productId)}
+                  >
+                    Xem
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -164,12 +194,7 @@ const OrderManagement = () => {
         />
       </TableContainer>
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
-        <Pagination
-          count={Math.max(totalPages, 1)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
+        <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
       </Box>
     </>
   );

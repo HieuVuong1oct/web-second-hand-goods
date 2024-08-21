@@ -57,7 +57,6 @@ export const getCategoryById = async (id) => {
   return response;
 };
 
-// Gửi sản phẩm mới để phê duyệt
 export const submitProductForApproval = async (productData) => {
   const categoryId = productData.get('categoryId');
   try {
@@ -93,9 +92,9 @@ export const getProducts = async (categoryId, page, itemsPerPage, status,request
   }
 };
 
-export const getApprovedProducts = async (categoryId, page, itemsPerPage) => {
+export const getApprovedProducts = async (categoryId, page, itemsPerPage,status) => {
   try {
-    const response = await getProductByCategoryId(categoryId, page, itemsPerPage);
+    const response = await getProductByCategoryId(categoryId, page, itemsPerPage,status);
 
     return response;
   } catch (error) {
@@ -103,7 +102,7 @@ export const getApprovedProducts = async (categoryId, page, itemsPerPage) => {
     throw error;
   }
 };
-// Cập nhật trạng thái sản phẩm (đã duyệt)
+
 export const approveProduct = async (productId) => {
   try {
     const response = await axiosClient.put(listPathApi.urlApproveProduct(productId));
@@ -163,4 +162,16 @@ export const rejectRequest = async (productId,userId) => {
     alert('Lỗi', error);
     throw error;
   }
+};
+
+export const addComment = (data) => {
+ 
+  const response = axiosClient.post(listPathApi.urlAddComment(data.productId),
+    {
+     content:data.content
+    },
+
+  );
+  
+  return response;
 };

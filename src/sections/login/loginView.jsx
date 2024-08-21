@@ -33,11 +33,13 @@ export default function LoginView() {
     useNavigationHelpers();
   const validationSchema = Yup.object({
     email: Yup.string()
+    .trim('Email không được bỏ trống')
       .email('Địa chỉ email không hợp lệ')
       .min(11, 'Email phải có ít nhất 11 ký tự')
       .max(64, 'Email tối đa 64 ký tự')
       .required('Vui lòng nhập email'),
     password: Yup.string()
+    .trim('Mật khẩu không được bỏ trống')
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .required('Vui lòng nhập mật khẩu'),
   });
@@ -53,10 +55,14 @@ export default function LoginView() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await login(data);
+      const trimmedData = {
+        email: data.email.trim(),
+        password: data.password.trim(),
+      };
+      const response = await login(trimmedData);
       setLoading(false);
       const userData = response;
-
+      
       if (userData.data.user.userId) {
         setCookies(userData.data);
 

@@ -1,26 +1,32 @@
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Alert, Snackbar, Container, Typography } from '@mui/material';
+import { Box, Alert, Snackbar, Container, CircularProgress } from '@mui/material';
 
-import { listStatus } from 'src/constant/constant'
-import { rejectRequest, approveRequest, getProductById, userBuyProduct } from 'src/api/product';
+import { listStatus } from 'src/constant/constant';
+import {
+  addComment,
+  rejectRequest,
+  approveRequest,
+  getProductById,
+  userBuyProduct,
+} from 'src/api/product';
 
 import ActionButtons from './actionButton';
 import MessageDialog from './messageDialog';
 import CommentSection from './commentSection';
 import RegisterDialog from './registerDialog';
+import ConfirmOrderDialog from './cancelOrder';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
-
 
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
-  const [newComment, setNewComment] = useState('');
-  const [comments, setComments] = useState([]);
+
+
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
@@ -33,7 +39,7 @@ const ProductDetail = () => {
 
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState('');
-
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const { productId } = useParams();
 
   const fetchProduct = useCallback(async () => {
@@ -41,9 +47,12 @@ const ProductDetail = () => {
       const response = await getProductById(productId);
       const fetchedProduct = response.data[0];
       setProduct(fetchedProduct);
+
       const resUserBuy = Array.isArray(fetchedProduct.requests) ? fetchedProduct.requests : [];
 
-      const filterUserBuy = resUserBuy.filter((resUser) => resUser.requestStatus === listStatus.PENDING);
+      const filterUserBuy = resUserBuy.filter(
+        (resUser) => resUser.requestStatus === listStatus.PENDING
+      );
       setUserBuy(filterUserBuy);
     } catch (error) {
       setSnackbarMessage('Lỗi: ');
@@ -64,13 +73,13 @@ const ProductDetail = () => {
     setOpen(false);
   };
 
-  const handleRegisterBuy = async () => {
+  const handleRegisterBuy = async (values) => {
     setLoading(true);
     try {
       await userBuyProduct({
         productId: product.productId,
-        message,
-        offer,
+        message: values.message,
+        offer: values.offer,
       });
 
       setSnackbarMessage('Đăng ký mua thành công!');
@@ -79,7 +88,9 @@ const ProductDetail = () => {
 
       setMessage('');
       setOffer();
+
       handleClose();
+      fetchProduct();
     } catch (error) {
       setSnackbarMessage('Có lỗi xảy ra khi đăng ký mua. Vui lòng thử lại.');
       setSnackbarSeverity('error');
@@ -89,10 +100,39 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddComment = () => {
-    if (newComment.trim() !== '') {
-      setComments([...comments, newComment]);
-      setNewComment('');
+  const handleCancelRegister = async () => {
+    setLoading(true);
+    try {
+      await userBuyProduct({
+        productId: product.productId,
+      });
+
+      setSnackbarMessage('Hủy đăng ký thành công!');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+
+      fetchProduct();
+    } catch (error) {
+      setSnackbarMessage('Có lỗi xảy ra khi hủy đăng ký. Vui lòng thử lại.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
+    } finally {
+      setLoading(false);
+      setOpenConfirmDialog(false);
+    }
+  };
+
+  const handleAddComment = async (data) => {
+    try {
+      await addComment({ content: data, productId: product.productId });
+   
+      setSnackbarMessage('Thêm bình luận thành công');
+      setSnackbarSeverity('success');
+      setSnackbarOpen(true);
+    } catch (error) {
+      setSnackbarMessage('Có lỗi xảy ra . Vui lòng thử lại.');
+      setSnackbarSeverity('error');
+      setSnackbarOpen(true);
     }
   };
 
@@ -107,7 +147,13 @@ const ProductDetail = () => {
   const handleDislike = () => {
     setDislikes(dislikes + 1);
   };
+  const handleOpenConfirmDialog = () => {
+    setOpenConfirmDialog(true);
+  };
 
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false);
+  };
   const handleViewMessage = (mess) => {
     setSelectedMessage(mess);
     setMessageDialogOpen(true);
@@ -146,7 +192,13 @@ const ProductDetail = () => {
   };
 
   if (!product) {
-    return <Typography variant="h6">Loading...</Typography>;
+    return (
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}
+      >
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const getStatus = (categoryId) => {
@@ -175,6 +227,7 @@ const ProductDetail = () => {
         product={product}
         getStatus={getStatus}
         handleOpen={handleOpen}
+        handleOpenConfirmDialog={handleOpenConfirmDialog}
       />
 
       <RegisterDialog
@@ -211,12 +264,15 @@ const ProductDetail = () => {
           handleRejectRequest={handleRejectRequest}
         />
       )}
-
+      <ConfirmOrderDialog
+        open={openConfirmDialog}
+        onClose={handleCloseConfirmDialog}
+        onConfirm={handleCancelRegister}
+      />
       <CommentSection
-        newComment={newComment}
-        setNewComment={setNewComment}
+        productId={productId}
+ 
         handleAddComment={handleAddComment}
-        comments={comments}
       />
 
       <Snackbar

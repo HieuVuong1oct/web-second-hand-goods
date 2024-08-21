@@ -1,7 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 
 import {ExpandMore} from '@mui/icons-material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Paper,
   Table,
@@ -23,7 +24,25 @@ const UserRequestList = ({
   handleViewMessage,
   handleAcceptRequest,
   handleRejectRequest,
-}) => (
+}) => {
+  const [loading, setLoading] = useState({
+    accept: null,
+    reject: null,
+  });
+
+  const handleAccept = async (userId, username) => {
+    setLoading((prev) => ({ ...prev, accept: userId }));
+    await handleAcceptRequest(userId, username);
+    setLoading((prev) => ({ ...prev, accept: null }));
+  };
+
+  const handleReject = async (userId, username) => {
+    setLoading((prev) => ({ ...prev, reject: userId }));
+    await handleRejectRequest(userId, username);
+    setLoading((prev) => ({ ...prev, reject: null }));
+  };
+  return(
+  
   <Container sx={{ mt: 4 }}>
     <Accordion>
       <AccordionSummary
@@ -61,21 +80,23 @@ const UserRequestList = ({
                     >
                       Xem lời nhắn
                     </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleAcceptRequest(request.userId, request.user.username)}
-                      sx={{ mr: 1 }}
-                    >
-                      Đồng ý
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => handleRejectRequest(request.userId, request.user.username)}
-                    >
-                      Từ chối
-                    </Button>
+                    <LoadingButton
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleAccept(request.userId, request.user.username)}
+                        loading={loading.accept === request.userId}
+                        sx={{ mr: 1 }}
+                      >
+                        Đồng ý
+                      </LoadingButton>
+                      <LoadingButton
+                        variant="contained"
+                        color="error"
+                        onClick={() => handleReject(request.userId, request.user.username)}
+                        loading={loading.reject === request.userId}
+                      >
+                        Từ chối
+                      </LoadingButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -86,7 +107,7 @@ const UserRequestList = ({
     </Accordion>
   </Container>
 );
-
+}
 UserRequestList.propTypes = {
   userBuy: PropTypes.array.isRequired,
   handleViewMessage: PropTypes.func.isRequired,

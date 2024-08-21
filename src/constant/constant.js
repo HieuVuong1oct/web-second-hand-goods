@@ -11,6 +11,8 @@ export const listPath = {
   listProductById: (productId) => `/homeMain/product/get-by-id/${productId}`,
   productByCategoryId: (categoryId) => `/homeMain/categories/${categoryId}/products`,
   history: '/homeMain/history',
+  order:'/order',
+  productDetailOrders:(productId) => `/order/product/get-by-id/${productId}`,
 };
 
 export const listPathApi = {
@@ -35,6 +37,7 @@ export const listPathApi = {
   urlUserBuy: (productId) => `user/request-to-buy/${productId}`,
   urlApproveRequest: (productId, userId) => `user/approve-request/${productId}/${userId}`,
   urlRejectRequest: (productId, userId) => `user/reject-request/${productId}/${userId}`,
+  urlAddComment: (productId) => `/comment/add-comment/${productId}` 
 };
 
 export const MESSAGES = {

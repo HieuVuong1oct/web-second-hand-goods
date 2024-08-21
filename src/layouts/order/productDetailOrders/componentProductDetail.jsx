@@ -1,16 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, Card, Button, CardMedia, Typography } from '@mui/material';
+import { Grid, Card,  CardMedia, Typography } from '@mui/material';
 
-const ComponentProductDetail = ({
-  imageBig,
-  smallImages,
-  product,
-  getStatus,
-  handleOpen,
-  handleOpenConfirmDialog,
-}) => (
+const ComponentProductDetail = ({ imageBig, smallImages, product,  }) => (
   <Grid container spacing={2} sx={{ mt: 1 }}>
     <Grid item xs={12} md={6}>
       <Card>
@@ -42,24 +35,9 @@ const ComponentProductDetail = ({
         Mô tả: {product.description}
       </Typography>
       <Typography variant="body1" gutterBottom>
-        Trạng thái: {getStatus(product.categoryId)}
+        Trạng thái: Đang chờ duyệt
       </Typography>
-      <Typography variant="body1" paragraph>
-        Người bán: {product.author.username}
-      </Typography>
-      {product.categoryId !== 2 && (
-        <>
-          {product.isRequested === true ? (
-            <Button variant="contained" color="secondary" onClick={handleOpenConfirmDialog}>
-              Hủy đăng ký
-            </Button>
-          ) : (
-            <Button variant="contained" color="primary" onClick={handleOpen}>
-              Đăng ký mua
-            </Button>
-          )}
-        </>
-      )}
+
     </Grid>
   </Grid>
 );
@@ -72,13 +50,8 @@ ComponentProductDetail.propTypes = {
     price: PropTypes.number.isRequired,
     description: PropTypes.string.isRequired,
     categoryId: PropTypes.number.isRequired,
-    isRequested: PropTypes.bool.isRequired,
-    author: PropTypes.shape({
-      username: PropTypes.string.isRequired,
-    }).isRequired,
-  }),
-  getStatus: PropTypes.func.isRequired,
-  handleOpen: PropTypes.func.isRequired,
-  handleOpenConfirmDialog: PropTypes.func.isRequired,
+  }).isRequired,
+ 
+
 };
 export default ComponentProductDetail;

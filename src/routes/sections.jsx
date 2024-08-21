@@ -2,6 +2,8 @@ import Cookies from 'js-cookie';
 import { lazy, Suspense } from 'react';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import { Box,CircularProgress,  } from '@mui/material';
+
 import AuthLayout from 'src/layouts/authLayout';
 import DashboardLayout from 'src/layouts/dashboard';
 
@@ -22,7 +24,14 @@ export const ViewAllProductPage = lazy(() => import('src/pages/viewAllProduct'))
 export const ContentPage  = lazy(() => import('src/pages/content'));
 export const OrderPage = lazy(() => import('src/pages/order'));
 export const HistoryPage = lazy(() => import('src/pages/history'));
+export const ProductDetailOrderPage = lazy(() => import('src/pages/productDetailOrders'));
 
+
+const Loading = () => (
+  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <CircularProgress />
+  </Box>
+);
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
 
@@ -39,7 +48,7 @@ export default function Router() {
       path: '/',
       element: isAuthenticated ? (
         <DashboardLayout>
-          <Suspense fallback={<div>Loading...</div>}>
+           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
         </DashboardLayout>
@@ -52,6 +61,7 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'product-detail/:productId', element: <ProductDetailPage /> },
         { path: 'order', element: <OrderPage /> },
+        { path: 'order/product/get-by-id/:productId', element: <ProductDetailOrderPage /> },
         
       ],
     },
@@ -59,7 +69,7 @@ export default function Router() {
       path: '/',
       element: !isAuthenticated ? (
         <AuthLayout>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>
       </AuthLayout> 
@@ -77,7 +87,7 @@ export default function Router() {
       path: 'homeMain',
       element:(
         <HomeMainPage>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<Loading />}>
           <Outlet />
         </Suspense>
       </HomeMainPage> 
