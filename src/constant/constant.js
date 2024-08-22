@@ -71,6 +71,7 @@ export const MESSAGES = {
   SUCCESS_DELETE_USER: 'Xóa người dùng thành công!',
   ERROR_DELETE_USER: 'Xóa người dùng thất bại!',
   ERROR_GET_ALL_USER: 'Gặp lỗi khi lấy dữ liệu hoặc token không hợp lệ',
+  ERROR_SEARCH_USER:'Không có người dùng nào',
 };
 
 export const listStatus = {

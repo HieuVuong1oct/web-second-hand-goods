@@ -42,7 +42,7 @@ const UserPage = () => {
       setUsers(usersData.data.usersWithImageUrls);
       setTotalPages(usersData.data.meta.total)
       if (usersData.data.usersWithImageUrls.length === 0) {
-        setError('Không có người dùng nào.');
+        setError(MESSAGES.ERROR_SEARCH_USER);
       } else {
         setError(null);
       }
