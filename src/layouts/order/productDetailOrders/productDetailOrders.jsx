@@ -60,7 +60,7 @@ const navigate = useNavigate()
   return (
     <>
     <h2>Chi tiết sản phẩm: {product.name}</h2>
-    <Typography sx={{cursor:'pointer', color:'blue',mb:2}} onClick={handleOrder}>Tới trang duyệt sản phẩm</Typography>
+ 
     <Container
       width="80%"
       sx={{ margin: '0 auto', paddingTop: '20px', backgroundColor: 'white', borderRadius: '10px' }}
@@ -84,6 +84,7 @@ const navigate = useNavigate()
         </Alert>
       </Snackbar>
     </Container>
+    <Typography sx={{cursor:'pointer', color:'blue',mt: 2}} onClick={handleOrder}>Tới trang duyệt sản phẩm</Typography>
     </>
   );
 };

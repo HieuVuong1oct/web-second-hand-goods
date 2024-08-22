@@ -11,8 +11,11 @@ export const listPath = {
   listProductById: (productId) => `/homeMain/product/get-by-id/${productId}`,
   productByCategoryId: (categoryId) => `/homeMain/categories/${categoryId}/products`,
   history: '/homeMain/history',
-  order:'/order',
-  productDetailOrders:(productId) => `/order/product/get-by-id/${productId}`,
+  order: '/order',
+  productDetailOrders: (productId) => `/order/product/get-by-id/${productId}`,
+  adminSignUp: '/admin/addUser',
+  user: '/user',
+  editUser: (userId) => `/admin/editUser/${userId}`,
 };
 
 export const listPathApi = {
@@ -37,7 +40,11 @@ export const listPathApi = {
   urlUserBuy: (productId) => `user/request-to-buy/${productId}`,
   urlApproveRequest: (productId, userId) => `user/approve-request/${productId}/${userId}`,
   urlRejectRequest: (productId, userId) => `user/reject-request/${productId}/${userId}`,
-  urlAddComment: (productId) => `/comment/add-comment/${productId}` 
+  urlAddComment: (productId) => `/comment/add-comment/${productId}`,
+  urlAddUser: '/user/add-user',
+  urlUpdateUser: (userId) => `user/update/${userId}`,
+  urlDeleteUser: (userId) => `user/delete/${userId}`,
+  urlGetUserById: (userId) => `user/get-by-id/${userId}`,
 };
 
 export const MESSAGES = {
@@ -57,13 +64,19 @@ export const MESSAGES = {
   ERROR_OTP_SEND: 'Lỗi khi gửi OTP',
   PASSWORD_RESET_SUCCESS: 'Tạo mật khẩu mới thành công',
   ERROR_RESET_PASSWORD: 'Lỗi khi tạo mật khẩu mới',
+  SUCCESS_ADD_USER: 'Thêm người dùng thành công!',
+  ERROR_ADD_USER: 'Thêm người dùng thất bại!',
+  SUCCESS_UPDATE_USER: 'Cập nhật thông tin người dùng thành công!',
+  ERROR_UPDATE_USER: 'Cập nhật thông tin người dùng thất bại!',
+  SUCCESS_DELETE_USER: 'Xóa người dùng thành công!',
+  ERROR_DELETE_USER: 'Xóa người dùng thất bại!',
+  ERROR_GET_ALL_USER: 'Gặp lỗi khi lấy dữ liệu hoặc token không hợp lệ',
+  ERROR_SEARCH_USER:'Không có người dùng nào',
 };
 
 export const listStatus = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',
   REJECTED: 'REJECTED',
-  SOLD:'SOLD'
+  SOLD: 'SOLD',
 };
-
-

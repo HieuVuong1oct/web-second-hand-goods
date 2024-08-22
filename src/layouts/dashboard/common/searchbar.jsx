@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 import Slide from '@mui/material/Slide'
 import Input from '@mui/material/Input'
@@ -11,8 +12,6 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import { bgBlur } from 'src/theme/css'
 
 import Iconify from 'src/components/iconify'
-
-// ----------------------------------------------------------------------
 
 const HEADER_MOBILE = 64
 const HEADER_DESKTOP = 92
@@ -39,6 +38,8 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const handleOpen = () => {
     setOpen(!open)
@@ -47,6 +48,18 @@ export default function Searchbar() {
   const handleClose = () => {
     setOpen(false)
   }
+
+  const handleSearch = () => {
+   
+    if (searchQuery) {
+      setSearchParams({ name: searchQuery.trim() });
+    } else {
+    
+      searchParams.delete('name');
+      setSearchParams(searchParams);
+    }
+    
+  };
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
@@ -62,8 +75,10 @@ export default function Searchbar() {
             <Input
               autoFocus
               fullWidth
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               disableUnderline
-              placeholder="Search…"
+              placeholder="Nhập tên "
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify
@@ -74,7 +89,7 @@ export default function Searchbar() {
               }
               sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <Button variant="contained" onClick={handleClose}>
+            <Button variant="contained" onClick={handleSearch}>
               Search
             </Button>
           </StyledSearchbar>
