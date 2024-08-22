@@ -41,6 +41,11 @@ const UserPage = () => {
       const usersData = await getUsers(page,itemsPerPage,name,role);
       setUsers(usersData.data.usersWithImageUrls);
       setTotalPages(usersData.data.meta.total)
+      if (usersData.data.usersWithImageUrls.length === 0) {
+        setError('Không có người dùng nào.');
+      } else {
+        setError(null);
+      }
     } catch (err) {
       setError(MESSAGES.ERROR_GET_ALL_USER);
     }
