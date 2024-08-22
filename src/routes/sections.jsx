@@ -25,7 +25,8 @@ export const ContentPage  = lazy(() => import('src/pages/content'));
 export const OrderPage = lazy(() => import('src/pages/order'));
 export const HistoryPage = lazy(() => import('src/pages/history'));
 export const ProductDetailOrderPage = lazy(() => import('src/pages/productDetailOrders'));
-
+export const AddUserPage = lazy(() => import('src/pages/addUser'));
+export const EditUserPage = lazy(() => import('src/pages/editUser'));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -62,7 +63,8 @@ export default function Router() {
         { path: 'product-detail/:productId', element: <ProductDetailPage /> },
         { path: 'order', element: <OrderPage /> },
         { path: 'order/product/get-by-id/:productId', element: <ProductDetailOrderPage /> },
-        
+        { path: 'admin/addUser', element: <AddUserPage /> },
+        { path: 'admin/editUser/:userId', element: <EditUserPage /> },
       ],
     },
     {
