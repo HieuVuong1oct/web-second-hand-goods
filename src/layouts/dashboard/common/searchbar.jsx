@@ -52,7 +52,7 @@ export default function Searchbar() {
   const handleSearch = () => {
    
     if (searchQuery) {
-      setSearchParams({ name: searchQuery });
+      setSearchParams({ name: searchQuery.trim() });
     } else {
     
       searchParams.delete('name');
