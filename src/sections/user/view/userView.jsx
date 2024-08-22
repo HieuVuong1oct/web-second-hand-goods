@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useSearchParams, } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { Add, Edit, Delete } from '@mui/icons-material';
@@ -14,6 +14,7 @@ import {
   TableCell,
   TableHead,
   Typography,
+  Pagination,
   IconButton,
   TableContainer,
 } from '@mui/material';
@@ -22,22 +23,28 @@ import { getUsers, deleteUser } from 'src/api/user';
 import { listPath, MESSAGES } from 'src/constant/constant';
 
 const UserPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  const name = searchParams.get('name') || ''
+  const role = searchParams.get('role') || ''
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
+  const [totalPages,setTotalPages] = useState(1)
+  const itemsPerPage = 4
   const navigate = useNavigate();
 
   const fetchUsers = useCallback(async () => {
     try {
-      const usersData = await getUsers();
+      const usersData = await getUsers(page,itemsPerPage,name,role);
       setUsers(usersData.data.usersWithImageUrls);
+      setTotalPages(usersData.data.meta.total)
     } catch (err) {
       setError(MESSAGES.ERROR_GET_ALL_USER);
     }
-  }, []);
+  }, [page,itemsPerPage,name,role]);
 
   useEffect(() => {
     fetchUsers();
@@ -49,6 +56,9 @@ const UserPage = () => {
 
   const handleEditUser = (userId) => {
     navigate(listPath.editUser(userId));
+  };
+  const handlePageChange = (event, newPage) => {
+    setSearchParams({ page: newPage });
   };
 
   const handleDeleteUser = async (userId) => {
@@ -134,7 +144,16 @@ const UserPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
       )}
+       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+        <Pagination
+          count={Math.max(totalPages, 1)}
+          page={page}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

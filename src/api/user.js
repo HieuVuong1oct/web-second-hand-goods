@@ -3,8 +3,15 @@ import { listPathApi } from 'src/constant/constant'
 import axiosClient from './axiosClient';
 
 
-export const getUsers = async () => {
-  const response = await axiosClient.get(listPathApi.urlGetAllUser);
+export const getUsers = async (page,itemsPerPage,name,role) => {
+  const response = await axiosClient.get(listPathApi.urlGetAllUser,{
+    params: {
+      page,
+      limit: itemsPerPage,
+      name,
+      role
+    },
+  });
   return response;
 };
 
