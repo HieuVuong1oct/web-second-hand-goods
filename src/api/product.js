@@ -175,3 +175,16 @@ export const addComment = (data) => {
   
   return response;
 };
+
+export const getTopProduct = async () => {
+  const response = await axiosClient.get(listPathApi.urlTopProduct);
+  return response;
+
+};
+
+export const getTrendProduct = async () => {
+  const response = await axiosClient.get(listPathApi.urlTrendProduct);
+
+  return response;
+
+};

@@ -45,6 +45,8 @@ export const listPathApi = {
   urlUpdateUser: (userId) => `user/update/${userId}`,
   urlDeleteUser: (userId) => `user/delete/${userId}`,
   urlGetUserById: (userId) => `user/get-by-id/${userId}`,
+  urlTopProduct:'/user/add-chart-for-trending',
+  urlTrendProduct:'/product/get-trending-products',
 };
 
 export const MESSAGES = {
@@ -72,6 +74,7 @@ export const MESSAGES = {
   ERROR_DELETE_USER: 'Xóa người dùng thất bại!',
   ERROR_GET_ALL_USER: 'Gặp lỗi khi lấy dữ liệu hoặc token không hợp lệ',
   ERROR_SEARCH_USER:'Không có người dùng nào',
+  ERROR_TOP_PRODUCT:'Lỗi xảy ra khi tải dữ liệu'
 };
 
 export const listStatus = {
