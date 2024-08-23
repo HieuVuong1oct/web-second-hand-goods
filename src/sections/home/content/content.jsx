@@ -19,14 +19,14 @@ const ProductPage = () => {
   useEffect(() => {
     const fetchInitialData = async () => {
       setLoading(true);
-      console.log(333333)
+    
       try {
         const [categoriesResponse, productsResponse, topProductResponse] = await Promise.all([
           getAllCategory(),
           getAllProduct(),
           getTrendProduct()
         ]);
-        console.log(44444444,topProductResponse.data[0])
+      
         const productApprove = productsResponse.data.filter(
           (product) => product.status === 'APPROVED'
         );
