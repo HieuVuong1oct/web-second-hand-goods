@@ -39,11 +39,7 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 20);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -57,13 +53,8 @@ const Header = () => {
     const token = Cookies.get('accessToken');
     const role = Cookies.get('role');
 
-    if (token) {
-      setIsLoggedIn(true);
-    }
-
-    if (role === 'ADMIN') {
-      setIsAdmin(true);
-    }
+    setIsLoggedIn(!!token);
+    setIsAdmin(role === 'ADMIN');
   }, []);
 
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
@@ -81,9 +72,7 @@ const Header = () => {
   };
 
   const handleOpen = (event) => {
-    if (event.currentTarget) {
-      setAnchorEl(event.currentTarget);
-    }
+    setAnchorEl(event.currentTarget);
   };
 
   const logOut = async () => {
@@ -108,7 +97,6 @@ const Header = () => {
 
   const handleAddProduct = () => {
     navigate(listPath.addProduct);
-    
   };
 
   const handleHomePage = () => {
@@ -117,6 +105,11 @@ const Header = () => {
 
   const handleHistory = () => {
     navigate(listPath.history);
+  };
+
+  const userId = Cookies.get('userId');
+  const handleEdit = (Id) => {
+    navigate(listPath.editInformation(Id));
   };
 
   return (
@@ -129,128 +122,135 @@ const Header = () => {
       }}
     >
       <div className={classes.container}>
-      
-          <div
-            className={classes.logo}
-            role="button"
-            aria-label="Logo"
-            tabIndex={0}
-            onClick={handleHomePage}
-            onKeyDown={handleHomePage}
-          >
-            <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer', width: '150px', height: '50px' }} />
-          </div>
-          <Box className={classes.searchContainer}>
-            {isLoggedIn ? (
-              <>
-                <IconButton
-                  onClick={handleOpen}
+        <div
+          className={classes.logo}
+          role="button"
+          aria-label="Logo"
+          tabIndex={0}
+          onClick={handleHomePage}
+          onKeyDown={handleHomePage}
+        >
+          <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer', width: '150px', height: '50px' }} />
+        </div>
+        <Box className={classes.searchContainer}>
+          {isLoggedIn ? (
+            <>
+              <IconButton
+                onClick={handleOpen}
+                sx={{
+                  marginLeft: '200px',
+                  width: 40,
+                  height: 40,
+                  background: (theme) => alpha(theme.palette.grey[500], 0.08),
+                  ...(anchorEl && {
+                    background: (theme) =>
+                      `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+                  }),
+                }}
+              >
+                <Avatar
+                  src={account.photoURL[0]}
+                  alt={account.displayName}
                   sx={{
-                    marginLeft: '200px',
-                    width: 40,
-                    height: 40,
-                    background: (theme) => alpha(theme.palette.grey[500], 0.08),
-                    ...(anchorEl && {
-                      background: (theme) =>
-                        `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
-                    }),
+                    width: 36,
+                    height: 36,
+                    border: (theme) => `solid 2px ${theme.palette.background.default}`,
                   }}
                 >
-                  <Avatar
-                    src={account.photoURL[0]}
-                    alt={account.displayName}
-                    sx={{
-                      width: 36,
-                      height: 36,
-                      border: (theme) => `solid 2px ${theme.palette.background.default}`,
-                    }}
-                  >
-                    {account.displayName.charAt(0).toUpperCase()}
-                  </Avatar>
-                </IconButton>
-                <Popover
-                  open={Boolean(anchorEl)}
-                  anchorEl={anchorEl} 
-                  onClose={handleClose}
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                  sx={{
-                    p: 0,
-                    mt: 1,
-                    ml: 0.75,
-                    width: 200,
-                  }}
+                  {account.displayName.charAt(0).toUpperCase()}
+                </Avatar>
+              </IconButton>
+              <Popover
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                sx={{
+                  p: 0,
+                  mt: 1,
+                  ml: 0.75,
+                  width: 200,
+                }}
+              >
+                <Box sx={{ my: 1.5, px: 2 }}>
+                  <Typography variant="subtitle2" noWrap>
+                    {account.displayName}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+                    {account.email}
+                  </Typography>
+                </Box>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                <MenuItem
+                  disableRipple
+                  disableTouchRipple
+                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                  onClick={handleHistory}
                 >
-                  <Box sx={{ my: 1.5, px: 2 }}>
-                    <Typography variant="subtitle2" noWrap>
-                      {account.displayName}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                      {account.email}
-                    </Typography>
-                  </Box>
-                  <Divider sx={{ borderStyle: 'dashed' }} />
-                  <MenuItem
-                    disableRipple
-                    disableTouchRipple
-                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                    onClick={handleHistory}
-                  >
-                    Lịch sử
-                  </MenuItem>
-                  <Divider sx={{ borderStyle: 'dashed' }} />
-                  <MenuItem
-                    disableRipple
-                    disableTouchRipple
-                    onClick={handleAddProduct}
-                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                  >
-                    Đăng bán
-                  </MenuItem>
-                  <Divider sx={{ borderStyle: 'dashed' }} />
-                  {isAdmin && (
-                    <>
-                      <Divider sx={{ borderStyle: 'dashed' }} />
-                      <MenuItem
-                        disableRipple
-                        disableTouchRipple
-                        onClick={handleAdminPage}
-                        sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                      >
-                        Quản trị
-                      </MenuItem>
-                    </>
-                  )}
-                  <Divider sx={{ borderStyle: 'dashed' }} />
-                  <MenuItem
-                    disableRipple
-                    disableTouchRipple
-                    onClick={logOut}
-                    sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                  >
-                    Đăng xuất
-                  </MenuItem>
-                </Popover>
-              </>
-            ) : (
-              <div className={classes.loginButtons}>
-                <Button
-                  sx={{ ml: '20px' }}
-                  className={classes.loginButton}
-                  onClick={handleLoginClick}
+                  Lịch sử
+                </MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                <MenuItem
+                  disableRipple
+                  disableTouchRipple
+                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                  onClick={() => handleEdit(userId)}
                 >
-                  Đăng nhập
-                </Button>
-                <Button
-                  className={classes.loginButton}
-                  onClick={handleRegisterClick}
+                  Thông tin cá nhân
+                </MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                <MenuItem
+                  disableRipple
+                  disableTouchRipple
+                  onClick={handleAddProduct}
+                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
                 >
-                  Đăng ký
-                </Button>
-              </div>
-            )}
-          </Box>
-       
+                  Đăng bán
+                </MenuItem>
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                {isAdmin && (
+                  <>
+                    <Divider sx={{ borderStyle: 'dashed' }} />
+                    <MenuItem
+                      disableRipple
+                      disableTouchRipple
+                      onClick={handleAdminPage}
+                      sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                    >
+                      Quản trị
+                    </MenuItem>
+                  </>
+                )}
+                <Divider sx={{ borderStyle: 'dashed' }} />
+                <MenuItem
+                  disableRipple
+                  disableTouchRipple
+                  onClick={logOut}
+                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
+                >
+                  Đăng xuất
+                </MenuItem>
+              </Popover>
+            </>
+          ) : (
+            <div className={classes.loginButtons}>
+              <Button
+                sx={{ ml: '20px' }}
+                className={classes.loginButton}
+                onClick={handleLoginClick}
+              >
+                Đăng nhập
+              </Button>
+              <Button
+                className={classes.loginButton}
+                onClick={handleRegisterClick}
+              >
+                Đăng ký
+              </Button>
+            </div>
+          )}
+        </Box>
       </div>
 
       <Snackbar
