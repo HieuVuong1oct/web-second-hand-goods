@@ -35,6 +35,10 @@ export default function AppConversionRates({ title, subheader, chart, ...other }
     },
     xaxis: {
       categories: series.map((i) => i.label),
+      labels: {
+        formatter: (value) => Math.round(value),
+      },
+      tickAmount: 1, 
     },
     ...options,
   })
