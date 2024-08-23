@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 
-import { Box,Card,  CardMedia,Typography, CardContent, CircularProgress  } from '@mui/material';
+import { Box, Card, CardMedia, Typography, CardContent, CircularProgress } from '@mui/material';
 
 import { listPath } from 'src/constant/constant';
 
 import useStyles from './contentStyles';
-
 
 const FeaturedProduct = ({ product, loading }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -22,15 +23,16 @@ const FeaturedProduct = ({ product, loading }) => {
 
   const featuredProduct = Array.isArray(product) ? product[0] : product;
   const images = product.images ? JSON.parse(product.images)[0] : null;
-  
+
   const handleProductClick = (productId) => {
     navigate(listPath.listProductById(productId));
   };
   return (
     <Card className={classes.featuredProductCard}>
-      <CardContent className={classes.featuredCardContent}  
-      onClick={() => handleProductClick(Number(featuredProduct.productId))}
-      sx={{ cursor: 'pointer' }}
+      <CardContent
+        className={classes.featuredCardContent}
+        onClick={() => handleProductClick(Number(featuredProduct.productId))}
+        sx={{ cursor: 'pointer' }}
       >
         <CardMedia
           component="img"
@@ -49,7 +51,6 @@ const FeaturedProduct = ({ product, loading }) => {
       </CardContent>
     </Card>
   );
-
 };
 
 FeaturedProduct.propTypes = {
