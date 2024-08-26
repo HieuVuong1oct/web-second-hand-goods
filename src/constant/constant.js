@@ -61,7 +61,7 @@ export const listPathApi = {
 };
 
 export const MESSAGES = {
-  SUCCESS_ADD_PRODUCT: 'Đăng bán thành công! Sản phẩm được gửi cho ADMIN duyệt! ',
+  SUCCESS_ADD_PRODUCT: 'Đăng bán thành công! ',
   ERROR_ADD_PRODUCT: 'Đăng bán thất bại!',
   SEND_EMAIL: 'Đã gửi email đặt lại mật khẩu, vui lòng kiểm tra email của bạn.',
   ERROR_SEND_EMAIL: 'Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.',
