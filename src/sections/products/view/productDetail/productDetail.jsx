@@ -222,6 +222,9 @@ const ProductDetail = () => {
 
   return (
     <>
+    <Typography sx={{ mb: 2 }} variant="h5">
+        Chi tiết sản phẩm : {product.name}
+      </Typography>
       <Typography sx={{ cursor: 'pointer', color: 'blue', mb: 2, mt: 2 }} onClick={handleProduct}>
         Tới trang quản lý sản phẩm
       </Typography>
