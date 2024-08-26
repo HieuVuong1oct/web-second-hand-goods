@@ -8,6 +8,7 @@ import {
   Paper,
   Alert,
   Button,
+  Dialog,
   Snackbar,
   TableRow,
   TableBody,
@@ -16,6 +17,9 @@ import {
   Typography,
   Pagination,
   IconButton,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   TableContainer,
   CircularProgress,
 } from '@mui/material';
@@ -36,6 +40,9 @@ const ProductsPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const limit = 4;
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -70,9 +77,9 @@ const ProductsPage = () => {
     setSearchParams({ page: newPage });
   };
 
-  const handleDeleteProduct = async (productId) => {
+  const handleDeleteProduct = async () => {
     try {
-      const response = await deleteProduct(productId);
+      const response = await deleteProduct(productToDelete);
       if (response) {
         setSnackbarMessage(MESSAGES.SUCCESS_DELETE_PRODUCT);
         setSnackbarSeverity('success');
@@ -86,6 +93,7 @@ const ProductsPage = () => {
       setSnackbarSeverity('error');
     }
     setSnackbarOpen(true);
+    setDialogOpen(false);
   };
 
   const handleSnackbarClose = () => {
@@ -94,6 +102,16 @@ const ProductsPage = () => {
 
   const handleProductClick = (productId) => {
     navigate(listPath.adminDetailProduct(productId));
+  };
+
+  const openDialog = (productId) => {
+    setProductToDelete(productId);
+    setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    setProductToDelete(null);
   };
   return (
     <Box sx={{ padding: 4 }}>
@@ -137,7 +155,7 @@ const ProductsPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product,index) => (
+              {products.map((product, index) => (
                 <TableRow key={product.productId}>
                   <TableCell align="left">{(page - 1) * limit + index + 1}</TableCell>
                   <TableCell align="left">
@@ -166,10 +184,7 @@ const ProductsPage = () => {
                     >
                       <Edit />
                     </IconButton>
-                    <IconButton
-                      color="secondary"
-                      onClick={() => handleDeleteProduct(product.productId)}
-                    >
+                    <IconButton color="secondary" onClick={() => openDialog(product.productId)}>
                       <Delete />
                     </IconButton>
                   </TableCell>
@@ -201,6 +216,21 @@ const ProductsPage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      <Dialog open={dialogOpen} onClose={closeDialog} aria-labelledby="confirm-delete-dialog">
+        <DialogTitle id="confirm-delete-dialog">Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>Bạn có chắc chắn muốn xóa sản phẩm này không?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleDeleteProduct} color="secondary">
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

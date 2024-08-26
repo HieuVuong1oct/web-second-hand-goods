@@ -8,6 +8,7 @@ import {
   Paper,
   Alert,
   Button,
+  Dialog,
   Snackbar,
   TableRow,
   TableBody,
@@ -16,6 +17,9 @@ import {
   Typography,
   Pagination,
   IconButton,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   TableContainer,
   CircularProgress,
 } from '@mui/material';
@@ -37,6 +41,9 @@ const UserPage = () => {
   const itemsPerPage = 4;
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -70,9 +77,9 @@ const UserPage = () => {
     setSearchParams({ page: newPage });
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async () => {
     try {
-      const response = await deleteUser(userId);
+      const response = await deleteUser(userToDelete);
       if (response) {
         setSnackbarMessage(MESSAGES.SUCCESS_DELETE_USER);
         setSnackbarSeverity('success');
@@ -86,12 +93,22 @@ const UserPage = () => {
       setSnackbarSeverity('error');
     }
     setSnackbarOpen(true);
+    setDialogOpen(false);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  const openDialog = (userId) => {
+    setUserToDelete(userId);
+    setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    setUserToDelete(null);
+  };
   return (
     <Box sx={{ padding: 4 }}>
       <Box
@@ -153,7 +170,7 @@ const UserPage = () => {
                     <IconButton color="primary" onClick={() => handleEditUser(user.userId)}>
                       <Edit />
                     </IconButton>
-                    <IconButton color="secondary" onClick={() => handleDeleteUser(user.userId)}>
+                    <IconButton color="secondary" onClick={() => openDialog(user.userId)}>
                       <Delete />
                     </IconButton>
                   </TableCell>
@@ -185,6 +202,21 @@ const UserPage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      <Dialog open={dialogOpen} onClose={closeDialog} aria-labelledby="confirm-delete-dialog">
+        <DialogTitle id="confirm-delete-dialog">Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>Bạn có chắc chắn muốn xóa người dùng này không?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="primary">
+            Hủy
+          </Button>
+          <Button onClick={handleDeleteUser} color="secondary">
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
