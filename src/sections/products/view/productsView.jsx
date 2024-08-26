@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import {
   Box,
@@ -42,7 +43,7 @@ const ProductsPage = () => {
   const limit = 4;
   const [dialogOpen, setDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
-
+  const [deleting, setDeleting] = useState(false);
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
@@ -78,6 +79,7 @@ const ProductsPage = () => {
   };
 
   const handleDeleteProduct = async () => {
+    setDeleting(true);
     try {
       const response = await deleteProduct(productToDelete);
       if (response) {
@@ -94,6 +96,7 @@ const ProductsPage = () => {
     }
     setSnackbarOpen(true);
     setDialogOpen(false);
+    setDeleting(false);
   };
 
   const handleSnackbarClose = () => {
@@ -226,9 +229,9 @@ const ProductsPage = () => {
           <Button onClick={closeDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteProduct} color="secondary">
+          <LoadingButton onClick={handleDeleteProduct} color="secondary" loading={deleting}>
             Xóa
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </Box>

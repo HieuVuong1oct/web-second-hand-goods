@@ -1,6 +1,7 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import {
   Box,
@@ -43,6 +44,7 @@ const UserPage = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -78,6 +80,7 @@ const UserPage = () => {
   };
 
   const handleDeleteUser = async () => {
+    setDeleting(true);
     try {
       const response = await deleteUser(userToDelete);
       if (response) {
@@ -94,6 +97,7 @@ const UserPage = () => {
     }
     setSnackbarOpen(true);
     setDialogOpen(false);
+    setDeleting(false);
   };
 
   const handleSnackbarClose = () => {
@@ -152,7 +156,7 @@ const UserPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user,index) => (
+              {users.map((user, index) => (
                 <TableRow key={user.userId}>
                   <TableCell align="left">{(page - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell align="left">
@@ -212,9 +216,9 @@ const UserPage = () => {
           <Button onClick={closeDialog} color="primary">
             Hủy
           </Button>
-          <Button onClick={handleDeleteUser} color="secondary">
+          <LoadingButton onClick={handleDeleteUser} color="secondary" loading={deleting}>
             Xóa
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </Box>
