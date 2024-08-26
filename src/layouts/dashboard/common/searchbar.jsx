@@ -78,7 +78,7 @@ export default function Searchbar() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               disableUnderline
-              placeholder="Nhập tên "
+              placeholder="Tìm kiếm " 
               startAdornment={
                 <InputAdornment position="start">
                   <Iconify

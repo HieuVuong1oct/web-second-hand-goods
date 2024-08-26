@@ -167,7 +167,17 @@ export default function EditUserView() {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} sx={{ display: 'none' }}>
+                <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 3 }}>
+                  <Avatar src={avatarPreview} alt="Avatar Preview" sx={{ width: 50, height: 50 }} />
+                  <Button variant="contained" component="label">
+                    Thay Avatar
+                    <input type="file" hidden accept="image/*" onChange={handleAvatarChange} />
+                  </Button>
+                </Stack>
+              </Grid>
+
+              <Grid item xs={12} sm={6} sx={{ display: 'none' }}>
                 <Controller
                   name="email"
                   control={control}
@@ -184,7 +194,6 @@ export default function EditUserView() {
                     />
                   )}
                 />
-
                 <Controller
                   name="password"
                   control={control}
@@ -211,29 +220,6 @@ export default function EditUserView() {
                     />
                   )}
                 />
-
-                <Controller
-                  name="role"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      sx={{ mt: 4 }}
-                      label="Vai trò"
-                      select
-                      {...field}
-                      fullWidth
-                      error={!!errors.role}
-                      helperText={errors.role?.message}
-                      InputLabelProps={{ shrink: true }}
-                    >
-                      <MenuItem value="USER">USER</MenuItem>
-                      <MenuItem value="ADMIN">ADMIN</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
                 <Controller
                   name="username"
                   defaultValue=""
@@ -266,15 +252,29 @@ export default function EditUserView() {
                     />
                   )}
                 />
+              </Grid>
 
-                <Stack direction="row" alignItems="center" spacing={2} sx={{ mt: 3 }}>
-                  <Avatar src={avatarPreview} alt="Avatar Preview" sx={{ width: 50, height: 50 }} />
-
-                  <Button variant="contained" component="label">
-                    Thay Avatar
-                    <input type="file" hidden accept="image/*" onChange={handleAvatarChange} />
-                  </Button>
-                </Stack>
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="role"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      sx={{ mt: 4 }}
+                      label="Vai trò"
+                      select
+                      {...field}
+                      fullWidth
+                      error={!!errors.role}
+                      helperText={errors.role?.message}
+                      InputLabelProps={{ shrink: true }}
+                    >
+                      <MenuItem value="USER">USER</MenuItem>
+                      <MenuItem value="ADMIN">ADMIN</MenuItem>
+                    </TextField>
+                  )}
+                />
               </Grid>
             </Grid>
 

@@ -27,6 +27,9 @@ export const HistoryPage = lazy(() => import('src/pages/history'));
 export const ProductDetailOrderPage = lazy(() => import('src/pages/productDetailOrders'));
 export const AddUserPage = lazy(() => import('src/pages/addUser'));
 export const EditUserPage = lazy(() => import('src/pages/editUser'));
+export const ProductDetailAdminPage = lazy(() => import('src/pages/productDetailAdmin'));
+export const EditUserViewPage = lazy(() => import('src/pages/editInformation'));
+export const EditProductViewPage = lazy(() => import('src/pages/editProduct'));
 
 const Loading = () => (
   <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -60,11 +63,13 @@ export default function Router() {
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
-        { path: 'product-detail/:productId', element: <ProductDetailPage /> },
         { path: 'order', element: <OrderPage /> },
         { path: 'order/product/get-by-id/:productId', element: <ProductDetailOrderPage /> },
         { path: 'admin/addUser', element: <AddUserPage /> },
         { path: 'admin/editUser/:userId', element: <EditUserPage /> },
+        { path: 'admin/product/get-by-id/:productId', element: <ProductDetailAdminPage /> },
+        { path: 'admin/addProduct', element: <AddProductPage /> },
+        { path: 'admin/editProduct/:productId', element: <EditProductViewPage /> },
       ],
     },
     {
@@ -100,6 +105,7 @@ export default function Router() {
         { path: 'categories/:categoryId/products', element: <ViewAllProductPage /> },
         { path: 'addProduct', element: <AddProductPage /> },
         { path: 'history', element: <HistoryPage /> },
+        { path: 'editInformation/:userId', element: < EditUserViewPage /> },
       ],
     },
  

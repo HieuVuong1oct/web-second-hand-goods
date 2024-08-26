@@ -1,3 +1,5 @@
+
+
 export const listPath = {
   homePage: '/homeMain',
   login: '/login',
@@ -16,6 +18,11 @@ export const listPath = {
   adminSignUp: '/admin/addUser',
   user: '/user',
   editUser: (userId) => `/admin/editUser/${userId}`,
+  adminDetailProduct:(productId) => `/admin/product/get-by-id/${productId}`,
+  product:'/products',
+  editInformation:(userId) => `/homeMain/editInformation/${userId}`,
+  addProductAdmin:'/admin/addProduct',
+  editProduct:(productId) => `/admin/editProduct/${productId}`,
 };
 
 export const listPathApi = {
@@ -47,10 +54,14 @@ export const listPathApi = {
   urlGetUserById: (userId) => `user/get-by-id/${userId}`,
   urlTopProduct:'/user/add-chart-for-trending',
   urlTrendProduct:'/product/get-trending-products',
+  urlAdminAddProduct:'/product/add-product',
+  urlUpdateProduct: (productId) => `product/update/${productId}`,
+  urlDeleteProduct: (productId) => `product/delete/${productId}`,
+  urlGetListProduct: '/product/list-product',
 };
 
 export const MESSAGES = {
-  SUCCESS_ADD_PRODUCT: 'Đăng bán thành công! Sản phẩm được gửi cho ADMIN duyệt! ',
+  SUCCESS_ADD_PRODUCT: 'Đăng bán thành công! ',
   ERROR_ADD_PRODUCT: 'Đăng bán thất bại!',
   SEND_EMAIL: 'Đã gửi email đặt lại mật khẩu, vui lòng kiểm tra email của bạn.',
   ERROR_SEND_EMAIL: 'Đã xảy ra lỗi trong quá trình gửi email. Vui lòng thử lại sau.',
@@ -74,7 +85,10 @@ export const MESSAGES = {
   ERROR_DELETE_USER: 'Xóa người dùng thất bại!',
   ERROR_GET_ALL_USER: 'Gặp lỗi khi lấy dữ liệu hoặc token không hợp lệ',
   ERROR_SEARCH_USER:'Không có người dùng nào',
-  ERROR_TOP_PRODUCT:'Lỗi xảy ra khi tải dữ liệu'
+  ERROR_TOP_PRODUCT:'Lỗi xảy ra khi tải dữ liệu',
+  SUCCESS_DELETE_PRODUCT: 'Xóa sản phẩm thành công!',
+  ERROR_DELETE_PRODUCT: 'Xóa sản phẩm thất bại!',
+  ERROR_SEARCH_PRODUCT:'Không có sản phẩm nào',
 };
 
 export const listStatus = {

@@ -1,1 +1,0 @@
-export { default as ProductDetailView } from './productDetail';

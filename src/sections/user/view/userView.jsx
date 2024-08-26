@@ -1,6 +1,7 @@
-import { useNavigate,useSearchParams, } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import {
   Box,
@@ -8,6 +9,7 @@ import {
   Paper,
   Alert,
   Button,
+  Dialog,
   Snackbar,
   TableRow,
   TableBody,
@@ -16,7 +18,11 @@ import {
   Typography,
   Pagination,
   IconButton,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
   TableContainer,
+  CircularProgress,
 } from '@mui/material';
 
 import { getUsers, deleteUser } from 'src/api/user';
@@ -25,22 +31,27 @@ import { listPath, MESSAGES } from 'src/constant/constant';
 const UserPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-  const name = searchParams.get('name') || ''
-  const role = searchParams.get('role') || ''
+  const name = searchParams.get('name') || '';
+  const role = searchParams.get('role') || '';
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [totalPages,setTotalPages] = useState(1)
-  const itemsPerPage = 4
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 4;
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const fetchUsers = useCallback(async () => {
+    setLoading(true);
     try {
-      const usersData = await getUsers(page,itemsPerPage,name,role);
+      const usersData = await getUsers(page, itemsPerPage, name, role);
       setUsers(usersData.data.usersWithImageUrls);
-      setTotalPages(usersData.data.meta.total)
+      setTotalPages(usersData.data.meta.total);
       if (usersData.data.usersWithImageUrls.length === 0) {
         setError(MESSAGES.ERROR_SEARCH_USER);
       } else {
@@ -48,8 +59,10 @@ const UserPage = () => {
       }
     } catch (err) {
       setError(MESSAGES.ERROR_GET_ALL_USER);
+    } finally {
+      setLoading(false);
     }
-  }, [page,itemsPerPage,name,role]);
+  }, [page, itemsPerPage, name, role]);
 
   useEffect(() => {
     fetchUsers();
@@ -66,9 +79,10 @@ const UserPage = () => {
     setSearchParams({ page: newPage });
   };
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async () => {
+    setDeleting(true);
     try {
-      const response = await deleteUser(userId);
+      const response = await deleteUser(userToDelete);
       if (response) {
         setSnackbarMessage(MESSAGES.SUCCESS_DELETE_USER);
         setSnackbarSeverity('success');
@@ -82,12 +96,23 @@ const UserPage = () => {
       setSnackbarSeverity('error');
     }
     setSnackbarOpen(true);
+    setDialogOpen(false);
+    setDeleting(false);
   };
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
+  const openDialog = (userId) => {
+    setUserToDelete(userId);
+    setDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setDialogOpen(false);
+    setUserToDelete(null);
+  };
   return (
     <Box sx={{ padding: 4 }}>
       <Box
@@ -103,16 +128,25 @@ const UserPage = () => {
           Thêm mới user
         </Button>
       </Box>
-      {error ? (
+
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!loading && error && (
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      ) : (
+      )}
+
+      {!loading && !error && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">ID</TableCell>
+                <TableCell align="left">STT</TableCell>
                 <TableCell align="left">Avatar</TableCell>
                 <TableCell align="left">Tên người dùng</TableCell>
                 <TableCell align="left">Tên tài khoản</TableCell>
@@ -122,9 +156,9 @@ const UserPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <TableRow key={user.userId}>
-                  <TableCell align="left">{user.userId}</TableCell>
+                  <TableCell align="left">{(page - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell align="left">
                     <img
                       src={JSON.parse(user.avatar)}
@@ -140,7 +174,7 @@ const UserPage = () => {
                     <IconButton color="primary" onClick={() => handleEditUser(user.userId)}>
                       <Edit />
                     </IconButton>
-                    <IconButton color="secondary" onClick={() => handleDeleteUser(user.userId)}>
+                    <IconButton color="secondary" onClick={() => openDialog(user.userId)}>
                       <Delete />
                     </IconButton>
                   </TableCell>
@@ -149,16 +183,19 @@ const UserPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-
       )}
-       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
-        <Pagination
-          count={Math.max(totalPages, 1)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </Box>
+
+      {users.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+          <Pagination
+            count={Math.max(totalPages, 1)}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
+      )}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
@@ -169,6 +206,21 @@ const UserPage = () => {
           {snackbarMessage}
         </Alert>
       </Snackbar>
+
+      <Dialog open={dialogOpen} onClose={closeDialog} aria-labelledby="confirm-delete-dialog">
+        <DialogTitle id="confirm-delete-dialog">Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <Typography>Bạn có chắc chắn muốn xóa người dùng này không?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog} color="primary">
+            Hủy
+          </Button>
+          <LoadingButton onClick={handleDeleteUser} color="secondary" loading={deleting}>
+            Xóa
+          </LoadingButton>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
