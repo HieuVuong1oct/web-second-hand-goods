@@ -1,4 +1,4 @@
-import { useNavigate,useSearchParams, } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { Add, Edit, Delete } from '@mui/icons-material';
@@ -17,6 +17,7 @@ import {
   Pagination,
   IconButton,
   TableContainer,
+  CircularProgress,
 } from '@mui/material';
 
 import { getUsers, deleteUser } from 'src/api/user';
@@ -25,22 +26,23 @@ import { listPath, MESSAGES } from 'src/constant/constant';
 const UserPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-  const name = searchParams.get('name') || ''
-  const role = searchParams.get('role') || ''
+  const name = searchParams.get('name') || '';
+  const role = searchParams.get('role') || '';
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [totalPages,setTotalPages] = useState(1)
-  const itemsPerPage = 4
+  const [totalPages, setTotalPages] = useState(1);
+  const itemsPerPage = 4;
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(true);
   const fetchUsers = useCallback(async () => {
+    setLoading(true);
     try {
-      const usersData = await getUsers(page,itemsPerPage,name,role);
+      const usersData = await getUsers(page, itemsPerPage, name, role);
       setUsers(usersData.data.usersWithImageUrls);
-      setTotalPages(usersData.data.meta.total)
+      setTotalPages(usersData.data.meta.total);
       if (usersData.data.usersWithImageUrls.length === 0) {
         setError(MESSAGES.ERROR_SEARCH_USER);
       } else {
@@ -48,8 +50,10 @@ const UserPage = () => {
       }
     } catch (err) {
       setError(MESSAGES.ERROR_GET_ALL_USER);
+    } finally {
+      setLoading(false);
     }
-  }, [page,itemsPerPage,name,role]);
+  }, [page, itemsPerPage, name, role]);
 
   useEffect(() => {
     fetchUsers();
@@ -103,11 +107,20 @@ const UserPage = () => {
           Thêm mới user
         </Button>
       </Box>
-      {error ? (
+
+      {loading && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!loading && error && (
         <Typography variant="h6" color="error" align="center">
           {error}
         </Typography>
-      ) : (
+      )}
+
+      {!loading && !error && (
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
@@ -149,16 +162,19 @@ const UserPage = () => {
             </TableBody>
           </Table>
         </TableContainer>
-
       )}
-       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
-        <Pagination
-          count={Math.max(totalPages, 1)}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </Box>
+
+      {users.length > 0 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
+          <Pagination
+            count={Math.max(totalPages, 1)}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
+      )}
+
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}

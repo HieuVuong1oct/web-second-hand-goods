@@ -28,11 +28,21 @@ const FeaturedProduct = ({ product, loading }) => {
     navigate(listPath.listProductById(productId));
   };
   return (
+    <>
+    <Typography variant="h4" sx={{ marginBottom: 2}}>Sản phẩm nổi bật</Typography>
     <Card className={classes.featuredProductCard}>
       <CardContent
         className={classes.featuredCardContent}
         onClick={() => handleProductClick(Number(featuredProduct.productId))}
-        sx={{ cursor: 'pointer' }}
+        sx={{ 
+          cursor: 'pointer', 
+          backgroundColor: '#f0f0f0',
+          display: 'flex',       
+          width: '100%',         
+          padding: 2,            
+          boxSizing: 'border-box'
+        }}
+        
       >
         <CardMedia
           component="img"
@@ -40,8 +50,9 @@ const FeaturedProduct = ({ product, loading }) => {
           image={images}
           alt={featuredProduct.name}
           className={classes.featuredProductImage}
+          sx={{ flex: '1 1 auto' , width:'20%'}}
         />
-        <Box className={classes.featuredProductInfo}>
+        <Box className={classes.featuredProductInfo} sx={{ flex: '2 1 auto', paddingLeft: 2 }}>
           <Typography variant="h5">{featuredProduct.name} </Typography>
           <Typography variant="body1">Mô tả: {featuredProduct.description}</Typography>
           <Typography variant="body1">Giá: ${featuredProduct.price}</Typography>
@@ -50,6 +61,7 @@ const FeaturedProduct = ({ product, loading }) => {
         </Box>
       </CardContent>
     </Card>
+    </>
   );
 };
 

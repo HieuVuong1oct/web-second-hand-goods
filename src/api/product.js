@@ -20,6 +20,7 @@ export const addProduct = (data) => {
 
 export const getAllProduct = async () => {
   const response = await axiosClient.get(listPathApi.urlGetAllProduct);
+
   return response;
 };
 
@@ -33,7 +34,6 @@ export const getProductById = async (id) => {
 };
 
 export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status) => {
-  
   try {
     const response = await axiosClient.get(listPathApi.urlGetProductByCategoryId, {
       params: {
@@ -43,8 +43,7 @@ export const getProductByCategoryId = async (categoryId, page, itemsPerPage, sta
         status,
       },
     });
-   
-  
+
     return response;
   } catch (error) {
     alert('Lỗi', error);
@@ -73,7 +72,7 @@ export const submitProductForApproval = async (productData) => {
     throw error;
   }
 };
-export const getProducts = async (categoryId, page, itemsPerPage, status,requestStatus) => {
+export const getProducts = async (categoryId, page, itemsPerPage, status, requestStatus) => {
   try {
     const response = await axiosClient.get(listPathApi.urlPersonalProduct, {
       params: {
@@ -81,7 +80,7 @@ export const getProducts = async (categoryId, page, itemsPerPage, status,request
         page,
         limit: itemsPerPage,
         status,
-        requestStatus
+        requestStatus,
       },
     });
 
@@ -92,9 +91,9 @@ export const getProducts = async (categoryId, page, itemsPerPage, status,request
   }
 };
 
-export const getApprovedProducts = async (categoryId, page, itemsPerPage,status) => {
+export const getApprovedProducts = async (categoryId, page, itemsPerPage, status) => {
   try {
-    const response = await getProductByCategoryId(categoryId, page, itemsPerPage,status);
+    const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status);
 
     return response;
   } catch (error) {
@@ -143,21 +142,20 @@ export const userBuyProduct = (data) => {
   return response;
 };
 
-
-export const approveRequest = async (productId,userId) => {
+export const approveRequest = async (productId, userId) => {
   try {
-    const response = await axiosClient.put(listPathApi.urlApproveRequest(productId,userId));
-   return response
+    const response = await axiosClient.put(listPathApi.urlApproveRequest(productId, userId));
+    return response;
   } catch (error) {
     alert('Lỗi', error);
     throw error;
   }
 };
 
-export const rejectRequest = async (productId,userId) => {
+export const rejectRequest = async (productId, userId) => {
   try {
-    const response = await axiosClient.put(listPathApi.urlRejectRequest(productId,userId));
-    return response
+    const response = await axiosClient.put(listPathApi.urlRejectRequest(productId, userId));
+    return response;
   } catch (error) {
     alert('Lỗi', error);
     throw error;
@@ -165,26 +163,45 @@ export const rejectRequest = async (productId,userId) => {
 };
 
 export const addComment = (data) => {
- 
-  const response = axiosClient.post(listPathApi.urlAddComment(data.productId),
-    {
-     content:data.content
-    },
+  const response = axiosClient.post(listPathApi.urlAddComment(data.productId), {
+    content: data.content,
+  });
 
-  );
-  
   return response;
 };
 
 export const getTopProduct = async () => {
   const response = await axiosClient.get(listPathApi.urlTopProduct);
   return response;
-
 };
 
 export const getTrendProduct = async () => {
   const response = await axiosClient.get(listPathApi.urlTrendProduct);
 
   return response;
+};
 
+export const deleteProduct = (productId) =>
+  axiosClient.delete(listPathApi.urlDeleteProduct(productId));
+
+export const updateProduct = (productId, product) => {
+  const response = axiosClient.put(listPathApi.urlUpdateProduct(productId), product, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+
+  return response;
+};
+
+export const getListProduct = async (page, limit, name) => {
+  const response = await axiosClient.get(listPathApi.urlGetListProduct, {
+    params: {
+      page,
+      limit,
+      productName: name,
+    },
+  });
+
+  return response;
 };

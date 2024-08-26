@@ -11,26 +11,24 @@ import { MESSAGES } from 'src/constant/constant';
 
 const schema = Yup.object().shape({
   name: Yup.string()
-  .trim('Tên sản phẩm không được bỏ trống')
+    .trim('Tên sản phẩm không được bỏ trống')
     .min(1, 'Tên sản phẩm phải có ít nhất 1 ký tự')
     .max(30, 'Tên sản phẩm tối đa 30 ký tự')
     .required('Tên sản phẩm là bắt buộc'),
   description: Yup.string()
-  .trim('Mô tả không được bỏ trống')
+    .trim('Mô tả không được bỏ trống')
     .min(1, 'Mô tả phải có ít nhất 1 ký tự')
     .max(300, 'Mô tả tối đa 300 ký tự')
     .required('Mô tả là bắt buộc'),
   price: Yup.number()
- 
+
     .typeError('Bạn chưa nhập giá')
     .required('Giá là bắt buộc')
     .positive('Giá phải là số lớn hơn 0'),
-    images: Yup.mixed()
+  images: Yup.mixed()
     .typeError('Bạn chưa tải ảnh')
     .required('Hình ảnh là bắt buộc')
-    .test('fileCount', 'Bạn phải tải lên đúng 4 hình ảnh', (value) => 
-         value && value.length === 4
-    ),
+    .test('fileCount', 'Bạn phải tải lên đúng 4 hình ảnh', (value) => value && value.length === 4),
 });
 
 const AddProductView = () => {

@@ -39,7 +39,7 @@ export default function ForgotPasswordView() {
     newPassword: Yup.string().when('otpSent', {
       is: true,
       then: Yup.string()
-      .trim('Mật khẩu không được bỏ trống')
+      
         .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
         .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
         .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
@@ -48,7 +48,7 @@ export default function ForgotPasswordView() {
     checkPassword: Yup.string().when('otpSent', {
       is: true,
       then: Yup.string()
-      .trim('Kiểm tra mật khẩu không được bỏ trống')
+      
         .oneOf([Yup.ref('newPassword'), null], 'Mật khẩu không khớp')
         .required('Vui lòng xác nhận mật khẩu'),
     }),
@@ -66,7 +66,7 @@ export default function ForgotPasswordView() {
     const trimmedEmail = data.email.trim();
     setLoading(true);
     try {
-      await sendOtp({ email: trimmedEmail.email });
+      await sendOtp({ email: trimmedEmail });
       setOtpSent(true);
       setEmail(data.email);
       setLoading(false);
@@ -82,10 +82,10 @@ export default function ForgotPasswordView() {
 
   const onSubmitNewPassword = async (data) => {
     const trimmedOtp = data.otp.trim(); 
-    const trimmedNewPassword = data.newPassword.trim(); 
+    const trimmedNewPassword = data.newPassword; 
     setLoading(true);
     try {
-      await setPassword(email, trimmedOtp.otp, trimmedNewPassword.password);
+      await setPassword(email, trimmedOtp, trimmedNewPassword);
       setTimeout(() => {
         navigateToLogin();
       }, 3000);
