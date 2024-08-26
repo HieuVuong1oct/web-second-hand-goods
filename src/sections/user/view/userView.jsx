@@ -125,7 +125,7 @@ const UserPage = () => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">ID</TableCell>
+                <TableCell align="left">STT</TableCell>
                 <TableCell align="left">Avatar</TableCell>
                 <TableCell align="left">Tên người dùng</TableCell>
                 <TableCell align="left">Tên tài khoản</TableCell>
@@ -135,9 +135,9 @@ const UserPage = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user) => (
+              {users.map((user,index) => (
                 <TableRow key={user.userId}>
-                  <TableCell align="left">{user.userId}</TableCell>
+                  <TableCell align="left">{(page - 1) * itemsPerPage + index + 1}</TableCell>
                   <TableCell align="left">
                     <img
                       src={JSON.parse(user.avatar)}
