@@ -46,6 +46,8 @@
     "react-hook-form": "^7.52.1",
     "react-router-dom": "^6.16.0",
     "simplebar-react": "^3.2.4",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "yup": "^1.4.0"
   },
   "devDependencies": {

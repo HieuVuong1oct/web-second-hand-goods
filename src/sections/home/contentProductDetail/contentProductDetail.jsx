@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+import io from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
@@ -20,14 +22,13 @@ import ConfirmOrderDialog from './cancelOrder';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
 
+const socket = io('http://localhost:3000');
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
 
-
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [likes, setLikes] = useState(0);
   const [dislikes, setDislikes] = useState(0);
   const [product, setProduct] = useState(null);
@@ -41,6 +42,7 @@ const ProductDetail = () => {
   const [selectedMessage, setSelectedMessage] = useState('');
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const { productId } = useParams();
+  const Id = Cookies.get('userId');
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -60,6 +62,14 @@ const ProductDetail = () => {
       setSnackbarOpen(true);
     }
   }, [productId]);
+
+  useEffect(() => {
+    socket.emit('joinRoom', Number(productId), Id);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [productId, Id]);
 
   useEffect(() => {
     fetchProduct();
@@ -125,7 +135,7 @@ const ProductDetail = () => {
   const handleAddComment = async (data) => {
     try {
       await addComment({ content: data, productId: product.productId });
-   
+
       setSnackbarMessage('Thêm bình luận thành công');
       setSnackbarSeverity('success');
       setSnackbarOpen(true);
@@ -134,10 +144,6 @@ const ProductDetail = () => {
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
     }
-  };
-
-  const handleToggleNotifications = () => {
-    setNotificationsEnabled(!notificationsEnabled);
   };
 
   const handleLike = () => {
@@ -250,10 +256,8 @@ const ProductDetail = () => {
       <ActionButtons
         likes={likes}
         dislikes={dislikes}
-        notificationsEnabled={notificationsEnabled}
         handleLike={handleLike}
         handleDislike={handleDislike}
-        handleToggleNotifications={handleToggleNotifications}
       />
 
       {userBuy.length > 0 && (
@@ -269,11 +273,7 @@ const ProductDetail = () => {
         onClose={handleCloseConfirmDialog}
         onConfirm={handleCancelRegister}
       />
-      <CommentSection
-        productId={productId}
- 
-        handleAddComment={handleAddComment}
-      />
+      <CommentSection productId={productId} handleAddComment={handleAddComment} />
 
       <Snackbar
         open={snackbarOpen}

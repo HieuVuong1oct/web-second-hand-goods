@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
+import { io } from 'socket.io-client';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useState, useEffect, useCallback } from 'react';
@@ -20,19 +21,21 @@ import {
 
 import { getProductById } from 'src/api/product';
 
+const socket = io('http://localhost:3000');
 
 const validationSchema = Yup.object().shape({
   comment: Yup.string()
-  .trim('Bình luận không được bỏ trống')
+    .trim('Bình luận không được bỏ trống')
     .required('Bạn chưa nhập bình luận')
     .min(1, 'Bình luận phải có ít nhất 1 ký tự'),
 });
-const CommentSection = ({ productId,  handleAddComment }) => {
+const CommentSection = ({ productId, handleAddComment }) => {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visibleComments, setVisibleComments] = useState(4);
   const [expanded, setExpanded] = useState(true);
   const [commentValue, setCommentValue] = useState('');
+
   const {
     control,
     handleSubmit,
@@ -54,38 +57,61 @@ const CommentSection = ({ productId,  handleAddComment }) => {
 
   useEffect(() => {
     listComment();
-    
-  }, [listComment]);
 
+    socket.on(`comment ${productId}`, (data) => {
+      setComments((prevComments) => [
+        ...prevComments,
+        {
+          user: data.user,
+          content: data.content,
+        },
+      ]);
+    });
+
+    return () => {
+      socket.off(`comment ${productId}`);
+    };
+  }, [listComment, productId]);
+
+  useEffect(() => {
+    socket.on('comment', (data) => {
+      setComments((prevComments) => [
+        ...prevComments,
+        { user: { username: data.user.username }, content: data.content },
+      ]);
+    });
+
+    return () => {
+      socket.off(`comment ${productId}`);
+    };
+  }, [productId]);
   const handleAddCommentAndReload = async (data) => {
-    setLoading(true)
+    setLoading(true);
     const trimmedComment = data.comment.trim();
- 
+
     await handleAddComment(trimmedComment);
     reset();
     setCommentValue('');
     await listComment();
     setLoading(false);
-   
   };
 
   const handleShowMoreComments = () => {
-    setVisibleComments((prev) => prev + 4); 
+    setVisibleComments((prev) => prev + 4);
   };
   const handleAccordionChange = () => {
-    setExpanded((prev) => !prev); 
+    setExpanded((prev) => !prev);
   };
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
         Phản hồi
       </Typography>
-      
+
       <form onSubmit={handleSubmit(handleAddCommentAndReload)}>
         <Controller
           name="comment"
           control={control}
-         
           render={({ field }) => (
             <TextField
               {...field}
@@ -153,7 +179,6 @@ const CommentSection = ({ productId,  handleAddComment }) => {
     </Container>
   );
 };
-
 
 CommentSection.propTypes = {
   productId: PropTypes.string.isRequired,

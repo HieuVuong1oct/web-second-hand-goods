@@ -1,11 +1,13 @@
-
 import Cookies from 'js-cookie';
+import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { alpha } from '@mui/material/styles';
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import {
   Box,
+  Badge,
   Alert,
   Avatar,
   AppBar,
@@ -27,16 +29,21 @@ import { clearCookies } from 'src/cookie/setCookies';
 
 import useStyles from './headerStyles';
 
+const socket = io('http://localhost:3000');
+
 const Header = () => {
   const account = Account();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const [notificationCount, setNotificationCount] = useState(0);
+  const [notifications, setNotifications] = useState([]);
+  const [showMore, setShowMore] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -57,6 +64,22 @@ const Header = () => {
     setIsAdmin(role === 'ADMIN');
   }, []);
 
+  useEffect(() => {
+    const userId = Cookies.get('userId');
+
+    socket.on(`notification ${userId}`, (data) => {
+      setNotifications((prevNotifications) => [
+        ...prevNotifications,
+        { id: Date.now(), message: `${data.message}`, productId: data.product.productId },
+      ]);
+      setNotificationCount((prevCount) => prevCount + 1);
+    });
+
+    return () => {
+      socket.off(`notification ${userId}`);
+    };
+  }, []);
+
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
 
   const handleAdminPage = () => {
@@ -75,6 +98,15 @@ const Header = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleNotificationClick = (event) => {
+    setNotificationAnchorEl(event.currentTarget);
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
+    setNotificationCount(0);
+  };
+
   const logOut = async () => {
     try {
       await logout();
@@ -90,7 +122,9 @@ const Header = () => {
       setAnchorEl(null);
     }
   };
-
+  const handleShowMore = () => {
+    setShowMore(!showMore);
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -112,6 +146,9 @@ const Header = () => {
     navigate(listPath.editInformation(Id));
   };
 
+  const handleViewComment = (id) => {
+    navigate(listPath.listProductById(id));
+  };
   return (
     <AppBar
       position="fixed"
@@ -130,7 +167,11 @@ const Header = () => {
           onClick={handleHomePage}
           onKeyDown={handleHomePage}
         >
-          <img src="/favicon/image.webp" alt="Logo" style={{ cursor: 'pointer', width: '150px', height: '50px' }} />
+          <img
+            src="/favicon/image.webp"
+            alt="Logo"
+            style={{ cursor: 'pointer', width: '150px', height: '50px' }}
+          />
         </div>
         <Box className={classes.searchContainer}>
           {isLoggedIn ? (
@@ -155,10 +196,29 @@ const Header = () => {
                     width: 36,
                     height: 36,
                     border: (theme) => `solid 2px ${theme.palette.background.default}`,
+                    mr: 1,
                   }}
                 >
                   {account.displayName.charAt(0).toUpperCase()}
                 </Avatar>
+              </IconButton>
+              <IconButton
+                onClick={handleNotificationClick}
+                sx={{
+                  marginLeft: '20px',
+                }}
+              >
+                <Badge
+                  badgeContent={notificationCount}
+                  color="error"
+                  sx={{
+                    '& .MuiBadge-dot': {
+                      backgroundColor: (theme) => theme.palette.error.main,
+                    },
+                  }}
+                >
+                  <NotificationsNoneIcon />
+                </Badge>
               </IconButton>
               <Popover
                 open={Boolean(anchorEl)}
@@ -242,14 +302,48 @@ const Header = () => {
               >
                 Đăng nhập
               </Button>
-              <Button
-                className={classes.loginButton}
-                onClick={handleRegisterClick}
-              >
+              <Button className={classes.loginButton} onClick={handleRegisterClick}>
                 Đăng ký
               </Button>
             </div>
           )}
+
+          <Popover
+            open={Boolean(notificationAnchorEl)}
+            anchorEl={notificationAnchorEl}
+            onClose={handleNotificationClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            sx={{
+              p: 0,
+              mt: 1,
+              ml: 0.75,
+              width: '500px',
+            }}
+          >
+            <Box sx={{ p: 2 }}>
+              <Typography sx={{ fontSize: '10px' }}>Thông báo</Typography>
+              {notifications.slice(0, showMore ? notifications.length : 5).map((notification) => (
+                <>
+                  <MenuItem
+                    key={notification.id}
+                    disableRipple
+                    disableTouchRipple
+                    className={classes.popoverMenuItem}
+                    onClick={() => handleViewComment(notification.productId)}
+                  >
+                    {notification.message}
+                  </MenuItem>
+                  <Divider />
+                </>
+              ))}
+              {notifications.length > 5 && (
+                <Button onClick={handleShowMore} fullWidth>
+                  {showMore ? 'Ẩn bớt' : 'Xem thêm'}
+                </Button>
+              )}
+            </Box>
+          </Popover>
         </Box>
       </div>
 

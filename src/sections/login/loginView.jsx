@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
+import io from 'socket.io-client';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -24,6 +25,7 @@ import { setCookies } from 'src/cookie/setCookies';
 
 import Iconify from 'src/components/iconify';
 
+const socket = io('http://localhost:3000');
 export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,7 +69,7 @@ export default function LoginView() {
         setCookies(userData.data);
 
         setSuccess(true);
-
+        socket.emit('login', (userData.data.user.userId));
         setTimeout(() => {
           if (userData.data.user.role === 'ADMIN') {
             navigateToAdmin();
