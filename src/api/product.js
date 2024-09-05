@@ -34,23 +34,18 @@ export const getProductById = async (id) => {
   return response;
 };
 
-export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status,name) => {
-  try {
-    const response = await axiosClient.get(listPathApi.URL_GET_PRODUCT_BY_CATEGORY_ID, {
-      params: {
-        categoryId,
-        page,
-        limit: itemsPerPage,
-        status,
-        productName:name
-      },
-    });
+export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status, name) => {
+  const response = await axiosClient.get(listPathApi.URL_GET_PRODUCT_BY_CATEGORY_ID, {
+    params: {
+      categoryId,
+      page,
+      limit: itemsPerPage,
+      status,
+      productName: name,
+    },
+  });
 
-    return response;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  return response;
 };
 
 export const getCategoryById = async (id) => {
@@ -60,71 +55,47 @@ export const getCategoryById = async (id) => {
 
 export const submitProductForApproval = async (productData) => {
   const categoryId = productData.get('categoryId');
-  try {
-    const response = await axios.post(
-      `https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/${categoryId}/products`,
-      {
-        ...productData,
-        status: 'pending',
-      }
-    );
-    return response.data;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+
+  const response = await axios.post(
+    `https://66b38d8a7fba54a5b7ed6258.mockapi.io/api/categories/${categoryId}/products`,
+    {
+      ...productData,
+      status: 'pending',
+    }
+  );
+  return response.data;
 };
 export const getProducts = async (categoryId, page, itemsPerPage, status, requestStatus) => {
-  try {
-    const response = await axiosClient.get(listPathApi.URL_PERSONAL_PRODUCT, {
-      params: {
-        categoryId,
-        page,
-        limit: itemsPerPage,
-        status,
-        requestStatus,
-      },
-    });
+  const response = await axiosClient.get(listPathApi.URL_PERSONAL_PRODUCT, {
+    params: {
+      categoryId,
+      page,
+      limit: itemsPerPage,
+      status,
+      requestStatus,
+    },
+  });
 
-    return response.data[0];
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  return response.data[0];
 };
 
-export const getApprovedProducts = async (categoryId, page, itemsPerPage, status,name) => {
-  try {
-    const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status,name);
+export const getApprovedProducts = async (categoryId, page, itemsPerPage, status, name) => {
+  const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status, name);
 
-    return response;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  return response;
 };
 
 export const approveProduct = async (productId) => {
-  try {
-    const response = await axiosClient.put(listPathApi.URL_APPROVE_PRODUCT(productId));
-    return response.data;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  const response = await axiosClient.put(listPathApi.URL_APPROVE_PRODUCT(productId));
+  return response.data;
 };
 
 export const rejectProduct = async (productId, mess) => {
-  try {
-    const response = await axiosClient.put(listPathApi.URL_REJECT_PRODUCT(productId), {
-      message: mess,
-    });
+  const response = await axiosClient.put(listPathApi.URL_REJECT_PRODUCT(productId), {
+    message: mess,
+  });
 
-    return response.data;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  return response.data;
 };
 
 export const userBuyProduct = (data) => {
@@ -145,26 +116,14 @@ export const userBuyProduct = (data) => {
 };
 
 export const approveRequest = async (productId, userId) => {
-  try {
-    const response = await axiosClient.put(listPathApi.URL_APPROVE_REQUEST(productId, userId));
-    return response;
-  } catch (error) {
-    alert('Lỗi', error);
-    throw error;
-  }
+  const response = await axiosClient.put(listPathApi.URL_APPROVE_REQUEST(productId, userId));
+  return response;
 };
 
 export const rejectRequest = async (productId, userId) => {
-  
-  try {
-    const response = await axiosClient.put(listPathApi. URL_REJECT_REQUEST(productId, userId));
-   
-    return response;
-  } catch (error) {
-   
-    alert('Lỗi', error);
-    throw error;
-  }
+  const response = await axiosClient.put(listPathApi.URL_REJECT_REQUEST(productId, userId));
+
+  return response;
 };
 
 export const addComment = (data) => {
