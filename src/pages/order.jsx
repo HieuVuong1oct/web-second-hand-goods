@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import OrderManagement from 'src/layouts/order/order'
+import OrderManagement from 'src/layouts/admin/order/order'
 
 export default function OrderPage() {
   return (

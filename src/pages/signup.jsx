@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { SignUpView } from 'src/sections/signup'
+import { SignUpView } from 'src/layouts/signup'
 
 export default function SignUpPage() {
   return (

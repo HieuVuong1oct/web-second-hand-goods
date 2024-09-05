@@ -4,8 +4,8 @@ import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import { Box,CircularProgress,  } from '@mui/material';
 
-import AuthLayout from 'src/layouts/authLayout';
-import DashboardLayout from 'src/layouts/dashboard';
+import AuthLayout from 'src/layouts/admin/authLayout';
+import DashboardLayout from 'src/layouts/admin/dashboard';
 
 export const IndexPage = lazy(() => import('src/pages/app'));
 
@@ -38,11 +38,11 @@ const Loading = () => (
 );
 export default function Router() {
   const isAuthenticated = Cookies.get('accessToken');
-
+  const userRole = Cookies.get('role');
   const routes = useRoutes([
     {
       path: '/',
-      element: isAuthenticated ? (
+      element: isAuthenticated  ? (
         <Navigate to="/homeMain/contentProduct" replace />
       ) : (
         <Navigate to="/homeMain" replace />
@@ -50,7 +50,7 @@ export default function Router() {
     },
     {
       path: '/',
-      element: isAuthenticated ? (
+      element: isAuthenticated && userRole === 'ADMIN' ? (
         <DashboardLayout>
            <Suspense fallback={<Loading />}>
             <Outlet />
@@ -69,7 +69,7 @@ export default function Router() {
         { path: 'admin/editUser/:userId', element: <EditUserPage /> },
         { path: 'admin/product/get-by-id/:productId', element: <ProductDetailAdminPage /> },
         { path: 'admin/addProduct', element: <AddProductPage /> },
-        { path: 'admin/editProduct/:productId', element: <EditProductViewPage /> },
+        
       ],
     },
     {
@@ -106,6 +106,7 @@ export default function Router() {
         { path: 'addProduct', element: <AddProductPage /> },
         { path: 'history', element: <HistoryPage /> },
         { path: 'editInformation/:userId', element: < EditUserViewPage /> },
+        { path: 'editProduct/:productId', element: <EditProductViewPage /> },
       ],
     },
  

@@ -5,6 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Unstable_Grid2'
 import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { getTopProduct } from 'src/api/product'
 import { MESSAGES } from 'src/constant/constant'
@@ -16,7 +17,7 @@ export default function AppView() {
   const [products, setProducts] = useState([]);
   const [open, setOpen] = useState(false); 
   const [errorMessage, setErrorMessage] = useState(''); 
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -25,6 +26,8 @@ export default function AppView() {
       } catch (err) {
         setErrorMessage(MESSAGES.ERROR_TOP_PRODUCT); 
         setOpen(true); 
+      }finally {
+        setLoading(false); 
       }
     };
     fetch();
@@ -46,12 +49,16 @@ export default function AppView() {
       </Typography>
 
       <Grid xs={12} md={6} lg={8}>
+      {loading ? (
+          <CircularProgress /> 
+        ) : (
         <AppConversionRates
           title="Top 3 sản phẩm nhiều người đăng ký nhất"
           chart={{
             series: topProduct,
           }}
         />
+      )}
       </Grid>
 
       <Snackbar

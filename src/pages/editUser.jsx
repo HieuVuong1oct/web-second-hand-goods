@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import EditUserView from 'src/sections/user/editUser/editUser'
+import EditUserView from 'src/layouts/admin/userAction/editUser/editUser'
 
 export default function EditUserPage() {
   return (

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { HomeMainView } from 'src/sections/home'
+import { HomeMainView } from 'src/layouts/user/home'
 
 export default function HomeMainPage() {
   return (

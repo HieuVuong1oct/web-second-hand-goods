@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import ContentProductDetailView from 'src/sections/home/contentProductDetail/contentProductDetail';
+import ContentProductDetailView from 'src/layouts/user/home/contentProductDetail/contentProductDetail';
 
 export default function ContentProductDetailPage() {
   return (
