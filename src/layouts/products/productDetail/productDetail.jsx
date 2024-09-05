@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Box, Alert, Snackbar, Container, Typography, CircularProgress } from '@mui/material';
 
 import { listPath, listStatus } from 'src/constant/constant';
+import MessageDialog from 'src/layouts/user/home/contentProductDetail/messageDialog';
 import {
   addComment,
   rejectRequest,
@@ -13,7 +14,7 @@ import {
 } from 'src/api/product';
 
 // import ActionButtons from 'src/sections/home/contentProductDetail/actionButton';
-import MessageDialog from 'src/layouts/user/home/contentProductDetail/messageDialog';
+
 import CommentSection from 'src/layouts/user/home/contentProductDetail/commentSection';
 import RegisterDialog from 'src/layouts/user/home/contentProductDetail/registerDialog';
 import ConfirmOrderDialog from 'src/layouts/user/home/contentProductDetail/cancelOrder';
@@ -213,7 +214,7 @@ const ProductDetail = () => {
   };
 
   const handleProduct = () => {
-    navigate(listPath.product);
+    navigate(listPath.PRODUCT);
   };
 
   const imageArray = JSON.parse(product.images);

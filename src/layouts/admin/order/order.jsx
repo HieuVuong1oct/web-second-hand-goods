@@ -139,7 +139,7 @@ const OrderManagement = () => {
   }
 
   const handleViewDetail = (productId) => {
-    navigate(listPath.productDetailOrders(productId));
+    navigate(listPath.PRODUCT_DETAIL_ORDER(productId));
   };
   return (
     <>

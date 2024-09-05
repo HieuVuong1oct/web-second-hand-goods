@@ -30,7 +30,7 @@ const AllProductsPage = () => {
   const [status, setStatus] = useState();
 
   const handleProductClick = (productId) => {
-    navigate(listPath.listProductById(productId));
+    navigate(listPath.LIST_PRODUCT_BY_ID(productId));
   };
 
   const handlePageChange = (event, newPage) => {

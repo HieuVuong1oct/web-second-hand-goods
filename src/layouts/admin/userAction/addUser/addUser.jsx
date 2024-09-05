@@ -128,7 +128,7 @@ export default function AddUserView() {
   };
 
   const handleUser = () => {
-    navigate(listPath.user);
+    navigate(listPath.USER);
   };
 
   return (

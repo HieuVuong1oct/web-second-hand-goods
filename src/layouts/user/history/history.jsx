@@ -127,7 +127,7 @@ const HistoryScreen = () => {
     setSearchParams({ status:statusNew, page: newPage ,tab,requestStatus:requestStatusNew});
   };
   const handleViewDetail = (productId) => {
-    navigate(listPath.listProductById(productId));
+    navigate(listPath.LIST_PRODUCT_BY_ID(productId));
   };
 
   const handleTabChange = (event, newValue) => {

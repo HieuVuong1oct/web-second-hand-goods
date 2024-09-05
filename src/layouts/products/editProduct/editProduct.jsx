@@ -131,7 +131,7 @@ export default function EditProductView() {
     setImagePreviews(previews);
   };
   const handleProduct = () => {
-    navigate(listPath.history);
+    navigate(listPath.HISTORY);
   };
 
   return (

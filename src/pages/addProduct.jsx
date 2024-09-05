@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { AddProductView } from 'src/layouts/products/view/addProduct'
+import { AddProductView } from 'src/layouts/products/addProduct'
 
 export default function AddProductPage() {
   return (

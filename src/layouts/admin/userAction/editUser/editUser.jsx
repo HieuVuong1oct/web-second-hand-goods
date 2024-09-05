@@ -135,7 +135,7 @@ export default function EditUserView() {
   };
 
   const handleUser = () => {
-    navigate(listPath.user);
+    navigate(listPath.USER);
   };
 
   const handleAvatarChange = (e) => {

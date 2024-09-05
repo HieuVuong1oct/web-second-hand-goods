@@ -69,11 +69,11 @@ const UserPage = () => {
   }, [fetchUsers]);
 
   const handleAddUser = () => {
-    navigate(listPath.adminSignUp);
+    navigate(listPath.ADMIN_SIGN_UP);
   };
 
   const handleEditUser = (userId) => {
-    navigate(listPath.editUser(userId));
+    navigate(listPath.EDIT_USER(userId));
   };
   const handlePageChange = (event, newPage) => {
     setSearchParams({ page: newPage });

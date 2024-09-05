@@ -98,7 +98,7 @@ const ProductsPage = () => {
   };
 
   const handleProductClick = (productId) => {
-    navigate(listPath.adminDetailProduct(productId));
+    navigate(listPath.ADMIN_DETAIL_PRODUCT(productId));
   };
 
   const openDialog = (productId) => {

@@ -25,7 +25,7 @@ const FeaturedProduct = ({ product, loading }) => {
   const images = product.images ? JSON.parse(product.images)[0] : null;
 
   const handleProductClick = (productId) => {
-    navigate(listPath.listProductById(productId));
+    navigate(listPath.LIST_PRODUCT_BY_ID(productId));
   };
   return (
     <>

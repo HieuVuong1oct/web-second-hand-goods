@@ -19,11 +19,11 @@ const ProductList = ({ category, products }) => {
   const navigate = useNavigate();
 
   const handleProductClick = (productId) => {
-    navigate(listPath.listProductById(productId));
+    navigate(listPath.LIST_PRODUCT_BY_ID(productId));
   };
 
   const handleViewAllClick = (categoryId) => {
-    navigate(listPath.productByCategoryId(categoryId));
+    navigate(listPath.PRODUCT_BY_CATEGORY_ID(categoryId));
   };
 
   const displayedProducts = products.slice(0, 8);

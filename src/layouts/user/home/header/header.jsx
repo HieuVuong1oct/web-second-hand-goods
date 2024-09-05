@@ -5,20 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { alpha } from '@mui/material/styles';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import {
-  Box,
-  Badge,
-  Alert,
-  Avatar,
-  AppBar,
-  // Button,
-  // Divider,
-  // Popover,
-  // MenuItem,
-  Snackbar,
-  IconButton,
-  // Typography,
-} from '@mui/material';
+import { Box, Badge, Alert, Avatar, AppBar, Snackbar, IconButton } from '@mui/material';
 
 import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
 
@@ -105,7 +92,6 @@ const Header = () => {
         ...prevNotifications,
       ]);
       setNotificationCount((prevCount) => prevCount + 1);
-      // fetchNotification();
     });
 
     if (userId) {
@@ -120,16 +106,8 @@ const Header = () => {
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
 
   const handleAdminPage = () => {
-    navigate(listPath.admin);
+    navigate(listPath.ADMIN);
   };
-
-  // const handleLoginClick = () => {
-  //   navigateToLogin();
-  // };
-
-  // const handleRegisterClick = () => {
-  //   navigateToSignUp();
-  // };
 
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -139,13 +117,6 @@ const Header = () => {
     setNotificationAnchorEl(event.currentTarget);
     fetchNotification();
   };
-
-  // const handleNotificationClose = () => {
-  //   setNotificationAnchorEl(null);
-  //   setNotificationCount(0);
-  //   setCurrentPage(1);
-  //   setShowMore(false);
-  // };
 
   const logOut = async () => {
     try {
@@ -166,51 +137,35 @@ const Header = () => {
   const handleShowMore = () => {
     if (loading) return;
     if (total > 0 && showMore === false) {
-      // Khi nhấn "Xem thêm"
       const nextPage = currentPage + 1;
-      fetchNotification(nextPage, true); // Fetch trang tiếp theo và nối dữ liệu
-      setCurrentPage(nextPage); // Cập nhật trang hiện tại
+      fetchNotification(nextPage, true);
+      setCurrentPage(nextPage);
       if (nextPage === total) {
         setShowMore(!showMore);
       }
     } else {
-      // Khi nhấn "Ẩn bớt"
       setCurrentPage(1);
       setShowMore(false);
-      fetchNotification(1); // Hiển thị lại dữ liệu ban đầu
+      fetchNotification(1);
     }
   };
 
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
-
   const handleAddProduct = () => {
-    navigate(listPath.addProduct);
+    navigate(listPath.ADD_PRODUCT);
   };
 
   const handleHomePage = () => {
-    navigate(listPath.homePage);
+    navigate(listPath.HOME_PAGE);
   };
 
   const handleHistory = () => {
-    navigate(listPath.history);
+    navigate(listPath.HISTORY);
   };
 
-  // const userId = Cookies.get('userId');
   const handleEdit = (Id) => {
-    navigate(listPath.editInformation(Id));
+    navigate(listPath.EDIT_INFORMATION(Id));
   };
 
-  // const handleViewComment = async (id, idProduct) => {
-  //   try {
-  //     await getNotification(id);
-  //   } catch (err) {
-  //     alert('Lỗi');
-  //   }
-  //   handleNotificationClose();
-  //   navigate(listPath.listProductById(idProduct));
-  // };
   return (
     <AppBar
       position="fixed"
@@ -282,78 +237,7 @@ const Header = () => {
                   <NotificationsNoneIcon />
                 </Badge>
               </IconButton>
-              {/* <Popover
-                open={Boolean(anchorEl)}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-                sx={{
-                  p: 0,
-                  mt: 1,
-                  ml: 0.75,
-                  width: 200,
-                }}
-              >
-                <Box sx={{ my: 1.5, px: 2 }}>
-                  <Typography variant="subtitle2" noWrap>
-                    {account.displayName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-                    {account.email}
-                  </Typography>
-                </Box>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuItem
-                  disableRipple
-                  disableTouchRipple
-                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                  onClick={handleHistory}
-                >
-                  Lịch sử
-                </MenuItem>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuItem
-                  disableRipple
-                  disableTouchRipple
-                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                  onClick={() => handleEdit(userId)}
-                >
-                  Thông tin cá nhân
-                </MenuItem>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuItem
-                  disableRipple
-                  disableTouchRipple
-                  onClick={handleAddProduct}
-                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                >
-                  Đăng bán
-                </MenuItem>
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                {isAdmin && (
-                  <>
-                    <Divider sx={{ borderStyle: 'dashed' }} />
-                    <MenuItem
-                      disableRipple
-                      disableTouchRipple
-                      onClick={handleAdminPage}
-                      sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                    >
-                      Quản trị
-                    </MenuItem>
-                  </>
-                )}
-                <Divider sx={{ borderStyle: 'dashed' }} />
-                <MenuItem
-                  disableRipple
-                  disableTouchRipple
-                  onClick={logOut}
-                  sx={{ typography: 'body2', color: 'error.main', py: 1.5 }}
-                >
-                  Đăng xuất
-                </MenuItem>
-              </Popover> */}
+
               <UserMenu
                 anchorEl={anchorEl}
                 handleClose={() => setAnchorEl(null)}
@@ -368,18 +252,6 @@ const Header = () => {
               />
             </>
           ) : (
-            // <div className={classes.loginButtons}>
-            //   <Button
-            //     sx={{ ml: '20px' }}
-            //     className={classes.loginButton}
-            //     onClick={handleLoginClick}
-            //   >
-            //     Đăng nhập
-            //   </Button>
-            //   <Button className={classes.loginButton} onClick={handleRegisterClick}>
-            //     Đăng ký
-            //   </Button>
-            // </div>
             <LoginButtons
               handleLoginClick={navigateToLogin}
               handleRegisterClick={navigateToSignUp}

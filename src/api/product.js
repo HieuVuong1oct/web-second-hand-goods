@@ -8,7 +8,7 @@ import axiosClient from './axiosClient';
 const accessToken = Cookies.get('accessToken');
 
 export const addProduct = (data) => {
-  const response = axiosClient.post(listPathApi.urlAddProduct, data, {
+  const response = axiosClient.post(listPathApi.URL_ADD_PRODUCT, data, {
     headers: {
       'Content-Type': 'multipart/form-data',
       Authorization: `Bearer ${accessToken}`,
@@ -19,13 +19,13 @@ export const addProduct = (data) => {
 };
 
 export const getAllProduct = async () => {
-  const response = await axiosClient.get(listPathApi.urlGetAllProduct);
+  const response = await axiosClient.get(listPathApi.URL_GET_ALL_PRODUCT);
 
   return response;
 };
 
 export const getProductById = async (id) => {
-  const response = await axiosClient.get(listPathApi.urlGetProductById(id), {
+  const response = await axiosClient.get(listPathApi.URL_GET_PRODUCT_BY_ID(id), {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -36,7 +36,7 @@ export const getProductById = async (id) => {
 
 export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status,name) => {
   try {
-    const response = await axiosClient.get(listPathApi.urlGetProductByCategoryId, {
+    const response = await axiosClient.get(listPathApi.URL_GET_PRODUCT_BY_CATEGORY_ID, {
       params: {
         categoryId,
         page,
@@ -54,7 +54,7 @@ export const getProductByCategoryId = async (categoryId, page, itemsPerPage, sta
 };
 
 export const getCategoryById = async (id) => {
-  const response = await axiosClient.get(listPathApi.urlGetCategoryById(id));
+  const response = await axiosClient.get(listPathApi.URL_GET_CATEGORY_BY_ID(id));
   return response;
 };
 
@@ -76,7 +76,7 @@ export const submitProductForApproval = async (productData) => {
 };
 export const getProducts = async (categoryId, page, itemsPerPage, status, requestStatus) => {
   try {
-    const response = await axiosClient.get(listPathApi.urlPersonalProduct, {
+    const response = await axiosClient.get(listPathApi.URL_PERSONAL_PRODUCT, {
       params: {
         categoryId,
         page,
@@ -106,7 +106,7 @@ export const getApprovedProducts = async (categoryId, page, itemsPerPage, status
 
 export const approveProduct = async (productId) => {
   try {
-    const response = await axiosClient.put(listPathApi.urlApproveProduct(productId));
+    const response = await axiosClient.put(listPathApi.URL_APPROVE_PRODUCT(productId));
     return response.data;
   } catch (error) {
     alert('Lỗi', error);
@@ -116,7 +116,7 @@ export const approveProduct = async (productId) => {
 
 export const rejectProduct = async (productId, mess) => {
   try {
-    const response = await axiosClient.put(listPathApi.urlRejectProduct(productId), {
+    const response = await axiosClient.put(listPathApi.URL_REJECT_PRODUCT(productId), {
       message: mess,
     });
 
@@ -129,7 +129,7 @@ export const rejectProduct = async (productId, mess) => {
 
 export const userBuyProduct = (data) => {
   const response = axiosClient.post(
-    listPathApi.urlUserBuy(data.productId),
+    listPathApi.URL_USER_BUY(data.productId),
     {
       message: data.message,
       offer: data.offer,
@@ -146,7 +146,7 @@ export const userBuyProduct = (data) => {
 
 export const approveRequest = async (productId, userId) => {
   try {
-    const response = await axiosClient.put(listPathApi.urlApproveRequest(productId, userId));
+    const response = await axiosClient.put(listPathApi.URL_APPROVE_REQUEST(productId, userId));
     return response;
   } catch (error) {
     alert('Lỗi', error);
@@ -157,7 +157,7 @@ export const approveRequest = async (productId, userId) => {
 export const rejectRequest = async (productId, userId) => {
   
   try {
-    const response = await axiosClient.put(listPathApi.urlRejectRequest(productId, userId));
+    const response = await axiosClient.put(listPathApi. URL_REJECT_REQUEST(productId, userId));
    
     return response;
   } catch (error) {
@@ -168,7 +168,7 @@ export const rejectRequest = async (productId, userId) => {
 };
 
 export const addComment = (data) => {
-  const response = axiosClient.post(listPathApi.urlAddComment(data.productId), {
+  const response = axiosClient.post(listPathApi.URL_ADD_COMMENT(data.productId), {
     content: data.content,
   });
 
@@ -176,21 +176,21 @@ export const addComment = (data) => {
 };
 
 export const getTopProduct = async () => {
-  const response = await axiosClient.get(listPathApi.urlTopProduct);
+  const response = await axiosClient.get(listPathApi.URL_TOP_PRODUCT);
   return response;
 };
 
 export const getTrendProduct = async () => {
-  const response = await axiosClient.get(listPathApi.urlTrendProduct);
+  const response = await axiosClient.get(listPathApi.URL_TREND_PRODUCT);
 
   return response;
 };
 
 export const deleteProduct = (productId) =>
-  axiosClient.delete(listPathApi.urlDeleteProduct(productId));
+  axiosClient.delete(listPathApi.URL_DELETE_PRODUCT(productId));
 
 export const updateProduct = (productId, product) => {
-  const response = axiosClient.put(listPathApi.urlUpdateProduct(productId), product, {
+  const response = axiosClient.put(listPathApi.URL_UPDATE_PRODUCT(productId), product, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -200,7 +200,7 @@ export const updateProduct = (productId, product) => {
 };
 
 export const getListProduct = async (page, limit, name) => {
-  const response = await axiosClient.get(listPathApi.urlGetListProduct, {
+  const response = await axiosClient.get(listPathApi.URL_GET_LIST_PRODUCT, {
     params: {
       page,
       limit,

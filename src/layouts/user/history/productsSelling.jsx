@@ -34,7 +34,7 @@ const ProductsSelling = ({
   const navigate = useNavigate();
 
   const handleEditProduct = (productId) => {
-    navigate(listPath.editProductUser(productId));
+    navigate(listPath.EDIT_PRODUCT_USER(productId));
   };
 
   return (
