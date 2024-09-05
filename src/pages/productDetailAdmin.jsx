@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import ProductDetail from 'src/sections/products/view/productDetail/productDetail';
+import ProductDetail from 'src/layouts/products/productDetail/productDetail';
 
 export default function ProductDetailAdminPage() {
  

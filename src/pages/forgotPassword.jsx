@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { ForgotPasswordView } from 'src/sections/forgotPassword'
+import { ForgotPasswordView } from 'src/layouts/forgotPassword'
 
 export default function ForgotPasswordPage() {
   return (

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import HistoryScreen from 'src/sections/history/history'
+import HistoryScreen from 'src/layouts/user/history/history'
 
 export default function HistoryPage() {
   return (

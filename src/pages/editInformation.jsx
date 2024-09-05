@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import EditInformationView from 'src/sections/editInformation/editInformation';
+import EditInformationView from 'src/layouts/user/editInformation/editInformation';
 
 export default function EditUserViewPage() {
   return (

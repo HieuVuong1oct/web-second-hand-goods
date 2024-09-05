@@ -13,7 +13,7 @@ const axiosClient = axios.create({
 const refreshAccessToken = async () => {
   try {
     const refreshToken = Cookies.get('refreshToken');
- 
+
     if (refreshToken) {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
         headers: {
@@ -55,6 +55,7 @@ axiosClient.interceptors.request.use(
 
 axiosClient.interceptors.response.use(
   (response) => {
+    // Nếu có dữ liệu trong response, trả về luôn response.data
     if (response && response.data) {
       return response.data;
     }
@@ -62,7 +63,8 @@ axiosClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const tokens = await refreshAccessToken();
       if (tokens && tokens.accessToken) {
@@ -70,14 +72,18 @@ axiosClient.interceptors.response.use(
         return axiosClient(originalRequest);
       }
     }
-    return Promise.reject(error);
+
+    return Promise.reject(error.response?.data || { message: error.message });
   }
 );
 
 const startTokenRefreshInterval = () => {
-  setInterval(async () => {
-    await refreshAccessToken();
-  }, 14*60*1000);
+  setInterval(
+    async () => {
+      await refreshAccessToken();
+    },
+    14 * 60 * 1000
+  );
 };
 
 startTokenRefreshInterval();

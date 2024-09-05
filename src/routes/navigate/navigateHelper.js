@@ -7,32 +7,32 @@ export const useNavigationHelpers = () => {
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
-    navigate(listPath.login);
+    navigate(listPath.LOGIN);
   };
 
   const navigateToSignUp = () => {
-    navigate(listPath.signUp);
+    navigate(listPath.SIGN_UP);
   };
   
   const navigateToHome = () => {
-    navigate(listPath.homePage);
+    navigate(listPath.HOME_PAGE);
   };
 
   const navigateToAdmin = () => {
-    navigate(listPath.admin);
+    navigate(listPath.ADMIN);
   };
   
   const navigateToForgotPassword = () => {
-    navigate(listPath.forgotPassword);
+    navigate(listPath.FORGOT_PASSWORD);
   }
 
   const navigateToResetPassword = () => {
-    navigate(listPath.resetPassword);
+    navigate(listPath.RESET_PASSWORD);
   }
 
   const navigateProductById = (id) => {
    
-    navigate(listPath.listProductById(id))
+    navigate(listPath.LIST_PRODUCT_BY_ID(id))
   }
 
   
