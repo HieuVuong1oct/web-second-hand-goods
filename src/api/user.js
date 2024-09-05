@@ -34,3 +34,17 @@ export const updateUser = (userId, user) => {
   return response;
 };
 export const deleteUser = (userId) => axiosClient.delete(listPathApi.urlDeleteUser(userId));
+
+export const getAllNotification = async (page) => {
+  const response = await axiosClient.get(listPathApi.urlAllNotification,{
+    params:{
+      page
+    }
+  });
+  return response;
+};
+
+export const getNotification = async (notificationId) => {
+  const response = await axiosClient.get(listPathApi.urlNotification(notificationId));
+  return response;
+};

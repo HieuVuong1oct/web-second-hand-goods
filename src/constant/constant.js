@@ -1,5 +1,3 @@
-
-
 export const listPath = {
   homePage: '/homeMain',
   login: '/login',
@@ -18,11 +16,12 @@ export const listPath = {
   adminSignUp: '/admin/addUser',
   user: '/user',
   editUser: (userId) => `/admin/editUser/${userId}`,
-  adminDetailProduct:(productId) => `/admin/product/get-by-id/${productId}`,
-  product:'/products',
-  editInformation:(userId) => `/homeMain/editInformation/${userId}`,
-  addProductAdmin:'/admin/addProduct',
-  editProduct:(productId) => `/admin/editProduct/${productId}`,
+  adminDetailProduct: (productId) => `/admin/product/get-by-id/${productId}`,
+  product: '/products',
+  editInformation: (userId) => `/homeMain/editInformation/${userId}`,
+  addProductAdmin: '/admin/addProduct',
+  editProduct: (productId) => `/admin/editProduct/${productId}`,
+  editProductUser: (productId) => `/homeMain/editProduct/${productId}`,
 };
 
 export const listPathApi = {
@@ -52,12 +51,14 @@ export const listPathApi = {
   urlUpdateUser: (userId) => `user/update/${userId}`,
   urlDeleteUser: (userId) => `user/delete/${userId}`,
   urlGetUserById: (userId) => `user/get-by-id/${userId}`,
-  urlTopProduct:'/user/add-chart-for-trending',
-  urlTrendProduct:'/product/get-trending-products',
-  urlAdminAddProduct:'/product/add-product',
+  urlTopProduct: '/user/add-chart-for-trending',
+  urlTrendProduct: '/product/get-trending-products',
+  urlAdminAddProduct: '/product/add-product',
   urlUpdateProduct: (productId) => `product/update/${productId}`,
   urlDeleteProduct: (productId) => `product/delete/${productId}`,
   urlGetListProduct: '/product/list-product',
+  urlAllNotification: '/notification/get-all-noti',
+  urlNotification:(notificationId) => `/notification/get-by-id/${notificationId}`
 };
 
 export const MESSAGES = {
@@ -84,11 +85,13 @@ export const MESSAGES = {
   SUCCESS_DELETE_USER: 'Xóa người dùng thành công!',
   ERROR_DELETE_USER: 'Xóa người dùng thất bại!',
   ERROR_GET_ALL_USER: 'Gặp lỗi khi lấy dữ liệu hoặc token không hợp lệ',
-  ERROR_SEARCH_USER:'Không có người dùng nào',
-  ERROR_TOP_PRODUCT:'Lỗi xảy ra khi tải dữ liệu',
+  ERROR_SEARCH_USER: 'Không có người dùng nào',
+  ERROR_TOP_PRODUCT: 'Lỗi xảy ra khi tải dữ liệu',
   SUCCESS_DELETE_PRODUCT: 'Xóa sản phẩm thành công!',
   ERROR_DELETE_PRODUCT: 'Xóa sản phẩm thất bại!',
-  ERROR_SEARCH_PRODUCT:'Không có sản phẩm nào',
+  ERROR_SEARCH_PRODUCT: 'Không có sản phẩm nào',
+  SUCCESS_UPDATE_PRODUCT:'Cập nhật sản phẩm thành công!',
+  ERROR_UPDATE_PRODUCT:'Cập nhật thất bại!'
 };
 
 export const listStatus = {

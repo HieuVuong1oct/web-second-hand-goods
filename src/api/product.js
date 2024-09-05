@@ -30,10 +30,11 @@ export const getProductById = async (id) => {
       Authorization: `Bearer ${accessToken}`,
     },
   });
+
   return response;
 };
 
-export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status) => {
+export const getProductByCategoryId = async (categoryId, page, itemsPerPage, status,name) => {
   try {
     const response = await axiosClient.get(listPathApi.urlGetProductByCategoryId, {
       params: {
@@ -41,6 +42,7 @@ export const getProductByCategoryId = async (categoryId, page, itemsPerPage, sta
         page,
         limit: itemsPerPage,
         status,
+        productName:name
       },
     });
 
@@ -91,9 +93,9 @@ export const getProducts = async (categoryId, page, itemsPerPage, status, reques
   }
 };
 
-export const getApprovedProducts = async (categoryId, page, itemsPerPage, status) => {
+export const getApprovedProducts = async (categoryId, page, itemsPerPage, status,name) => {
   try {
-    const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status);
+    const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status,name);
 
     return response;
   } catch (error) {
@@ -153,10 +155,13 @@ export const approveRequest = async (productId, userId) => {
 };
 
 export const rejectRequest = async (productId, userId) => {
+  
   try {
     const response = await axiosClient.put(listPathApi.urlRejectRequest(productId, userId));
+   
     return response;
   } catch (error) {
+   
     alert('Lỗi', error);
     throw error;
   }
