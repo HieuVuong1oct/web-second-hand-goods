@@ -55,7 +55,7 @@ Notifications.propTypes = {
   notificationAnchorEl: PropTypes.object,
   notifications: PropTypes.arrayOf(
     PropTypes.shape({
-      notificationId: PropTypes.number.isRequired,
+      notificationId: PropTypes.number,
       productId: PropTypes.number.isRequired,
       content: PropTypes.string.isRequired,
       status: PropTypes.bool.isRequired,

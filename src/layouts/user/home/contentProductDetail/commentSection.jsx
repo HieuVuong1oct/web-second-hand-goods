@@ -41,7 +41,6 @@ const CommentSection = ({ productId, handleAddComment }) => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [showUserTagList, setShowUserTagList] = useState(false);
-  const [taggedUserIds, setTaggedUserIds] = useState([1]);
 
   const {
     control,
@@ -78,12 +77,13 @@ const CommentSection = ({ productId, handleAddComment }) => {
     listUser();
     socket.on(`comment ${productId}`, (data) => {
       setComments((prevComments) => [
-        ...prevComments,
         {
           user: data.user,
           content: data.content,
         },
+        ...prevComments,
       ]);
+      listComment();
     });
 
     return () => {
@@ -94,14 +94,21 @@ const CommentSection = ({ productId, handleAddComment }) => {
   const handleAddCommentAndReload = async (data) => {
     setLoading(true);
     const trimmedComment = commentValue.trim();
-
-    await handleAddComment(trimmedComment, taggedUserIds);
-
+    
+    let formattedComment = trimmedComment;
+  
+    users.forEach((user) => {
+      const usernameTag = `@${user.username}`; 
+      const userIdTag = `@${user.userId}`; 
+      formattedComment = formattedComment.replace(new RegExp(usernameTag, 'g'), userIdTag);
+    });
+  
+    await handleAddComment(formattedComment);
+  
     reset();
     setShowUserTagList(false);
     setCommentValue('');
-    setTaggedUserIds([]);
-
+  
     await listComment();
     setLoading(false);
   };
@@ -117,7 +124,6 @@ const CommentSection = ({ productId, handleAddComment }) => {
     const { value } = e.target;
     setCommentValue(value);
 
-    // Khi người dùng nhập "@", lọc danh sách người dùng
     if (value.includes('@')) {
       const tagInput = value.split('@').pop();
       if (tagInput.length > 0) {
@@ -139,43 +145,44 @@ const CommentSection = ({ productId, handleAddComment }) => {
     const newComment = `${currentComment.join('@')}@${username} `;
 
     setCommentValue(newComment);
-    setTaggedUserIds((prev) => [...prev, userId]);
+
     setShowUserTagList(false);
   };
 
   const formatComment = (comment) => {
     const parts = [];
     let index = 0;
-
+  
     while (index < comment.length) {
       const atIndex = comment.indexOf('@', index);
       if (atIndex === -1) {
-        parts.push(comment.slice(index));
+        parts.push(comment.slice(index)); // Lấy phần còn lại nếu không tìm thấy "@"
         break;
       }
-
-      const spaceIndex = comment.indexOf(' ', atIndex + 1);
+  
+      const spaceIndex = comment.indexOf(' ', atIndex + 1); // Tìm khoảng trắng sau "@"
       const endIndex = spaceIndex === -1 ? comment.length : spaceIndex;
-      const tag = comment.slice(atIndex + 1, endIndex);
-      const isUser = users.some((user) => user.username === tag);
-
+      const tag = comment.slice(atIndex + 1, endIndex); // Lấy phần sau "@"
+      
+      // Loại bỏ khoảng trắng khi so sánh
+      const isUser = users.some((user) => user.username.trim() === tag.trim());
+  
       if (isUser) {
-        parts.push(comment.slice(index, atIndex));
+        parts.push(comment.slice(index, atIndex)); // Lấy phần trước "@"
         parts.push(
           <span key={parts.length} style={{ color: 'red' }}>
-            {tag}
+            @{tag.trim()} {/* Hiển thị username với màu đỏ */}
           </span>
         );
       } else {
-        parts.push(comment.slice(index, endIndex));
+        parts.push(comment.slice(index, endIndex)); // Nếu không phải user, giữ nguyên text
       }
-
+  
       index = endIndex;
     }
-
+  
     return parts;
   };
-
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
