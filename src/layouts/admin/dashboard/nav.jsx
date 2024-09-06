@@ -19,8 +19,9 @@ import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './configLayout';
-import Account from '../../../_mock/account';
 import navConfig from './configNavigation';
+import Account from '../../../_mock/account';
+
 
 export default function Nav({ openNav, onCloseNav }) {
   const account = Account();

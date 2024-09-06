@@ -8,9 +8,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ExpandMore } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
+  List,
   Grid,
   Button,
   Divider,
+  ListItem,
   TextField,
   Container,
   Accordion,
@@ -19,7 +21,8 @@ import {
   AccordionDetails,
 } from '@mui/material';
 
-import { getProductById } from 'src/api/product';
+import { getUsers } from 'src/api/user';
+import { getComment } from 'src/api/product';
 
 const socket = io('http://localhost:3000');
 
@@ -35,6 +38,10 @@ const CommentSection = ({ productId, handleAddComment }) => {
   const [visibleComments, setVisibleComments] = useState(4);
   const [expanded, setExpanded] = useState(true);
   const [commentValue, setCommentValue] = useState('');
+  const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [showUserTagList, setShowUserTagList] = useState(false);
+  const [taggedUserIds, setTaggedUserIds] = useState([1]);
 
   const {
     control,
@@ -47,17 +54,28 @@ const CommentSection = ({ productId, handleAddComment }) => {
 
   const listComment = useCallback(async () => {
     try {
-      const response = await getProductById(productId);
-      const comment = response.data[0].comments;
+      const response = await getComment(productId);
+      const comment = response.data;
       setComments(comment || []);
     } catch {
       alert('Lỗi khi load bình luận');
     }
   }, [productId]);
 
+  const listUser = useCallback(async () => {
+    try {
+      const response = await getUsers('', '', '', '');
+      const userName = response.data;
+
+      setUsers(userName || []);
+    } catch {
+      alert('Lỗi khi load danh sách user');
+    }
+  }, []);
+
   useEffect(() => {
     listComment();
-
+    listUser();
     socket.on(`comment ${productId}`, (data) => {
       setComments((prevComments) => [
         ...prevComments,
@@ -71,37 +89,93 @@ const CommentSection = ({ productId, handleAddComment }) => {
     return () => {
       socket.off(`comment ${productId}`);
     };
-  }, [listComment, productId]);
+  }, [listComment, productId, listUser]);
 
-  useEffect(() => {
-    socket.on('comment', (data) => {
-      setComments((prevComments) => [
-        ...prevComments,
-        { user: { username: data.user.username }, content: data.content },
-      ]);
-    });
-
-    return () => {
-      socket.off(`comment ${productId}`);
-    };
-  }, [productId]);
   const handleAddCommentAndReload = async (data) => {
     setLoading(true);
-    const trimmedComment = data.comment.trim();
+    const trimmedComment = commentValue.trim();
 
-    await handleAddComment(trimmedComment);
+    await handleAddComment(trimmedComment, taggedUserIds);
+
     reset();
+    setShowUserTagList(false);
     setCommentValue('');
+    setTaggedUserIds([]);
+
     await listComment();
     setLoading(false);
   };
-
   const handleShowMoreComments = () => {
     setVisibleComments((prev) => prev + 4);
   };
+
   const handleAccordionChange = () => {
     setExpanded((prev) => !prev);
   };
+
+  const handleCommentInputChange = (e) => {
+    const { value } = e.target;
+    setCommentValue(value);
+
+    // Khi người dùng nhập "@", lọc danh sách người dùng
+    if (value.includes('@')) {
+      const tagInput = value.split('@').pop();
+      if (tagInput.length > 0) {
+        const filtered = users.filter((user) =>
+          user.username.toLowerCase().includes(tagInput.toLowerCase())
+        );
+
+        setFilteredUsers(filtered);
+        setShowUserTagList(true);
+      }
+    } else {
+      setShowUserTagList(false);
+    }
+  };
+
+  const handleTagClick = (username, userId) => {
+    const currentComment = commentValue.split('@');
+    currentComment.pop();
+    const newComment = `${currentComment.join('@')}@${username} `;
+
+    setCommentValue(newComment);
+    setTaggedUserIds((prev) => [...prev, userId]);
+    setShowUserTagList(false);
+  };
+
+  const formatComment = (comment) => {
+    const parts = [];
+    let index = 0;
+
+    while (index < comment.length) {
+      const atIndex = comment.indexOf('@', index);
+      if (atIndex === -1) {
+        parts.push(comment.slice(index));
+        break;
+      }
+
+      const spaceIndex = comment.indexOf(' ', atIndex + 1);
+      const endIndex = spaceIndex === -1 ? comment.length : spaceIndex;
+      const tag = comment.slice(atIndex + 1, endIndex);
+      const isUser = users.some((user) => user.username === tag);
+
+      if (isUser) {
+        parts.push(comment.slice(index, atIndex));
+        parts.push(
+          <span key={parts.length} style={{ color: 'red' }}>
+            {tag}
+          </span>
+        );
+      } else {
+        parts.push(comment.slice(index, endIndex));
+      }
+
+      index = endIndex;
+    }
+
+    return parts;
+  };
+
   return (
     <Container sx={{ mt: 4 }}>
       <Typography variant="h5" gutterBottom>
@@ -125,12 +199,30 @@ const CommentSection = ({ productId, handleAddComment }) => {
               error={!!errors.comment}
               helperText={errors.comment?.message}
               onChange={(e) => {
+                handleCommentInputChange(e); // Sử dụng hàm handleCommentInputChange
                 field.onChange(e);
-                setCommentValue(e.target.value);
               }}
             />
           )}
         />
+
+        {/* Hiển thị danh sách người dùng khi tag "@" */}
+        {showUserTagList && (
+          <List
+            sx={{ maxHeight: 200, overflow: 'auto', border: '1px solid #ddd', borderRadius: 1 }}
+          >
+            {filteredUsers.map((user) => (
+              <ListItem
+                key={user.userId}
+                component="button"
+                onClick={() => handleTagClick(user.username, user.userId)}
+              >
+                {user.username}
+              </ListItem>
+            ))}
+          </List>
+        )}
+
         <LoadingButton
           type="submit"
           variant="contained"
@@ -141,6 +233,7 @@ const CommentSection = ({ productId, handleAddComment }) => {
           Thêm bình luận
         </LoadingButton>
       </form>
+
       <Accordion sx={{ mt: 2 }} expanded={expanded} onChange={handleAccordionChange}>
         <AccordionSummary
           expandIcon={<ExpandMore />}
@@ -157,7 +250,9 @@ const CommentSection = ({ productId, handleAddComment }) => {
                   <Typography sx={{ color: 'blue' }} variant="body1">
                     {comment.user.username}
                   </Typography>
-                  <Typography variant="body1">{comment.content || 'Không có bình luận'}</Typography>
+                  <Typography variant="body1">
+                    {formatComment(comment.content) || 'Không có bình luận'}
+                  </Typography>
                 </Grid>
                 {index < visibleComments - 1 && index < comments.length - 1 && (
                   <Grid item xs={12}>

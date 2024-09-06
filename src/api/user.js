@@ -48,3 +48,10 @@ export const getNotification = async (notificationId) => {
   const response = await axiosClient.get(listPathApi.URL_NOTIFICATION(notificationId));
   return response;
 };
+
+export const getTag = async (userId) => {
+
+  const response = await axiosClient.get(listPathApi.URL_TAG,{userId});
+  
+  return response;
+};
