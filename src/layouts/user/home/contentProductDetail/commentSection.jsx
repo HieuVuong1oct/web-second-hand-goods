@@ -94,21 +94,21 @@ const CommentSection = ({ productId, handleAddComment }) => {
   const handleAddCommentAndReload = async (data) => {
     setLoading(true);
     const trimmedComment = commentValue.trim();
-    
+
     let formattedComment = trimmedComment;
-  
+
     users.forEach((user) => {
-      const usernameTag = `@${user.username}`; 
-      const userIdTag = `@${user.userId}`; 
+      const usernameTag = `@${user.username}`;
+      const userIdTag = `@${user.userId}`;
       formattedComment = formattedComment.replace(new RegExp(usernameTag, 'g'), userIdTag);
     });
-  
+
     await handleAddComment(formattedComment);
-  
+
     reset();
     setShowUserTagList(false);
     setCommentValue('');
-  
+
     await listComment();
     setLoading(false);
   };
@@ -152,21 +152,21 @@ const CommentSection = ({ productId, handleAddComment }) => {
   const formatComment = (comment) => {
     const parts = [];
     let index = 0;
-  
+
     while (index < comment.length) {
       const atIndex = comment.indexOf('@', index);
       if (atIndex === -1) {
         parts.push(comment.slice(index)); // Lấy phần còn lại nếu không tìm thấy "@"
         break;
       }
-  
+
       const spaceIndex = comment.indexOf(' ', atIndex + 1); // Tìm khoảng trắng sau "@"
       const endIndex = spaceIndex === -1 ? comment.length : spaceIndex;
       const tag = comment.slice(atIndex + 1, endIndex); // Lấy phần sau "@"
-      
+
       // Loại bỏ khoảng trắng khi so sánh
       const isUser = users.some((user) => user.username.trim() === tag.trim());
-  
+
       if (isUser) {
         parts.push(comment.slice(index, atIndex)); // Lấy phần trước "@"
         parts.push(
@@ -177,10 +177,10 @@ const CommentSection = ({ productId, handleAddComment }) => {
       } else {
         parts.push(comment.slice(index, endIndex)); // Nếu không phải user, giữ nguyên text
       }
-  
+
       index = endIndex;
     }
-  
+
     return parts;
   };
   return (

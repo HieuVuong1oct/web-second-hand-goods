@@ -1,7 +1,6 @@
 import Cookies from 'js-cookie';
 
 const setCookies = (userData) => {
-  
   const cookies = {
     accessToken: userData.accessToken,
     refreshToken: userData.refreshToken,
@@ -9,13 +8,12 @@ const setCookies = (userData) => {
     username: userData.user.username,
     avatar: userData.user.avatar,
     email: userData.user.email,
-    role:userData.user.role,
+    role: userData.user.role,
   };
 
   Object.entries(cookies).forEach(([key, value]) => {
     Cookies.set(key, value, { expires: 7 });
   });
-  
 };
 
 const clearCookies = () => {
@@ -26,6 +24,5 @@ const clearCookies = () => {
   Cookies.remove('avatar');
   Cookies.remove('email');
   Cookies.remove('role');
-
 };
-export { setCookies,clearCookies };
+export { setCookies, clearCookies };
