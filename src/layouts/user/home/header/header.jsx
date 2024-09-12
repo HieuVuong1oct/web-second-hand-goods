@@ -20,7 +20,7 @@ import useStyles from './headerStyles';
 import LoginButtons from './loginButton';
 import Notifications from './notification';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 const Header = () => {
   const account = Account();

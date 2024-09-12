@@ -24,7 +24,7 @@ import { clearCookies } from 'src/cookie';
 import { getAllNotification } from 'src/api/user';
 import Notifications from 'src/layouts/user/home/header/notification';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 export default function AccountPopover() {
   const account = Account();

@@ -22,7 +22,7 @@ import ConfirmOrderDialog from './cancelOrder';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');

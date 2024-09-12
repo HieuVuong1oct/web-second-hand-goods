@@ -24,7 +24,7 @@ import {
 import { getUsers } from 'src/api/user';
 import { getComment } from 'src/api/product';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 const validationSchema = Yup.object().shape({
   comment: Yup.string()
