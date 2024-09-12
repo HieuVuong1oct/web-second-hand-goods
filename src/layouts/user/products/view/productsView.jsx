@@ -1,8 +1,8 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
+import { Delete } from '@mui/icons-material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { Add, Edit, Delete } from '@mui/icons-material';
 import {
   Box,
   Table,
@@ -25,43 +25,39 @@ import {
   CircularProgress,
 } from '@mui/material';
 
-import { getUsers, deleteUser } from 'src/api/user';
 import { listPath, MESSAGES } from 'src/constant/constant';
+import { deleteProduct, getListProduct } from 'src/api/product';
 
-const UserPage = () => {
+const ProductsPage = () => {
   const [loading, setLoading] = useState(true);
-  const [deleting, setDeleting] = useState(false);
-
-  const [users, setUsers] = useState([]);
-  const [userToDelete, setUserToDelete] = useState(null);
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [error, setError] = useState(null);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const [totalPages, setTotalPages] = useState(1);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-
   const name = searchParams.get('name') || '';
-  const role = searchParams.get('role') || '';
 
   const navigate = useNavigate();
+  const limit = 4;
 
-  const itemsPerPage = 4;
-
-  const fetchUsers = useCallback(async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const usersData = await getUsers(page, itemsPerPage, name, role);
-      setUsers(usersData.data.usersWithImageUrls);
-      setTotalPages(usersData.data.meta.total);
-      if (usersData.data.usersWithImageUrls.length === 0) {
-        setError(MESSAGES.ERROR_SEARCH_USER);
+      const productsData = await getListProduct(page, limit, name);
+
+      setProducts(productsData.data);
+      setTotalPages(productsData.meta.total);
+      if (productsData.data.length === 0) {
+        setError(MESSAGES.ERROR_SEARCH_PRODUCT);
       } else {
         setError(null);
       }
@@ -70,38 +66,31 @@ const UserPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [page, itemsPerPage, name, role]);
+  }, [page, name]);
 
   useEffect(() => {
-    fetchUsers();
-  }, [fetchUsers]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  const handleAddUser = () => {
-    navigate(listPath.ADMIN_SIGN_UP);
-  };
-
-  const handleEditUser = (userId) => {
-    navigate(listPath.EDIT_USER(userId));
-  };
   const handlePageChange = (event, newPage) => {
     setSearchParams({ page: newPage });
   };
 
-  const handleDeleteUser = async () => {
+  const handleDeleteProduct = async () => {
     setDeleting(true);
     try {
-      const response = await deleteUser(userToDelete);
+      const response = await deleteProduct(productToDelete);
       if (response) {
+        setSnackbarMessage(MESSAGES.SUCCESS_DELETE_PRODUCT);
         setSearchParams({ page: 1 });
-        setSnackbarMessage(MESSAGES.SUCCESS_DELETE_USER);
         setSnackbarSeverity('success');
-        fetchUsers();
+        fetchProducts();
       } else {
-        setSnackbarMessage(MESSAGES.ERROR_DELETE_USER);
+        setSnackbarMessage(MESSAGES.ERROR_DELETE_PRODUCT);
         setSnackbarSeverity('error');
       }
     } catch (err) {
-      setSnackbarMessage(MESSAGES.ERROR_DELETE_USER);
+      setSnackbarMessage(MESSAGES.ERROR_DELETE_PRODUCT);
       setSnackbarSeverity('error');
     }
     setSnackbarOpen(true);
@@ -113,14 +102,18 @@ const UserPage = () => {
     setSnackbarOpen(false);
   };
 
-  const openDialog = (userId) => {
-    setUserToDelete(userId);
+  const handleProductClick = (productId) => {
+    navigate(listPath.ADMIN_DETAIL_PRODUCT(productId));
+  };
+
+  const openDialog = (productId) => {
+    setProductToDelete(productId);
     setDialogOpen(true);
   };
 
   const closeDialog = () => {
     setDialogOpen(false);
-    setUserToDelete(null);
+    setProductToDelete(null);
   };
   return (
     <Box sx={{ padding: 4 }}>
@@ -132,12 +125,8 @@ const UserPage = () => {
           marginBottom: 2,
         }}
       >
-        <Typography variant="h5">Danh sách người dùng</Typography>
-        <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleAddUser}>
-          Thêm mới user
-        </Button>
+        <Typography variant="h5">Danh sách sản phẩm</Typography>
       </Box>
-
       {loading && (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 300 }}>
           <CircularProgress />
@@ -156,34 +145,39 @@ const UserPage = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="left">STT</TableCell>
-                <TableCell align="left">Avatar</TableCell>
-                <TableCell align="left">Tên người dùng</TableCell>
-                <TableCell align="left">Tên tài khoản</TableCell>
-                <TableCell align="left">Email</TableCell>
-                <TableCell align="left">Role</TableCell>
+                <TableCell align="left">Ảnh</TableCell>
+                <TableCell align="left">Tên sản phẩm</TableCell>
+                <TableCell align="left">Người bán</TableCell>
+                <TableCell align="left">Giá</TableCell>
+                <TableCell align="left">Chi tiết</TableCell>
                 <TableCell align="left">Hành động</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.map((user, index) => (
-                <TableRow key={user.userId}>
-                  <TableCell align="left">{(page - 1) * itemsPerPage + index + 1}</TableCell>
+              {products.map((product, index) => (
+                <TableRow key={product.productId}>
+                  <TableCell align="left">{(page - 1) * limit + index + 1}</TableCell>
                   <TableCell align="left">
                     <img
-                      src={JSON.parse(user.avatar)}
-                      alt={user.username}
+                      src={JSON.parse(product.images)[0]}
+                      alt={product.username}
                       style={{ width: 50, height: 50, borderRadius: '50%' }}
                     />
                   </TableCell>
-                  <TableCell align="left">{user.name}</TableCell>
-                  <TableCell align="left">{user.username}</TableCell>
-                  <TableCell align="left">{user.email}</TableCell>
-                  <TableCell align="left">{user.role}</TableCell>
+                  <TableCell align="left">{product.name}</TableCell>
+                  <TableCell align="left">{product.author.username}</TableCell>
+                  <TableCell align="left">${product.price}</TableCell>
                   <TableCell align="left">
-                    <IconButton color="primary" onClick={() => handleEditUser(user.userId)}>
-                      <Edit />
-                    </IconButton>
-                    <IconButton color="secondary" onClick={() => openDialog(user.userId)}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleProductClick(product.productId)}
+                    >
+                      Xem
+                    </Button>
+                  </TableCell>
+                  <TableCell align="left">
+                    <IconButton color="secondary" onClick={() => openDialog(product.productId)}>
                       <Delete />
                     </IconButton>
                   </TableCell>
@@ -194,7 +188,7 @@ const UserPage = () => {
         </TableContainer>
       )}
 
-      {users.length > 0 && (
+      {products.length > 0 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
           <Pagination
             count={Math.max(totalPages, 1)}
@@ -219,13 +213,13 @@ const UserPage = () => {
       <Dialog open={dialogOpen} onClose={closeDialog} aria-labelledby="confirm-delete-dialog">
         <DialogTitle id="confirm-delete-dialog">Xác nhận xóa</DialogTitle>
         <DialogContent>
-          <Typography>Bạn có chắc chắn muốn xóa người dùng này không?</Typography>
+          <Typography>Bạn có chắc chắn muốn xóa sản phẩm này không?</Typography>
         </DialogContent>
         <DialogActions>
           <LoadingButton onClick={closeDialog} color="primary" loading={deleting}>
             Hủy
           </LoadingButton>
-          <LoadingButton onClick={handleDeleteUser} color="secondary" loading={deleting}>
+          <LoadingButton onClick={handleDeleteProduct} color="secondary" loading={deleting}>
             Xóa
           </LoadingButton>
         </DialogActions>
@@ -234,4 +228,4 @@ const UserPage = () => {
   );
 };
 
-export default UserPage;
+export default ProductsPage;

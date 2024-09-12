@@ -43,24 +43,28 @@ TabPanel.propTypes = {
 };
 
 const HistoryScreen = () => {
+  const [loading, setLoading] = useState(false);
+
   const [openRejectDialog, setOpenRejectDialog] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
+  const [tabValue, setTabValue] = useState(0);
+
   const [products, setProducts] = useState([]);
   const [productsSold, setProductsSold] = useState([]);
   const [productRequest, setProductRequest] = useState([]);
-  const [tabValue, setTabValue] = useState(0);
+
   const [total, setTotal] = useState();
   const [totalRequest, setTotalRequest] = useState();
   const [totalSave, setTotalSave] = useState();
   const [totalSold, setTotalSold] = useState();
+
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
   const status = searchParams.get('status') || 'APPROVED';
   const page = parseInt(searchParams.get('page'), 10) || 1;
-  const itemsPerPage = 4;
-  const [loading, setLoading] = useState(false);
-
   const requestStatus = searchParams.get('requestStatus') || 'APPROVED';
+
+  const navigate = useNavigate();
+  const itemsPerPage = 4;
 
   useEffect(() => {
     const fetchDataSelling = async () => {
@@ -123,8 +127,8 @@ const HistoryScreen = () => {
   const handleCloseRejectDialog = () => {
     setOpenRejectDialog(false);
   };
-  const handlePageChange = ( newPage,statusNew, tab,requestStatusNew) => {
-    setSearchParams({ status:statusNew, page: newPage ,tab,requestStatus:requestStatusNew});
+  const handlePageChange = (newPage, statusNew, tab, requestStatusNew) => {
+    setSearchParams({ status: statusNew, page: newPage, tab, requestStatus: requestStatusNew });
   };
   const handleViewDetail = (productId) => {
     navigate(listPath.LIST_PRODUCT_BY_ID(productId));
@@ -172,7 +176,7 @@ const HistoryScreen = () => {
             onClick={() => handleTabClick(6, listStatus.APPROVED, listStatus.REJECTED)}
           />
         </Tabs>
-        {loading ? ( 
+        {loading ? (
           <Box display="flex" justifyContent="center" alignItems="center" height="60vh">
             <CircularProgress />
           </Box>
@@ -188,7 +192,7 @@ const HistoryScreen = () => {
                 handlePageChange={handlePageChange}
                 status={listStatus.APPROVED}
                 tab={0}
-                requestStatus=''
+                requestStatus=""
               />
             </TabPanel>
 
@@ -202,7 +206,7 @@ const HistoryScreen = () => {
                 handlePageChange={handlePageChange}
                 status={listStatus.PENDING}
                 tab={1}
-                requestStatus=''
+                requestStatus=""
               />
             </TabPanel>
 
@@ -216,7 +220,7 @@ const HistoryScreen = () => {
                 handlePageChange={handlePageChange}
                 status={listStatus.REJECTED}
                 tab={2}
-                requestStatus=''
+                requestStatus=""
               />
             </TabPanel>
 
@@ -229,7 +233,7 @@ const HistoryScreen = () => {
                 handlePageChange={handlePageChange}
                 status={listStatus.SOLD}
                 tab={3}
-                requestStatus=''
+                requestStatus=""
               />
             </TabPanel>
 

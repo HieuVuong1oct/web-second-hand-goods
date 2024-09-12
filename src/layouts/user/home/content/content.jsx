@@ -9,9 +9,10 @@ import FeaturedProduct from './topProduct';
 import ProductList from '../productCategory/productCategory';
 
 const ProductPage = () => {
+  const [loading, setLoading] = useState(true);
+
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState({});
-  const [loading, setLoading] = useState(true);
   const [topProduct, setTopProduct] = useState([]);
 
   useEffect(() => {

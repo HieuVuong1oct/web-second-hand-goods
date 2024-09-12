@@ -1,14 +1,15 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
-import { MenuItem } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import Snackbar from '@mui/material/Snackbar';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -16,18 +17,21 @@ import IconButton from '@mui/material/IconButton';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { addUser } from 'src/api/user';
-import { listPath, MESSAGES } from 'src/constant/constant';
+import { useNavigationHelpers } from 'src/routes/navigate/navigateHelper';
+
+import { signUp } from 'src/api/account';
+import { MESSAGES } from 'src/constant/constant';
 
 import Iconify from 'src/components/iconify';
 
-export default function AddUserView() {
+export default function SignUpView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
-  const navigate = useNavigate();
+  const { navigateToLogin } = useNavigationHelpers();
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -64,20 +68,18 @@ export default function AddUserView() {
         'Bạn phải tải lên đúng 1 hình ảnh',
         (value) => value && value.length === 1
       ),
-    role: Yup.string().required('Vui lòng chọn role'),
   });
 
   const {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
 
   const onSubmit = async (data) => {
-    const { email, password, checkPassword, username, name, avatar, role } = data;
+    const { email, password, checkPassword, username, name, avatar } = data;
     const trimmedData = {
       email: email.trim(),
       password: password.trim(),
@@ -85,9 +87,7 @@ export default function AddUserView() {
       username: username.trim(),
       name: name.trim(),
       avatar,
-      role,
     };
-
     setLoading(true);
     if (trimmedData.password !== trimmedData.checkPassword) {
       setError(MESSAGES.ERROR_CHECKPASSWORD);
@@ -107,18 +107,22 @@ export default function AddUserView() {
           formData.append('avatar', file);
         });
       }
-      formData.append('role', trimmedData.role);
-      const response = await addUser(formData);
+      const response = await signUp(formData);
 
       setLoading(false);
       if (response) {
-        setSuccessMessage(MESSAGES.SUCCESS_ADD_USER);
-        reset();
+        setSignUpSuccess(true);
+        setSuccessMessage(
+          'Mở email để xác nhận tài khoản. Nếu không xác nhận tài khoản sẽ bị xóa sau 15 phút!'
+        );
+        setTimeout(() => {
+          navigateToLogin();
+        }, 5000);
       } else {
-        setError(MESSAGES.ERROR_ADD_USER);
+        setError(MESSAGES.ERROR_SIGN_UP_WRONG);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || MESSAGES.ERROR_ADD_USER;
+      const errorMsg = err.response?.data?.message || MESSAGES.ERROR_SIGN_UP;
       setError(errorMsg);
       setLoading(false);
     }
@@ -128,27 +132,32 @@ export default function AddUserView() {
     setShowPassword((prev) => !prev);
   };
 
-  const handleUser = () => {
-    navigate(listPath.USER);
+  const handleClickLogin = () => {
+    navigateToLogin();
   };
 
   return (
     <>
-      <Typography sx={{ mb: 2 }} variant="h5">
-        Thêm mới người dùng
-      </Typography>
-
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
+        <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
           <Card
             sx={{
               p: 5,
               width: 1,
-              maxWidth: '100%',
-              height: '100%',
-              mt: 1,
+              maxWidth: 820,
+              mt: 10,
             }}
           >
+            <Stack direction="row" justifyContent="center" spacing={2} mb={5}>
+              <Box sx={{ mb: 3 }}>
+                <img
+                  src="/favicon/logo-mor.jpg"
+                  alt="Logo MOR"
+                  style={{ width: '160px', height: '56px' }}
+                />
+              </Box>
+            </Stack>
+
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Controller
@@ -172,7 +181,7 @@ export default function AddUserView() {
                   defaultValue=""
                   render={({ field }) => (
                     <TextField
-                      sx={{ mt: 4 }}
+                      sx={{ mt: 2 }}
                       {...field}
                       label="Nhập mật khẩu"
                       error={!!errors.password}
@@ -198,7 +207,7 @@ export default function AddUserView() {
                   defaultValue=""
                   render={({ field }) => (
                     <TextField
-                      sx={{ mt: 4 }}
+                      sx={{ mt: 2 }}
                       {...field}
                       label="Xác nhận mật khẩu"
                       error={!!errors.checkPassword}
@@ -215,25 +224,6 @@ export default function AddUserView() {
                         ),
                       }}
                     />
-                  )}
-                />
-                <Controller
-                  name="role"
-                  control={control}
-                  defaultValue=""
-                  render={({ field }) => (
-                    <TextField
-                      sx={{ mt: 4 }}
-                      {...field}
-                      label="Chọn role"
-                      error={!!errors.role}
-                      helperText={errors.role ? errors.role.message : ''}
-                      select
-                      fullWidth
-                    >
-                      <MenuItem value="USER">USER</MenuItem>
-                      <MenuItem value="ADMIN">ADMIN</MenuItem>
-                    </TextField>
                   )}
                 />
               </Grid>
@@ -258,7 +248,7 @@ export default function AddUserView() {
                   defaultValue=""
                   render={({ field }) => (
                     <TextField
-                      sx={{ mt: 4, mb: 3 }}
+                      sx={{ mt: 2, mb: 2 }}
                       {...field}
                       label="Nhập tên người dùng"
                       error={!!errors.name}
@@ -277,7 +267,7 @@ export default function AddUserView() {
                         type="file"
                         multiple
                         onChange={(e) => field.onChange(e.target.files)}
-                        style={{ marginTop: '16px' }}
+                        style={{}}
                       />
                       {errors.avatar && (
                         <Typography color="error" variant="caption">
@@ -290,28 +280,49 @@ export default function AddUserView() {
               </Grid>
             </Grid>
 
+            {signUpSuccess && (
+              <Typography
+                variant="body2"
+                sx={{ color: 'success.main', mt: 1, textAlign: 'center' }}
+              >
+                Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...
+              </Typography>
+            )}
             <LoadingButton
+              fullWidth
               size="large"
               type="submit"
               variant="contained"
               color="inherit"
               loading={loading}
-              sx={{ mt: 3, width: '60%', mx: 'auto', display: 'block' }}
+              sx={{ mt: 3 }}
             >
-              Thêm mới
+              Đăng Ký
             </LoadingButton>
+
+            <Divider sx={{ my: 3 }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                Hoặc
+              </Typography>
+            </Divider>
+
+            <Typography variant="body2" sx={{ mt: 2, mb: 5, textAlign: 'center' }}>
+              Bạn đã có tài khoản?
+              <Link variant="subtitle2" onClick={handleClickLogin} sx={{ cursor: 'pointer' }}>
+                {' '}
+                Đăng Nhập
+              </Link>
+            </Typography>
           </Card>
         </Stack>
       </form>
-      <Typography sx={{ cursor: 'pointer', color: 'blue', mb: 2, mt: 2 }} onClick={handleUser}>
-        Tới trang quản lý người dùng
-      </Typography>
+
       {successMessage && (
         <Snackbar
           open={Boolean(successMessage)}
           onClose={() => setSuccessMessage('')}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          autoHideDuration={3000}
+          autoHideDuration={6000}
         >
           <Alert onClose={() => setSuccessMessage('')} severity="success" sx={{ width: '100%' }}>
             {successMessage}
@@ -324,7 +335,7 @@ export default function AddUserView() {
           open={Boolean(error)}
           onClose={() => setError('')}
           anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-          autoHideDuration={3000}
+          autoHideDuration={6000}
         >
           <Alert onClose={() => setError('')} severity="error" sx={{ width: '100%' }}>
             {error}

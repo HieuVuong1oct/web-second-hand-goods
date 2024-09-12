@@ -28,45 +28,21 @@ const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 export default function AccountPopover() {
   const account = Account();
-  const [open, setOpen] = useState(null);
-  const [success, setSuccess] = useState(null);
-  const { navigateToHome, navigateToLogin } = useNavigationHelpers();
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-  const [showMore, setShowMore] = useState(false);
-  const navigate = useNavigate();
-  const [total, setTotal] = useState();
+
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [success, setSuccess] = useState(null);
+  const [open, setOpen] = useState(null);
+
+  const [notifications, setNotifications] = useState([]);
   const [notificationCount, setNotificationCount] = useState(0);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+  const [showMore, setShowMore] = useState(false);
 
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
+  const [total, setTotal] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleShowMore = () => {
-    if (loading) return;
-    if (total > 0 && showMore === false) {
-      const nextPage = currentPage + 1;
-      fetchNotification(nextPage, true);
-      setCurrentPage(nextPage);
-      if (nextPage === total) {
-        setShowMore(!showMore);
-      }
-    } else {
-      setCurrentPage(1);
-      setShowMore(false);
-      fetchNotification(1);
-    }
-  };
-  const handleClose = () => {
-    setOpen(null);
-  };
-
-  const handleHome = () => {
-    setOpen(null);
-    navigateToHome();
-  };
+  const navigate = useNavigate();
+  const { navigateToHome, navigateToLogin } = useNavigationHelpers();
 
   const fetchNotification = useCallback(async (page = 1, append = false) => {
     try {
@@ -100,7 +76,6 @@ export default function AccountPopover() {
         ...prevNotifications,
       ]);
       setNotificationCount((prevCount) => prevCount + 1);
-    
     });
 
     if (userId) {
@@ -111,6 +86,35 @@ export default function AccountPopover() {
       socket.off(`notification ${userId}`);
     };
   }, [fetchNotification]);
+
+  const handleOpen = (event) => {
+    setOpen(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setOpen(null);
+  };
+
+  const handleShowMore = () => {
+    if (loading) return;
+    if (total > 0 && showMore === false) {
+      const nextPage = currentPage + 1;
+      fetchNotification(nextPage, true);
+      setCurrentPage(nextPage);
+      if (nextPage === total) {
+        setShowMore(!showMore);
+      }
+    } else {
+      setCurrentPage(1);
+      setShowMore(false);
+      fetchNotification(1);
+    }
+  };
+
+  const handleHome = () => {
+    setOpen(null);
+    navigateToHome();
+  };
 
   const logOut = async () => {
     try {
@@ -134,6 +138,7 @@ export default function AccountPopover() {
     setNotificationAnchorEl(null);
     setNotificationCount(0);
   };
+
   return (
     <>
       <IconButton

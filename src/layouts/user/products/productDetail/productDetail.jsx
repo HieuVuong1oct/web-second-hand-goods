@@ -1,11 +1,10 @@
-import Cookies from 'js-cookie';
-import io from 'socket.io-client';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { Box, Alert, Snackbar, Container, CircularProgress } from '@mui/material';
+import { Box, Alert, Snackbar, Container, Typography, CircularProgress } from '@mui/material';
 
-import { listStatus } from 'src/constant/constant';
+import { listPath, listStatus } from 'src/constant/constant';
+import MessageDialog from 'src/layouts/user/home/contentProductDetail/messageDialog';
 import {
   addComment,
   rejectRequest,
@@ -14,39 +13,37 @@ import {
   userBuyProduct,
 } from 'src/api/product';
 
-import MessageDialog from './messageDialog';
-import CommentSection from './commentSection';
-import RegisterDialog from './registerDialog';
-import ConfirmOrderDialog from './cancelOrder';
-import UserRequestList from './userRequestList';
-import ComponentProductDetail from './componentProductDetail';
+// import ActionButtons from 'src/sections/home/contentProductDetail/actionButton';
 
-const socket = io(import.meta.env.VITE_SOCKET_URL);
+import CommentSection from 'src/layouts/user/home/contentProductDetail/commentSection';
+import RegisterDialog from 'src/layouts/user/home/contentProductDetail/registerDialog';
+import ConfirmOrderDialog from 'src/layouts/user/home/contentProductDetail/cancelOrder';
+import UserRequestList from 'src/layouts/user/home/contentProductDetail/userRequestList';
+import ComponentProductDetail from 'src/layouts/user/home/contentProductDetail/componentProductDetail';
+
 const ProductDetail = () => {
   const [loading, setLoading] = useState(false);
-
   const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [offer, setOffer] = useState();
 
   const [product, setProduct] = useState(null);
   const [userBuy, setUserBuy] = useState([]);
+  const [offer, setOffer] = useState();
+
+  const [message, setMessage] = useState('');
+  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState('');
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
-  const [selectedMessage, setSelectedMessage] = useState('');
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-
   const { productId } = useParams();
-  const Id = Cookies.get('userId');
+  const navigate = useNavigate();
 
   const fetchProduct = useCallback(async () => {
     try {
       const response = await getProductById(productId);
-
       const fetchedProduct = response.data[0];
       setProduct(fetchedProduct);
 
@@ -62,14 +59,6 @@ const ProductDetail = () => {
       setSnackbarOpen(true);
     }
   }, [productId]);
-
-  useEffect(() => {
-    socket.emit('joinRoom', Number(productId), Id);
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [productId, Id]);
 
   useEffect(() => {
     fetchProduct();
@@ -115,8 +104,6 @@ const ProductDetail = () => {
     try {
       await userBuyProduct({
         productId: product.productId,
-        message: 'Không mua',
-        offer: 1,
       });
 
       setSnackbarMessage('Hủy đăng ký thành công!');
@@ -134,9 +121,9 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddComment = async (data, userId) => {
+  const handleAddComment = async (data) => {
     try {
-      await addComment({ content: data, productId: product.productId }, userId);
+      await addComment({ content: data, productId: product.productId });
 
       setSnackbarMessage('Thêm bình luận thành công');
       setSnackbarSeverity('success');
@@ -148,13 +135,6 @@ const ProductDetail = () => {
     }
   };
 
-  // const handleLike = () => {
-  //   setLikes(likes + 1);
-  // };
-
-  // const handleDislike = () => {
-  //   setDislikes(dislikes + 1);
-  // };
   const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
@@ -220,74 +200,93 @@ const ProductDetail = () => {
     }
   };
 
+  const handleProduct = () => {
+    navigate(listPath.PRODUCT);
+  };
+
   const imageArray = JSON.parse(product.images);
   const imageBig = imageArray[0];
   const smallImages = imageArray.slice(1, 4);
 
   return (
-    <Container
-      width="80%"
-      sx={{ margin: '0 auto', paddingTop: '20px', backgroundColor: 'white', borderRadius: '10px' }}
-    >
-      <ComponentProductDetail
-        imageBig={imageBig}
-        smallImages={smallImages}
-        product={product}
-        getStatus={getStatus}
-        handleOpen={handleOpen}
-        handleOpenConfirmDialog={handleOpenConfirmDialog}
-      />
-
-      <RegisterDialog
-        open={open}
-        handleClose={handleClose}
-        message={message}
-        setMessage={setMessage}
-        offer={offer}
-        setOffer={setOffer}
-        handleRegisterBuy={handleRegisterBuy}
-        loading={loading}
-      />
-
-      <MessageDialog
-        open={messageDialogOpen}
-        onClose={() => setMessageDialogOpen(false)}
-        message={selectedMessage}
-      />
-
-      {/* <ActionButtons
-        likes={likes}
-        dislikes={dislikes}
-        handleLike={handleLike}
-        handleDislike={handleDislike}
-      /> */}
-
-      {userBuy.length > 0 && (
-        <UserRequestList
-          userBuy={userBuy}
-          handleViewMessage={handleViewMessage}
-          handleAcceptRequest={handleAcceptRequest}
-          handleRejectRequest={handleRejectRequest}
-        />
-      )}
-      <ConfirmOrderDialog
-        open={openConfirmDialog}
-        onClose={handleCloseConfirmDialog}
-        onConfirm={handleCancelRegister}
-      />
-      <CommentSection productId={productId} handleAddComment={handleAddComment} />
-
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    <>
+      <Typography sx={{ mb: 2 }} variant="h5">
+        Chi tiết sản phẩm : {product.name}
+      </Typography>
+      <Typography sx={{ cursor: 'pointer', color: 'blue', mb: 2, mt: 2 }} onClick={handleProduct}>
+        Tới trang quản lý sản phẩm
+      </Typography>
+      <Container
+        width="80%"
+        sx={{
+          margin: '0 auto',
+          paddingTop: '20px',
+          backgroundColor: 'white',
+          borderRadius: '10px',
+        }}
       >
-        <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </Container>
+        <ComponentProductDetail
+          imageBig={imageBig}
+          smallImages={smallImages}
+          product={product}
+          getStatus={getStatus}
+          handleOpen={handleOpen}
+          handleOpenConfirmDialog={handleOpenConfirmDialog}
+        />
+
+        <RegisterDialog
+          open={open}
+          handleClose={handleClose}
+          message={message}
+          setMessage={setMessage}
+          offer={offer}
+          setOffer={setOffer}
+          handleRegisterBuy={handleRegisterBuy}
+          loading={loading}
+        />
+
+        <MessageDialog
+          open={messageDialogOpen}
+          onClose={() => setMessageDialogOpen(false)}
+          message={selectedMessage}
+        />
+
+        {/* <ActionButtons
+          likes={likes}
+          dislikes={dislikes}
+          notificationsEnabled={notificationsEnabled}
+          handleLike={handleLike}
+          handleDislike={handleDislike}
+          handleToggleNotifications={handleToggleNotifications}
+        /> */}
+
+        {userBuy.length > 0 && (
+          <UserRequestList
+            userBuy={userBuy}
+            handleViewMessage={handleViewMessage}
+            handleAcceptRequest={handleAcceptRequest}
+            handleRejectRequest={handleRejectRequest}
+          />
+        )}
+        <ConfirmOrderDialog
+          open={openConfirmDialog}
+          onClose={handleCloseConfirmDialog}
+          onConfirm={handleCancelRegister}
+        />
+        <CommentSection productId={productId} handleAddComment={handleAddComment} />
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
+      </Container>
+    </>
   );
 };
 

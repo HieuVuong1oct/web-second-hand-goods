@@ -25,43 +25,25 @@ const socket = io(import.meta.env.VITE_SOCKET_URL);
 const Header = () => {
   const account = Account();
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [success, setSuccess] = useState(null);
   const navigate = useNavigate();
+
+  const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState(null);
+
+  const [success, setSuccess] = useState(null);
   const [notificationCount, setNotificationCount] = useState(0);
   const [notifications, setNotifications] = useState([]);
   const [showMore, setShowMore] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-
   const [total, setTotal] = useState();
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []); 
-
-  useEffect(() => {
-    const token = Cookies.get('accessToken');
-    const role = Cookies.get('role');
-
-    setIsLoggedIn(!!token);
-    setIsAdmin(role === 'ADMIN');
-  }, []);
 
   const fetchNotification = useCallback(async (page = 1, append = false) => {
-    
     try {
       setLoading(true);
       const response = await getAllNotification(page);
@@ -76,6 +58,26 @@ const Header = () => {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const token = Cookies.get('accessToken');
+    const role = Cookies.get('role');
+
+    setIsLoggedIn(!!token);
+    setIsAdmin(role === 'ADMIN');
   }, []);
 
   useEffect(() => {
