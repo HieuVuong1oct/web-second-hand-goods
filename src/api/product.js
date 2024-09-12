@@ -169,3 +169,9 @@ export const getListProduct = async (page, limit, name) => {
 
   return response;
 };
+
+export const getComment = async (productId) => {
+  const response = await axiosClient.get(listPathApi.URL_GET_COMMENT(productId));
+
+  return response;
+};

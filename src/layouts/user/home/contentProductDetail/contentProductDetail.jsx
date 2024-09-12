@@ -22,7 +22,7 @@ import ConfirmOrderDialog from './cancelOrder';
 import UserRequestList from './userRequestList';
 import ComponentProductDetail from './componentProductDetail';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 const ProductDetail = () => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
@@ -47,18 +47,17 @@ const ProductDetail = () => {
   const fetchProduct = useCallback(async () => {
     try {
       const response = await getProductById(productId);
-      
+
       const fetchedProduct = response.data[0];
       setProduct(fetchedProduct);
 
       const resUserBuy = Array.isArray(fetchedProduct.requests) ? fetchedProduct.requests : [];
-   
+
       const filterUserBuy = resUserBuy.filter(
         (resUser) => resUser.requestStatus === listStatus.PENDING
       );
       setUserBuy(filterUserBuy);
     } catch (error) {
-    
       setSnackbarMessage('Lỗi: ');
       setSnackbarSeverity('error');
       setSnackbarOpen(true);
@@ -117,8 +116,8 @@ const ProductDetail = () => {
     try {
       await userBuyProduct({
         productId: product.productId,
-        message:'Không mua',
-        offer:1
+        message: 'Không mua',
+        offer: 1,
       });
 
       setSnackbarMessage('Hủy đăng ký thành công!');
@@ -136,9 +135,9 @@ const ProductDetail = () => {
     }
   };
 
-  const handleAddComment = async (data) => {
+  const handleAddComment = async (data, userId) => {
     try {
-      await addComment({ content: data, productId: product.productId });
+      await addComment({ content: data, productId: product.productId }, userId);
 
       setSnackbarMessage('Thêm bình luận thành công');
       setSnackbarSeverity('success');

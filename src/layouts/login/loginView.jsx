@@ -25,7 +25,7 @@ import { MESSAGES } from 'src/constant/constant';
 
 import Iconify from 'src/components/iconify';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 export default function LoginView() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);

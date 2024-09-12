@@ -20,7 +20,7 @@ import useStyles from './headerStyles';
 import LoginButtons from './loginButton';
 import Notifications from './notification';
 
-const socket = io('http://localhost:3000');
+const socket = io(import.meta.env.VITE_SOCKET_URL);
 
 const Header = () => {
   const account = Account();
@@ -50,7 +50,7 @@ const Header = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, []); 
 
   useEffect(() => {
     const token = Cookies.get('accessToken');
@@ -61,6 +61,7 @@ const Header = () => {
   }, []);
 
   const fetchNotification = useCallback(async (page = 1, append = false) => {
+    
     try {
       setLoading(true);
       const response = await getAllNotification(page);
@@ -92,6 +93,7 @@ const Header = () => {
         ...prevNotifications,
       ]);
       setNotificationCount((prevCount) => prevCount + 1);
+      // fetchNotification();
     });
 
     if (userId) {
@@ -102,7 +104,6 @@ const Header = () => {
       socket.off(`notification ${userId}`);
     };
   }, [fetchNotification]);
-
   const { navigateToLogin, navigateToSignUp } = useNavigationHelpers();
 
   const handleAdminPage = () => {
@@ -164,6 +165,11 @@ const Header = () => {
 
   const handleEdit = (Id) => {
     navigate(listPath.EDIT_INFORMATION(Id));
+  };
+
+  const handleNotificationClose = () => {
+    setNotificationAnchorEl(null);
+    setNotificationCount(0);
   };
 
   return (
@@ -262,7 +268,7 @@ const Header = () => {
           <Notifications
             notificationAnchorEl={notificationAnchorEl}
             notifications={notifications}
-            handleNotificationClose={() => setNotificationAnchorEl(null)}
+            handleNotificationClose={handleNotificationClose}
             handleViewComment={(notificationId, productId) => navigate(`/product/${productId}`)}
             showMore={showMore}
             handleShowMore={handleShowMore}
