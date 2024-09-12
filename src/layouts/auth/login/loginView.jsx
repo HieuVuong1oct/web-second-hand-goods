@@ -27,21 +27,23 @@ import Iconify from 'src/components/iconify';
 
 const socket = io(import.meta.env.VITE_SOCKET_URL);
 export default function LoginView() {
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const { navigateToHome, navigateToAdmin, navigateToSignUp, navigateToForgotPassword } =
     useNavigationHelpers();
+
   const validationSchema = Yup.object({
     email: Yup.string()
-    .trim('Email không được bỏ trống')
+      .trim('Email không được bỏ trống')
       .email('Địa chỉ email không hợp lệ')
       .min(11, 'Email phải có ít nhất 11 ký tự')
       .max(64, 'Email tối đa 64 ký tự')
       .required('Vui lòng nhập email'),
     password: Yup.string()
-    .trim('Mật khẩu không được bỏ trống')
+      .trim('Mật khẩu không được bỏ trống')
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .required('Vui lòng nhập mật khẩu'),
   });
@@ -64,12 +66,12 @@ export default function LoginView() {
       const response = await login(trimmedData);
       setLoading(false);
       const userData = response;
-      
+
       if (userData.data.user.userId) {
         setCookies(userData.data);
 
         setSuccess(true);
-        socket.emit('login', (userData.data.user.userId));
+        socket.emit('login', userData.data.user.userId);
         setTimeout(() => {
           if (userData.data.user.role === 'ADMIN') {
             navigateToAdmin();

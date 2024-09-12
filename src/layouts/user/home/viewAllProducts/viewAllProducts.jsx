@@ -18,16 +18,20 @@ import { getCategoryById, getProductByCategoryId } from 'src/api/product';
 
 const AllProductsPage = () => {
   const { categoryId } = useParams();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [status, setStatus] = useState();
+
   const [totalPages, setTotalPages] = useState(1);
   const itemsPerPage = 8;
+
   const [searchParams, setSearchParams] = useSearchParams();
   const page = parseInt(searchParams.get('page'), 10) || 1;
-  const navigate = useNavigate();
-  const [status, setStatus] = useState();
 
   const handleProductClick = (productId) => {
     navigate(listPath.LIST_PRODUCT_BY_ID(productId));
@@ -45,12 +49,12 @@ const AllProductsPage = () => {
       setLoading(true);
 
       try {
-        const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status,'');
-       
+        const response = await getProductByCategoryId(categoryId, page, itemsPerPage, status, '');
+
         const allProductApprove = response.data.filter(
           (product) => product.status === listStatus.APPROVED
         );
-        
+
         setProducts(allProductApprove);
         setTotalPages(response.meta.total);
       } catch (err) {
@@ -100,68 +104,68 @@ const AllProductsPage = () => {
         </Typography>
       ) : (
         <>
-      <Grid container spacing={2}>
-        {products.map((product) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={Number(product.productId)}>
-            <Card
-              sx={{ cursor: 'pointer' }}
-              onClick={() => handleProductClick(Number(product.productId))}
-            >
-              <CardMedia
-                component="img"
-                height="200"
-                image={JSON.parse(product.images)[0]}
-                alt={product.name}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/200';
-                }}
-              />
-              <CardContent>
-                <Typography
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%',
-                  }}
-                  variant="h6"
+          <Grid container spacing={2}>
+            {products.map((product) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={Number(product.productId)}>
+                <Card
+                  sx={{ cursor: 'pointer' }}
+                  onClick={() => handleProductClick(Number(product.productId))}
                 >
-                  {product.name}
-                </Typography>
-                <Typography
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%',
-                  }}
-                  variant="body2"
-                >
-                  ${product.price}
-                </Typography>
-                <Typography
-                  sx={{
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    maxWidth: '100%',
-                  }}
-                  variant="body2"
-                >
-                  Người bán: {product.author.username}
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-                  <Button variant="contained" color="primary">
-                    Mua ngay
-                  </Button>
-                </Box>
-              </CardContent>
-            </Card>
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={JSON.parse(product.images)[0]}
+                    alt={product.name}
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = 'https://via.placeholder.com/200';
+                    }}
+                  />
+                  <CardContent>
+                    <Typography
+                      sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                      }}
+                      variant="h6"
+                    >
+                      {product.name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                      }}
+                      variant="body2"
+                    >
+                      ${product.price}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '100%',
+                      }}
+                      variant="body2"
+                    >
+                      Người bán: {product.author.username}
+                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+                      <Button variant="contained" color="primary">
+                        Mua ngay
+                      </Button>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        ))}
-      </Grid>
-      {totalPages > 1 && (
+          {totalPages > 1 && (
             <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 3 }}>
               <Pagination
                 count={Math.max(totalPages, 1)}
@@ -170,7 +174,7 @@ const AllProductsPage = () => {
                 color="primary"
               />
             </Box>
-         )}
+          )}
         </>
       )}
     </Box>

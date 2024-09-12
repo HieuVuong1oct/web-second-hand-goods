@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Grid, Card,  CardMedia, Typography } from '@mui/material';
+import { Grid, Card, CardMedia, Typography } from '@mui/material';
 
-const ComponentProductDetail = ({ imageBig, smallImages, product,  }) => (
+const ComponentProductDetail = ({ imageBig, smallImages, product }) => (
   <Grid container spacing={2} sx={{ mt: 1 }}>
     <Grid item xs={12} md={6}>
       <Card>
@@ -37,7 +37,6 @@ const ComponentProductDetail = ({ imageBig, smallImages, product,  }) => (
       <Typography variant="body1" gutterBottom>
         Trạng thái: Đang chờ duyệt
       </Typography>
-
     </Grid>
   </Grid>
 );
@@ -51,7 +50,5 @@ ComponentProductDetail.propTypes = {
     description: PropTypes.string.isRequired,
     categoryId: PropTypes.number.isRequired,
   }).isRequired,
- 
-
 };
 export default ComponentProductDetail;

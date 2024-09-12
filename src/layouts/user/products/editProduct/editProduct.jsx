@@ -33,22 +33,24 @@ const schema = Yup.object().shape({
     .typeError('Bạn chưa nhập giá')
     .required('Giá là bắt buộc')
     .positive('Giá phải là số lớn hơn 0'),
-    images: Yup.mixed().test('fileCount', 'Bạn phải tải lên đúng 4 hình ảnh', (value) => {
-      if (value && value.length > 0) {
-        return value.length === 4;
-      }
-      return true; 
-    }),
+  images: Yup.mixed().test('fileCount', 'Bạn phải tải lên đúng 4 hình ảnh', (value) => {
+    if (value && value.length > 0) {
+      return value.length === 4;
+    }
+    return true;
+  }),
 });
 
 export default function EditProductView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
   const [images, setImages] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
-  const navigate = useNavigate();
+
   const { productId } = useParams();
+  const navigate = useNavigate();
 
   const {
     control,
@@ -121,7 +123,7 @@ export default function EditProductView() {
       setLoading(false);
     }
   };
-  
+
   const handleImagesChange = (e) => {
     const files = Array.from(e.target.files);
 
@@ -284,7 +286,6 @@ export default function EditProductView() {
       )}
 
       {successMessage && (
-        
         <Snackbar
           open={Boolean(successMessage)}
           onClose={() => setSuccessMessage('')}

@@ -23,15 +23,19 @@ import { sendOtp, setPassword } from 'src/api/account';
 import Iconify from 'src/components/iconify';
 
 export default function ForgotPasswordView() {
+  const [email, setEmail] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const [otpSent, setOtpSent] = useState(false);
-  const [email, setEmail] = useState('');
   const { navigateToLogin } = useNavigationHelpers();
+
   const validationSchema = Yup.object({
-    email: Yup.string().trim('Email không được bỏ trống').email('Địa chỉ email không hợp lệ').required('Vui lòng nhập email'),
+    email: Yup.string()
+      .trim('Email không được bỏ trống')
+      .email('Địa chỉ email không hợp lệ')
+      .required('Vui lòng nhập email'),
     otp: Yup.string().when('otpSent', {
       is: true,
       then: Yup.string().required('Vui lòng nhập OTP'),
@@ -39,7 +43,7 @@ export default function ForgotPasswordView() {
     newPassword: Yup.string().when('otpSent', {
       is: true,
       then: Yup.string()
-      
+
         .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
         .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
         .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
@@ -48,7 +52,7 @@ export default function ForgotPasswordView() {
     checkPassword: Yup.string().when('otpSent', {
       is: true,
       then: Yup.string()
-      
+
         .oneOf([Yup.ref('newPassword'), null], 'Mật khẩu không khớp')
         .required('Vui lòng xác nhận mật khẩu'),
     }),
@@ -81,10 +85,10 @@ export default function ForgotPasswordView() {
   };
 
   const onSubmitNewPassword = async (data) => {
-    const trimmedOtp = data.otp.trim(); 
-    
-    const trimmedNewPassword = data.newPassword; 
-  
+    const trimmedOtp = data.otp.trim();
+
+    const trimmedNewPassword = data.newPassword;
+
     setLoading(true);
     try {
       await setPassword(email, Number(trimmedOtp), trimmedNewPassword);

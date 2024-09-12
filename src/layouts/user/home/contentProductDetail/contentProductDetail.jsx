@@ -14,7 +14,6 @@ import {
   userBuyProduct,
 } from 'src/api/product';
 
-// import ActionButtons from './actionButton';
 import MessageDialog from './messageDialog';
 import CommentSection from './commentSection';
 import RegisterDialog from './registerDialog';
@@ -24,13 +23,12 @@ import ComponentProductDetail from './componentProductDetail';
 
 const socket = io(import.meta.env.VITE_SOCKET_URL);
 const ProductDetail = () => {
+  const [loading, setLoading] = useState(false);
+
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState();
-  const [loading, setLoading] = useState(false);
 
-  // const [likes, setLikes] = useState(0);
-  // const [dislikes, setDislikes] = useState(0);
   const [product, setProduct] = useState(null);
   const [userBuy, setUserBuy] = useState([]);
 
@@ -41,6 +39,7 @@ const ProductDetail = () => {
   const [messageDialogOpen, setMessageDialogOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState('');
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
   const { productId } = useParams();
   const Id = Cookies.get('userId');
 

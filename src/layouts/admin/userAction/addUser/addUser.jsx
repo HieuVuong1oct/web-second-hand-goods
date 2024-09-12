@@ -22,12 +22,13 @@ import { listPath, MESSAGES } from 'src/constant/constant';
 import Iconify from 'src/components/iconify';
 
 export default function AddUserView() {
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
+
   const validationSchema = Yup.object({
     email: Yup.string()
       .trim('Email không được bỏ trống')

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-import { LoginView } from 'src/layouts/login'
+import { LoginView } from 'src/layouts/auth/login'
 
 export default function LoginPage() {
   return (

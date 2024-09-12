@@ -49,12 +49,13 @@ const schema = Yup.object().shape({
 });
 
 export default function EditUserView() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [avatar, setAvatar] = useState(null);
+  const [avatarPreview, setAvatarPreview] = useState('');
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -134,10 +135,6 @@ export default function EditUserView() {
     setShowPassword((prev) => !prev);
   };
 
-  const handleUser = () => {
-    navigate(listPath.USER);
-  };
-
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setAvatar(file);
@@ -147,6 +144,10 @@ export default function EditUserView() {
       setAvatarPreview(reader.result);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleUser = () => {
+    navigate(listPath.USER);
   };
 
   return (

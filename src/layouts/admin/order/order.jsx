@@ -25,28 +25,33 @@ import RejectDialog from './rejectDialog';
 import ConfirmDialog from './confirmDialog';
 
 const OrderManagement = () => {
-  const [openRejectDialog, setOpenRejectDialog] = useState(false);
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [rejectReason, setRejectReason] = useState('');
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const [orders, setOrders] = useState([]);
-  const [productIdToApprove, setProductIdToApprove] = useState(null);
-  const [rejectProductId, setRejectProductId] = useState(null);
   const categoryId = 1;
   const itemsPerPage = 4;
-  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [orders, setOrders] = useState([]);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [productIdToApprove, setProductIdToApprove] = useState(null);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectProductId, setRejectProductId] = useState(null);
+
+  const [openRejectDialog, setOpenRejectDialog] = useState(false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+
   const [loading, setLoading] = useState(false);
-  const page = parseInt(searchParams.get('page'), 10) || 1;
-  const [totalPages, setTotalPages] = useState(1);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const name = searchParams.get('name')||''
+
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const name = searchParams.get('name') || '';
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+
   const navigate = useNavigate();
 
   const fetchInitialData = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await getApprovedProducts(categoryId, page, itemsPerPage, 'PENDING',name);
+      const response = await getApprovedProducts(categoryId, page, itemsPerPage, 'PENDING', name);
       const products = Array.isArray(response.data) ? response.data : [];
       setOrders(products);
       setTotalPages(response.meta.total);
@@ -55,7 +60,7 @@ const OrderManagement = () => {
     } finally {
       setLoading(false);
     }
-  }, [categoryId, page, itemsPerPage,name]);
+  }, [categoryId, page, itemsPerPage, name]);
 
   useEffect(() => {
     fetchInitialData();

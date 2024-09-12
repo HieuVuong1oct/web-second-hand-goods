@@ -4,13 +4,7 @@ import PropTypes from 'prop-types';
 import { Grid, IconButton } from '@mui/material';
 import { ThumbUp, ThumbDown } from '@mui/icons-material';
 
-const ActionButtons = ({
-  likes,
-  dislikes,
-
-  handleLike,
-  handleDislike,
-}) => (
+const ActionButtons = ({ likes, dislikes, handleLike, handleDislike }) => (
   <Grid container spacing={2} sx={{ mt: 2 }}>
     <Grid item>
       <IconButton aria-label="like" onClick={handleLike}>

@@ -29,21 +29,26 @@ import { listPath, MESSAGES } from 'src/constant/constant';
 import { deleteProduct, getListProduct } from 'src/api/product';
 
 const ProductsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page'), 10) || 1;
-  const name = searchParams.get('name') || '';
-  const [products, setProducts] = useState([]);
-  const [error, setError] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
-  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-  const [totalPages, setTotalPages] = useState(1);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const limit = 4;
+  const [error, setError] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [deleting, setDeleting] = useState(false);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  const name = searchParams.get('name') || '';
+
+  const navigate = useNavigate();
+  const limit = 4;
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {

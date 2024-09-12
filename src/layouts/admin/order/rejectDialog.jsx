@@ -14,8 +14,8 @@ import {
 
 const validationSchema = Yup.object({
   rejectReason: Yup.string()
-   .trim('Lý do từ chối không được bỏ trống')
-  .required('Lý do từ chối không được bỏ trống'),
+    .trim('Lý do từ chối không được bỏ trống')
+    .required('Lý do từ chối không được bỏ trống'),
 });
 
 const RejectDialog = ({
@@ -39,7 +39,7 @@ const RejectDialog = ({
       if (err.name === 'ValidationError') {
         setError(err.errors[0]);
       } else {
-       alert('Lỗi')
+        alert('Lỗi');
       }
     } finally {
       setLoading(false);

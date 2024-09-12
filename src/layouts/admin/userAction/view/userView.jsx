@@ -29,22 +29,30 @@ import { getUsers, deleteUser } from 'src/api/user';
 import { listPath, MESSAGES } from 'src/constant/constant';
 
 const UserPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const page = parseInt(searchParams.get('page'), 10) || 1;
-  const name = searchParams.get('name') || '';
-  const role = searchParams.get('role') || '';
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+
   const [users, setUsers] = useState([]);
+  const [userToDelete, setUserToDelete] = useState(null);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [error, setError] = useState(null);
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+
   const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 4;
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+
+  const name = searchParams.get('name') || '';
+  const role = searchParams.get('role') || '';
+
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState(null);
-  const [deleting, setDeleting] = useState(false);
+
+  const itemsPerPage = 4;
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
@@ -88,7 +96,6 @@ const UserPage = () => {
         setSnackbarMessage(MESSAGES.SUCCESS_DELETE_USER);
         setSnackbarSeverity('success');
         fetchUsers();
-        
       } else {
         setSnackbarMessage(MESSAGES.ERROR_DELETE_USER);
         setSnackbarSeverity('error');

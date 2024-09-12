@@ -33,11 +33,13 @@ const validationSchema = Yup.object().shape({
     .min(1, 'Bình luận phải có ít nhất 1 ký tự'),
 });
 const CommentSection = ({ productId, handleAddComment }) => {
-  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [comments, setComments] = useState([]);
   const [visibleComments, setVisibleComments] = useState(4);
   const [expanded, setExpanded] = useState(true);
   const [commentValue, setCommentValue] = useState('');
+
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [showUserTagList, setShowUserTagList] = useState(false);

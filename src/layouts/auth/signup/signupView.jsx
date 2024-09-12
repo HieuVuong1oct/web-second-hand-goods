@@ -25,46 +25,48 @@ import { MESSAGES } from 'src/constant/constant';
 import Iconify from 'src/components/iconify';
 
 export default function SignUpView() {
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
- 
-  const { navigateToLogin } = useNavigationHelpers();
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const { navigateToLogin } = useNavigationHelpers();
 
   const validationSchema = Yup.object({
     email: Yup.string()
-    .trim('Email không được bỏ trống')
+      .trim('Email không được bỏ trống')
       .email('Địa chỉ email không hợp lệ')
       .min(11, 'Email phải có ít nhất 11 ký tự')
       .max(64, 'Email tối đa 64 ký tự')
       .required('Vui lòng nhập email'),
     password: Yup.string()
-    .trim('Mật khẩu không được bỏ trống')
+      .trim('Mật khẩu không được bỏ trống')
       .min(8, 'Mật khẩu phải có ít nhất 8 ký tự')
       .matches(/[A-Z]/, 'Mật khẩu phải chứa ít nhất một chữ hoa')
       .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt')
       .required('Vui lòng nhập mật khẩu'),
     checkPassword: Yup.string()
-    .trim('Kiểm tra mật khẩu không được bỏ trống')
+      .trim('Kiểm tra mật khẩu không được bỏ trống')
       .oneOf([Yup.ref('password'), null], 'Mật khẩu không khớp')
       .required('Vui lòng xác nhận mật khẩu'),
     username: Yup.string()
-    .trim('Tên tài khoản không được bỏ trống')
+      .trim('Tên tài khoản không được bỏ trống')
       .min(1, 'Tên tài khoản phải có ít nhất 1 ký tự')
       .max(30, 'Tên tài khoản tối đa 30 ký tự')
       .required('Vui lòng nhập tên tài khoản'),
     name: Yup.string()
-    .trim('Tên không được bỏ trống')
+      .trim('Tên không được bỏ trống')
       .min(1, 'Tên phải có ít nhất 1 ký tự')
       .max(30, 'Tên tối đa 30 ký tự')
       .required('Vui lòng nhập tên người dùng'),
-      avatar: Yup.mixed()
+    avatar: Yup.mixed()
       .typeError('Bạn chưa tải ảnh')
       .required('Hình ảnh là bắt buộc')
-      .test('fileCount', 'Bạn phải tải lên đúng 1 hình ảnh', (value) => 
-           value && value.length === 1
+      .test(
+        'fileCount',
+        'Bạn phải tải lên đúng 1 hình ảnh',
+        (value) => value && value.length === 1
       ),
   });
 
@@ -84,7 +86,7 @@ export default function SignUpView() {
       checkPassword: checkPassword.trim(),
       username: username.trim(),
       name: name.trim(),
-      avatar
+      avatar,
     };
     setLoading(true);
     if (trimmedData.password !== trimmedData.checkPassword) {
@@ -99,7 +101,7 @@ export default function SignUpView() {
       formData.append('password', trimmedData.password);
       formData.append('username', trimmedData.username);
       formData.append('name', trimmedData.name);
-    
+
       if (trimmedData.avatar && trimmedData.avatar.length > 0) {
         Array.from(trimmedData.avatar).forEach((file) => {
           formData.append('avatar', file);
@@ -255,26 +257,26 @@ export default function SignUpView() {
                     />
                   )}
                 />
-                <Typography variant="h7" >Avatar</Typography>
-              <Controller
-                name="avatar"
-                control={control}
-                render={({ field }) => (
-                  <div>
-                    <input
-                      type="file"
-                      multiple
-                      onChange={(e) => field.onChange(e.target.files)}
-                      style={{  }}
-                    />
-                    {errors.avatar && (
-                      <Typography color="error" variant="caption">
-                        {errors.avatar?.message}
-                      </Typography>
-                    )}
-                  </div>
-                )}
-              />
+                <Typography variant="h7">Avatar</Typography>
+                <Controller
+                  name="avatar"
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <input
+                        type="file"
+                        multiple
+                        onChange={(e) => field.onChange(e.target.files)}
+                        style={{}}
+                      />
+                      {errors.avatar && (
+                        <Typography color="error" variant="caption">
+                          {errors.avatar?.message}
+                        </Typography>
+                      )}
+                    </div>
+                  )}
+                />
               </Grid>
             </Grid>
 

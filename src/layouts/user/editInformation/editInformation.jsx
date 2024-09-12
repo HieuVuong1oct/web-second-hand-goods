@@ -50,10 +50,11 @@ const schema = Yup.object().shape({
 });
 
 export default function EditInformationView() {
-  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
 
@@ -132,7 +133,7 @@ export default function EditInformationView() {
         setAvatarPreview(response.data.avatar ? JSON.parse(response.data.avatar)[0] : '');
         setTimeout(() => {
           window.location.reload();
-        }, 3000)
+        }, 3000);
       } else {
         setError(MESSAGES.ERROR_UPDATE_USER);
       }

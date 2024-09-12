@@ -22,26 +22,24 @@ import UserRequestList from 'src/layouts/user/home/contentProductDetail/userRequ
 import ComponentProductDetail from 'src/layouts/user/home/contentProductDetail/componentProductDetail';
 
 const ProductDetail = () => {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState('');
-  const [offer, setOffer] = useState();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
-  // const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  // const [likes, setLikes] = useState(0);
-  // const [dislikes, setDislikes] = useState(0);
   const [product, setProduct] = useState(null);
   const [userBuy, setUserBuy] = useState([]);
+  const [offer, setOffer] = useState();
+
+  const [message, setMessage] = useState('');
+  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState('');
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
-  const [messageDialogOpen, setMessageDialogOpen] = useState(false);
-  const [selectedMessage, setSelectedMessage] = useState('');
-  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const { productId } = useParams();
+  const navigate = useNavigate();
 
   const fetchProduct = useCallback(async () => {
     try {
@@ -137,17 +135,6 @@ const ProductDetail = () => {
     }
   };
 
-  // const handleToggleNotifications = () => {
-  //   setNotificationsEnabled(!notificationsEnabled);
-  // };
-
-  // const handleLike = () => {
-  //   setLikes(likes + 1);
-  // };
-
-  // const handleDislike = () => {
-  //   setDislikes(dislikes + 1);
-  // };
   const handleOpenConfirmDialog = () => {
     setOpenConfirmDialog(true);
   };
@@ -223,7 +210,7 @@ const ProductDetail = () => {
 
   return (
     <>
-    <Typography sx={{ mb: 2 }} variant="h5">
+      <Typography sx={{ mb: 2 }} variant="h5">
         Chi tiết sản phẩm : {product.name}
       </Typography>
       <Typography sx={{ cursor: 'pointer', color: 'blue', mb: 2, mt: 2 }} onClick={handleProduct}>
