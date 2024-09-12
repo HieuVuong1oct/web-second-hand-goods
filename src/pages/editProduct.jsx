@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import EditProductView from 'src/layouts/products/editProduct/editProduct';
+import EditProductView from 'src/layouts/user/products/editProduct/editProduct';
 
 export default function EditProductViewPage() {
   return (

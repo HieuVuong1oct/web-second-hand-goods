@@ -1,40 +1,28 @@
-
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import {
-  Dialog,
-  TextField,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from '@mui/material';
+import { Dialog, TextField, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 
 const validationSchema = Yup.object({
   message: Yup.string()
-  .trim('Lời nhắn không được bỏ trống')
-  .required('Lời nhắn không được bỏ trống'),
+    .trim('Lời nhắn không được bỏ trống')
+    .required('Lời nhắn không được bỏ trống'),
   offer: Yup.number()
     .nullable()
     .positive('Giá mong muốn phải lớn hơn 0')
     .required('Giá mong muốn không được bỏ trống'),
 });
 
-const RegisterDialog = ({
-  open,
-  handleClose,
-  handleRegisterBuy,
-  loading,
-}) => {
+const RegisterDialog = ({ open, handleClose, handleRegisterBuy, loading }) => {
   const [message, setMessage] = useState('');
   const [offer, setOffer] = useState(null);
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async () => {
     const values = { message, offer };
-  
+
     try {
       await validationSchema.validate(values, { abortEarly: false });
       handleRegisterBuy(values);
@@ -81,12 +69,7 @@ const RegisterDialog = ({
         <LoadingButton onClick={handleClose} color="secondary" loading={loading}>
           Hủy
         </LoadingButton>
-        <LoadingButton
-          onClick={handleSubmit}
-          loading={loading}
-          variant="contained"
-          color="primary"
-        >
+        <LoadingButton onClick={handleSubmit} loading={loading} variant="contained" color="primary">
           Đăng ký
         </LoadingButton>
       </DialogActions>

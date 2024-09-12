@@ -49,16 +49,14 @@ const ComponentProductDetail = ({
       </Typography>
       {product.categoryId !== 2 && (
         <>
-          {product.isRequested === true  ? (
+          {product.isRequested === true ? (
             <Button variant="contained" color="secondary" onClick={handleOpenConfirmDialog}>
-            Hủy đăng ký
-          </Button>
-           
+              Hủy đăng ký
+            </Button>
           ) : (
-          
             <Button variant="contained" color="primary" onClick={handleOpen}>
-            Đăng ký mua
-          </Button>
+              Đăng ký mua
+            </Button>
           )}
         </>
       )}

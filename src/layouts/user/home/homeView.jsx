@@ -9,7 +9,6 @@ export default function HomeMainView() {
   return (
     <div>
       <Header />
-
       <div
         style={{
           paddingTop: '140px',
@@ -18,7 +17,6 @@ export default function HomeMainView() {
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'top',
           backgroundSize: 'cover',
-         
           paddingBottom: '100px',
         }}
       >
