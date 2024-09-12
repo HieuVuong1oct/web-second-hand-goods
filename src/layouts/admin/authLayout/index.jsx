@@ -1,4 +1,3 @@
-
 import { Outlet } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -15,7 +14,6 @@ const AuthLayout = () => {
       sx={{
         ...bgGradient({
           color: alpha(theme.palette.background.default, 0.9),
-          
         }),
         height: 1,
         backgroundImage: 'url(/favicon/bg1.jpg)',
@@ -24,14 +22,11 @@ const AuthLayout = () => {
         backgroundRepeat: 'no-repeat',
       }}
     >
-      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 , display: 'contents'}}>
-        
-     
-          <Outlet />
-        
+      <Stack alignItems="center" justifyContent="center" sx={{ height: 1, display: 'contents' }}>
+        <Outlet />
       </Stack>
     </Box>
   );
-}
+};
 
 export default AuthLayout;

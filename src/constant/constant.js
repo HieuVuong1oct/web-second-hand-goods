@@ -59,8 +59,8 @@ export const listPathApi = {
   URL_GET_LIST_PRODUCT: '/product/list-product',
   URL_ALL_NOTIFICATION: '/notification/get-all-noti',
   URL_NOTIFICATION: (notificationId) => `/notification/get-by-id/${notificationId}`,
-  URL_GET_COMMENT:(productId)=>`/comment/get-comments/${productId}`,
-  URL_TAG:'/tag/search',
+  URL_GET_COMMENT: (productId) => `/comment/get-comments/${productId}`,
+  URL_TAG: '/tag/search',
 };
 
 export const MESSAGES = {
